@@ -1,0 +1,171 @@
+# set this to "rtl" if this is a RTL language
+msgid "ltr"
+msgstr "rtl"
+
+# GLOBAL
+
+msgid "Home"
+msgstr "כניסה"
+
+msgid "Welcome!"
+msgstr "ברוכים הבאים!"
+
+msgid "The following collections are available:"
+msgstr "תבחור אוסף:"
+
+msgid "Submit"
+msgstr "שולח"
+
+# ABOUT
+
+msgid "About this collection"
+msgstr "אודות אוסף זה"
+
+msgid "Browse"
+msgstr "דפדף"
+
+msgid "Browse by %s"
+msgstr "דפדף לפי %s"
+
+msgid "By %s"
+msgstr "לפי %s"
+
+msgid "Search"
+msgstr "חפש"
+
+# BROWSE
+
+# Common classifier names
+
+msgid "title"
+msgstr "כותר"
+
+msgid "Title"
+msgstr "כותר"
+
+msgid "author"
+msgstr "מחבר"
+
+msgid "Author"
+msgstr "מחבר"
+
+msgid "subject"
+msgstr "נושא"
+
+msgid "Subject"
+msgstr "נושא"
+
+msgid "organization"
+msgstr "חברה"
+
+msgid "Organization"
+msgstr "חברה"
+
+msgid "howto"
+msgstr "איך"
+
+msgid "Howto"
+msgstr "איך"
+
+# SEARCH
+
+msgid "Simple"
+msgstr "פשוט"
+
+msgid "Fielded"
+msgstr "לפי שדות"
+
+msgid "Boolean"
+msgstr "בוליאני"
+
+msgid "Reset"
+msgstr "איפוס"
+
+msgid "and"
+msgstr "ו"
+
+msgid "or"
+msgstr "או"
+
+msgid "not"
+msgstr "לא"
+
+msgid "in"
+msgstr "בתוך"
+
+msgid "for"
+msgstr "ל"
+
+msgid "from"
+msgstr "מ"
+
+msgid "text"
+msgstr "טקסט"
+
+msgid "document"
+msgstr "מסמך"
+
+msgid "section"
+msgstr "חלק"
+
+msgid "Search for"
+msgstr ""
+
+msgid "Search at the %s level for"
+msgstr "חפש בדרגא %s"
+
+msgid "Search %1$s at the %2$s level for %3$s"
+msgstr "חפש %3$s בתוך %1$s בדרגא %2$s"
+
+msgid "Search %1$s for %2$s"
+msgstr "חפש %2$s בתוך %1$s"
+
+msgid "Search results"
+msgstr ""
+
+msgid "Recent searches"
+msgstr ""
+
+msgid "Results <strong>%d</strong> - <strong>%d</strong> of <strong>%d</strong> for <strong>%s</strong>"
+msgstr ""
+
+# VIEW
+
+msgid "Go to page %s"
+msgstr "לך אל עמוד %s"
+
+msgid "Go"
+msgstr "לך"
+
+msgid "Table of contents"
+msgstr ""
+
+msgid "hide"
+msgstr ""
+
+msgid "show"
+msgstr ""
+
+msgid "Opening page"
+msgstr "עמוד ראשון"
+
+msgid "Next"
+msgstr "הבא"
+
+msgid "Next page"
+msgstr "עמוד הבא"
+
+msgid "Previous"
+msgstr "קודם"
+
+msgid "Previous page"
+msgstr "עמוד הקודם"
+
+msgid "View item"
+msgstr ""
+
+msgid "Document Metadata"
+msgstr "מטאדה על מסמך"
+
+msgid "Section Metadata"
+msgstr "מטאדה על חלק"

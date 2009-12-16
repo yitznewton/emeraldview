@@ -1,0 +1,23 @@
+emeraldview_name:          Wassamatta Digital Collections
+institution_url:           http://wassamatta-u.example.com/library/
+institution_name:          Wassamatta University Libraries
+
+greenstone_collection_dir: c:/greenstone-2.82/collect
+
+default_theme: default
+default_language: en
+languages:
+  en: English
+  fr: French
+  he: עברית
+
+collections:
+  demo:
+    active: true
+    
+    classifiers:
+      CL1:
+        this: that
+    
+  that:
+    active: false

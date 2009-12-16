@@ -1,0 +1,171 @@
+# set this to "rtl" if this is a RTL language
+msgid "ltr"
+msgstr ""
+
+# GLOBAL
+
+msgid "Home"
+msgstr ""
+
+msgid "Welcome!"
+msgstr ""
+
+msgid "The following collections are available:"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+# ABOUT
+
+msgid "About this collection"
+msgstr ""
+
+msgid "Browse"
+msgstr ""
+
+msgid "Browse by %s"
+msgstr ""
+
+msgid "By %s"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+# BROWSE
+
+# Common classifier names
+
+msgid "title"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "author"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "subject"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "organization"
+msgstr ""
+
+msgid "Organization"
+msgstr ""
+
+msgid "howto"
+msgstr ""
+
+msgid "Howto"
+msgstr ""
+
+# SEARCH
+
+msgid "Simple"
+msgstr ""
+
+msgid "Fielded"
+msgstr ""
+
+msgid "Boolean"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "and"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "not"
+msgstr ""
+
+msgid "in"
+msgstr ""
+
+msgid "for"
+msgstr ""
+
+msgid "from"
+msgstr ""
+
+msgid "text"
+msgstr ""
+
+msgid "document"
+msgstr ""
+
+msgid "section"
+msgstr ""
+
+msgid "Search for"
+msgstr ""
+
+msgid "Search at the %s level for"
+msgstr ""
+
+msgid "Search %1$s at the %2$s level for %3$s"
+msgstr ""
+
+msgid "Search %1$s for %2$s"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Recent searches"
+msgstr ""
+
+msgid "Results <strong>%d</strong> - <strong>%d</strong> of <strong>%d</strong> for <strong>%s</strong>"
+msgstr ""
+
+# VIEW
+
+msgid "Go to page %s"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Table of contents"
+msgstr ""
+
+msgid "hide"
+msgstr ""
+
+msgid "show"
+msgstr ""
+
+msgid "Opening page"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Next page"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Previous page"
+msgstr ""
+
+msgid "View item"
+msgstr ""
+
+msgid "Document Metadata"
+msgstr ""
+
+msgid "Section Metadata"
+msgstr ""

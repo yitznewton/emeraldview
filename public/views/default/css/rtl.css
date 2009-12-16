@@ -1,0 +1,19 @@
+#about-browse-container{
+  float: right;
+}
+
+#about-search-container{
+  float: right;
+}
+
+#language-select{
+  float: left;
+}
+
+#search-form-container{
+  float: right;
+}
+
+#search-history-container{
+  float: right;
+}

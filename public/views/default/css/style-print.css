@@ -1,0 +1,50 @@
+body,h1,h2,h3,h4,h5,h6{
+  color: black;
+}
+
+body{
+  margin: 0;
+  width: auto; 
+}
+
+#header{
+  display: none;
+}
+
+#footer{
+  border-top: 1px solid black;
+}
+
+#footer-url{
+  display: block;
+}
+
+#bottom-pager{
+  display: none;
+}
+
+.highlight{
+  background: #999;
+}
+
+#language-select{
+  display: none;
+}
+
+#toc{
+  float: none;
+  width: auto;
+  margin: 0 0 1em;
+  padding: ;
+  border: 0;
+  background: white;
+}
+
+#toc-tree li a{
+  color: black;
+  text-decoration: none;
+}
+
+#tree-pager{
+  display: none;
+}

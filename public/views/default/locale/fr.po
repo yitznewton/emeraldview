@@ -1,0 +1,174 @@
+# set this to "rtl" if this is a RTL language
+msgid "ltr"
+msgstr ""
+
+# GLOBAL
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Welcome!"
+msgstr "Bienvenue!"
+
+msgid "The following collections are available:"
+msgstr "Voici les collections disponibles:"
+
+msgid "Submit"
+msgstr "Soumettre"
+
+# ABOUT
+
+msgid "About this collection"
+msgstr "Détails de cette collection"
+
+msgid "Browse"
+msgstr "Parcourir"
+
+msgid "Browse by %s"
+msgstr "Parcourir par %s"
+
+msgid "By %s"
+msgstr "Par %s"
+
+msgid "Search"
+msgstr "Rechercher"
+
+# BROWSE
+
+# Common classifier names
+
+msgid "title"
+msgstr "titre"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "author"
+msgstr "auteur"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "subject"
+msgstr "sujet"
+
+msgid "Subject"
+msgstr "Sujet"
+
+msgid "organization"
+msgstr "organisation"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "howto"
+msgstr "comment"
+
+msgid "Howto"
+msgstr "Comment"
+
+# SEARCH
+
+# same in French
+msgid "Simple"
+msgstr ""
+
+msgid "Fielded"
+msgstr "Par champs"
+
+msgid "Boolean"
+msgstr "Booléen"
+
+msgid "Reset"
+msgstr ""
+
+msgid "and"
+msgstr "et"
+
+msgid "or"
+msgstr "ou"
+
+msgid "not"
+msgstr "non"
+
+msgid "in"
+msgstr "dans"
+
+msgid "for"
+msgstr "pour"
+
+msgid "from"
+msgstr "extrait de"
+
+msgid "text"
+msgstr "texte"
+
+# same in French
+msgid "document"
+msgstr ""
+
+# same in French
+msgid "section"
+msgstr ""
+
+msgid "Search for"
+msgstr "Rechercher"
+
+msgid "Search at the %s level for"
+msgstr "Rechercher au niveau %s"
+
+msgid "Search %1$s at the %2$s level for %3$s"
+msgstr "Rechercher %3$s dans %1$s au niveau %2$s"
+
+msgid "Search %1$s for %2$s"
+msgstr "Rechercher %2$s dans %1$s"
+
+msgid "Search results"
+msgstr "Résultats de la recherche"
+
+msgid "Recent searches"
+msgstr "Recherches récentes"
+
+msgid "Results <strong>%d</strong> - <strong>%d</strong> of <strong>%d</strong> for <strong>%s</strong>"
+msgstr "Résultats <strong>%d</strong> - <strong>%d</strong> sur <strong>%d</strong> pour <strong>%s</strong>"
+
+# VIEW
+
+msgid "Go to page %s"
+msgstr "Procéder à la page %s"
+
+msgid "Go"
+msgstr "Procéder"
+
+msgid "Table of contents"
+msgstr "Sommaire"
+
+msgid "hide"
+msgstr "masquer"
+
+msgid "show"
+msgstr "afficher"
+
+msgid "Opening page"
+msgstr "Première page"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Next page"
+msgstr "Page suivante"
+
+msgid "Previous"
+msgstr "Précédant"
+
+msgid "Previous page"
+msgstr "Page précédante"
+
+msgid "View item"
+msgstr "Visualiser un article"
+
+msgid "Document Metadata"
+msgstr "Metadonnées du document"
+
+msgid "Section Metadata"
+msgstr "Metadonnées de la section"
