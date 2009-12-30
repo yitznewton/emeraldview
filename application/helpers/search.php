@@ -30,7 +30,7 @@ class search_Core
       'name'   => 'search',
       'id'     => 'search-form-simple',
       'class'  => 'search-form',
-      'action' => $collection->getUrl() . 'search',
+      'action' => $collection->getUrl() . '/search',
       'method' => 'GET',
     );
 
@@ -152,7 +152,7 @@ class search_Core
     }
     
     if ($next = $hits_pager->getLinkPages()->next) {
-      if ($last_number != $) {
+      if ($last_number != $hits_pager->getLinkPages()->last) {
         $pages .= myhtml::element( 'li', '...' );
       }
       

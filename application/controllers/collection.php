@@ -41,8 +41,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'classifier',      $classifier );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
-    $tree = $classifier->getTree();
-    var_dump(NodeTreeFormatter::factory( $tree )->html());
+    $this->template->set_global( 'tree',            $classifier->getTree()->getFormatter()->html() );
   }
   
 	public function __call($method, $arguments)

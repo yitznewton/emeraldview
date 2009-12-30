@@ -12,4 +12,6 @@
   <?php printf( L10n::_('Browse by %s'), L10n::_( $classifier->getTitle() ) )?>
 </h1>
 
+<?php echo $tree ?>
+
 </div>

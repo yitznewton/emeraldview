@@ -1,0 +1,4 @@
+syntax: glob
+system
+application/vendors
+application/logs

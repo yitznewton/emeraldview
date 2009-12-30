@@ -45,4 +45,9 @@ abstract class Node
       return false;
     }
   }
+
+  public function getFormatter()
+  {
+    return NodeTreeFormatter::factory( $this );
+  }
 }
