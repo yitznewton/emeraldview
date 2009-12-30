@@ -1,3 +1,12 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+    $(".browse-tree").treeview({
+      collapsed: true,
+      animated:  "fast"
+    });
+  });
+</script>
+
 <div id="main-content">
 
 <?php echo $language_select ?>

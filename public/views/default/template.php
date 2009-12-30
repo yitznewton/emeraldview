@@ -12,7 +12,7 @@
 href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/reset.css">
 
 <link rel="stylesheet" type="text/css" media="screen"
-href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/jquery.treeview.css">
+href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
 
 <link rel="stylesheet" type="text/css"
 href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/style.css">
@@ -26,10 +26,10 @@ href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/style-print.css">
 <?php endif; ?>
 
 <script type="text/javascript"
-src="<?php echo url::base() ?>js/jquery.js"></script>
+src="<?php echo url::base() ?>libraries/jquery.js"></script>
 
 <script type="text/javascript"
-src="<?php echo url::base() ?>js/jquery.treeview.js"></script>
+src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
 src="<?php echo url::base() ?>js/default.js"></script>
