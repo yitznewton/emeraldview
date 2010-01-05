@@ -84,13 +84,43 @@ class Document
   {
   }
   
-  public static function factory( Collection $collection, $id )
+  public static function factory( $object, $id = null )
+  {
+    // compensate for lack of __callStatic in <5.3
+    switch (get_class( $object )) {
+      case 'Node_Document':
+        return Document::factoryNodeDocument( $object );
+      case 'Collection':
+        return Document::factoryCollection( $object, $id );
+      default:
+        $msg = 'First argument must be an instance of Node_Document '
+             . 'or Collection';
+        throw new Exception( $msg );
+    }
+  }
+
+  public static function factoryCollection( Collection $collection, $id )
   {
     // check existence of doc by id
-    if ($metadata = $collection->getInfodb()->getDocumentMetadata( $id )) {
+    if ( $metadata = $collection->getInfodb()->getDocumentMetadata( $id ) ) {
       return new Document( $collection, $id, $metadata );
     }
-    
+
     return false;
+  }
+
+  public static function factoryNodeDocument( Node_Document $node )
+  {
+    // TODO what's the difference betw Infodb::getDocumentMetadata() and Infodb::getNode() ?
+    $id = $node->getId();
+    $root_id_length = strpos( $id, '.' );
+    if ($root_id_length) {
+      $id = substr( $id, 0, $root_id_length );
+    }
+    else {
+      $id = substr( $id, 0 );
+    }
+
+    return Document::factoryCollection( $node->getCollection(), $id );
   }
 }

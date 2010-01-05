@@ -2,8 +2,6 @@
 
 class Node_Document extends Node
 {
-  protected $document;
-  
   protected function recurse()
   {
   }

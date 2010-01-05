@@ -27,10 +27,26 @@ abstract class Node
   
   public function format()
   {
-    //TODO: change this
-    return $this->id;
+    //TODO: placeholder - write NodeFormatter or the like
+    if ($this->getChildren()) {
+      return $this->id;
+    }
+    else {
+      $url = Document::factory($this)->getUrl();
+      return html::anchor( $url, $this->id );
+    }
   }
   
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function getCollection()
+  {
+    return $this->collection;
+  }
+
   public function getChildren()
   {
     return $this->children;

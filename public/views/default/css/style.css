@@ -66,7 +66,7 @@ dl{
 	background: #5ED0BD;
   padding: 0 30px 0 30px;
   display: table;
-  #position: relative;
+  /* position: relative; */
   overflow: hidden;
   height: 135px;
   width: 690px;
@@ -75,8 +75,8 @@ dl{
 
 #header-collection-title,
 #header-emeraldview-title{
-  #position: absolute;
-  #top: 50%;
+  /*position: absolute;
+  top: 50%; */
   display: table-cell;
   margin: 0;
   line-height: 1.1em;
@@ -89,8 +89,8 @@ dl{
 
 #header-collection-title div,
 #header-emeraldview-title div{
-  #position: relative;
-  #top: -50%;
+  /* position: relative;
+  top: -50%; */
 }
 
 #header-emeraldview-title{
