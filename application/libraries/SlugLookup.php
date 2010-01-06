@@ -29,7 +29,7 @@ class SlugLookup
 
     $elements_string = serialize( $elements );
 
-    $query = 'SELECT value FROM metadata WHERE key="slug_metadata_elements"';
+    $query = 'SELECT value FROM metadata WHERE key="elements_string"';
     $stmt = $this->pdo->query( $query );
 
     if (! $stmt || $stmt->fetchColumn() != $elements_string) {
@@ -91,7 +91,7 @@ class SlugLookup
     $query = <<<EOF
       DROP TABLE IF EXISTS metadata; DROP TABLE IF EXISTS slugs;
       CREATE TABLE metadata (key VARCHAR, value VARCHAR);
-      CREATE TABLE slugs (key VARCHAR(25), base_slug VARCHAR, slug VARCHAR);
+      CREATE TABLE slugs (key VARCHAR(50), slug_base VARCHAR, slug VARCHAR);
       INSERT INTO metadata VALUES ('build_date', '$build_date');
 EOF;
 
@@ -108,7 +108,39 @@ EOF;
 
   public function buildIncremental()
   {
+    $all_nodes = $this->collection->getInfodb()->getAllNodes();
     
+    Benchmark::start('a');
+    foreach ( $all_nodes as $key => $node ) {
+      if ( substr( $key, 0, 2 ) == 'CL' || strpos( $key, '.' ) ) {
+        // only do documents
+        continue;
+      }
+
+      $query = 'SELECT key FROM slugs WHERE key=?';
+      $stmt = $this->pdo->prepare( $query );
+      $stmt->execute( array( $key ) );
+      
+      if (! $stmt->fetch()) {
+        // FIXME: use correct format
+        $slug_base = $node['Title'];
+        $slug = $node['Title'];
+        $query = 'INSERT INTO slugs VALUES (?, ?, ?)';
+        $stmt = $this->pdo->prepare( $query );
+        $stmt->execute( array( $key, $slug_base, $slug ) );
+        
+        // FIXME: error handling
+      }
+    }
+    Benchmark::stop('a');
+    var_dump(Benchmark::get('a'));exit;
+    /*
+     * foreach node
+     *   query db for slug
+     *   if not there, insert
+     * endforeach
+     *
+     */
 
     $this->unlock();
   }

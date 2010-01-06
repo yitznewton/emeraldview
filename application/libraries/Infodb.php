@@ -3,6 +3,7 @@
 abstract class Infodb
 {
   protected $collection;
+  protected $allNodes;
   
   abstract public function getDocumentMetadata( $id );
   abstract public function getClassifierMetadata();
@@ -12,8 +13,12 @@ abstract class Infodb
   protected function __construct( Collection $collection )
   {
     $this->collection = $collection;
+    $this->allNodes = $this->getAllNodes();
   }
   
+  abstract public function getNode( $key );
+  abstract public function getAllNodes();
+
   public static function factory( Collection $collection )
   {
     if ($collection->getCollectCfg()->getInfodbtype() == 'sqlite') {

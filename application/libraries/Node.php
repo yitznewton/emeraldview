@@ -17,8 +17,7 @@ abstract class Node
     $this->id = $node_id;
     
     $this->collection = $collection;
-    $this->data = $collection->getInfodb()
-                  ->getNode( $this->id );
+    $this->data = $collection->getInfodb()->getNode( $this->id );
     
     if (!$root_only) {
       $this->recurse();

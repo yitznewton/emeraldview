@@ -3,7 +3,7 @@
 class Infodb_Sqlite extends Infodb
 {
   protected $pdo;
-  protected $data;
+  protected $allNodes;
   
   public function getDocumentMetadata( $id )
   {
@@ -32,8 +32,6 @@ class Infodb_Sqlite extends Infodb
   
   protected function __construct( Collection $collection )
   {
-    parent::__construct( $collection );
-    
     $infodb_file = $collection->getGreenstoneDirectory() . '/index/text/'
                  . $collection->getName() . '.db'
                  ;
@@ -44,7 +42,8 @@ class Infodb_Sqlite extends Infodb
     }
     
     $this->pdo = new PDO('sqlite:' . $infodb_file);
-    $this->data = $this->getAllNodes();
+
+    parent::__construct( $collection );
   }
   
   public function getClassifierIds()
@@ -71,8 +70,12 @@ class Infodb_Sqlite extends Infodb
     return Infodb_Sqlite::parseFields( $data );
   }
   
-  protected function getAllNodes()
+  public function getAllNodes()
   {
+    if ($this->allNodes) {
+      return $this->allNodes;
+    }
+
     $q = 'SELECT key, value FROM data';
     $stmt = $this->pdo->query( $q );
     $data = $stmt->fetchAll( PDO::FETCH_ASSOC );
