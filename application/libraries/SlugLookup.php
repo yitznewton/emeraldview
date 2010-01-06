@@ -46,7 +46,7 @@ class SlugLookup
 
     if (! $stmt) {
       // database corrupt or absent; full build
-      $this->buildFull;
+      $this->buildFull();
     }
     
     $build_date = $stmt->fetchColumn();
@@ -91,7 +91,7 @@ class SlugLookup
     $query = <<<EOF
       DROP TABLE IF EXISTS metadata; DROP TABLE IF EXISTS slugs;
       CREATE TABLE metadata (key VARCHAR, value VARCHAR);
-      CREATE TABLE slugs (key VARCHAR(50), slug_base VARCHAR, slug VARCHAR);
+      CREATE TABLE slugs (key VARCHAR(50), slug VARCHAR);
       INSERT INTO metadata VALUES ('build_date', '$build_date');
 EOF;
 
@@ -108,8 +108,11 @@ EOF;
 
   public function buildIncremental()
   {
+    $this->lock();
+
     $all_nodes = $this->collection->getInfodb()->getAllNodes();
-    
+
+    // TODO: check the slug formulation code; written without thorough testing, e.g. duplicate slug detection
     foreach ( $all_nodes as $key => $node ) {
       if ( substr( $key, 0, 2 ) == 'CL' || strpos( $key, '.' ) ) {
         // only do documents
@@ -117,19 +120,21 @@ EOF;
       }
 
       $query = 'SELECT slug FROM slugs';
-      $stmt = $this->pdo->exec( $query );
-      $existing_slugs = $stmt->fetchAll();
+      $stmt = $this->pdo->prepare( $query );
+      $stmt->execute();
+      $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN );
 
       $query = 'SELECT key FROM slugs WHERE key=?';
       $stmt = $this->pdo->prepare( $query );
-      $stmt->execute( array( $key ) );
       
-      if (! $stmt->fetch() ) {
-        // FIXME: use correct format
+      if (! $stmt->execute( array($key) ) ) {
+        // no slug for this document yet
+
+        // FIXME: use specified metadata fields
         $slug_base = self::toSlug( $node['Title'] );
         $slug = $slug_base;
 
-        // check for existing identical slugs
+        // check for existing identical slugs and suffix them
         $count = 2;
         while (isset( $existing_slugs[ $slug ] )) {
           $slug = "$slug_base-$count";
@@ -142,7 +147,7 @@ EOF;
 
         // FIXME: error handling
 
-        // $existing_slugs[] = $slug;
+        $existing_slugs[] = $slug;
       }
     }
 
@@ -252,7 +257,7 @@ EOF;
       );
     }
 
-    $pattern = '/\bs(' . join('|', $stopwords) . ')-?\b/';
+    $pattern = '/\b(' . join('|', $stopwords) . ')-?\b/';
 
     return preg_replace( $pattern, '', $string );
   }
