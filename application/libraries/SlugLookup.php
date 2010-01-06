@@ -110,37 +110,41 @@ EOF;
   {
     $all_nodes = $this->collection->getInfodb()->getAllNodes();
     
-    Benchmark::start('a');
     foreach ( $all_nodes as $key => $node ) {
       if ( substr( $key, 0, 2 ) == 'CL' || strpos( $key, '.' ) ) {
         // only do documents
         continue;
       }
 
+      $query = 'SELECT slug FROM slugs';
+      $stmt = $this->pdo->exec( $query );
+      $existing_slugs = $stmt->fetchAll();
+
       $query = 'SELECT key FROM slugs WHERE key=?';
       $stmt = $this->pdo->prepare( $query );
       $stmt->execute( array( $key ) );
       
-      if (! $stmt->fetch()) {
+      if (! $stmt->fetch() ) {
         // FIXME: use correct format
-        $slug_base = $node['Title'];
-        $slug = $node['Title'];
-        $query = 'INSERT INTO slugs VALUES (?, ?, ?)';
+        $slug_base = self::toSlug( $node['Title'] );
+        $slug = $slug_base;
+
+        // check for existing identical slugs
+        $count = 2;
+        while (isset( $existing_slugs[ $slug ] )) {
+          $slug = "$slug_base-$count";
+          $count++;
+        }
+
+        $query = 'INSERT INTO slugs VALUES (?, ?)';
         $stmt = $this->pdo->prepare( $query );
-        $stmt->execute( array( $key, $slug_base, $slug ) );
-        
+        $stmt->execute( array( $key, $slug ) );
+
         // FIXME: error handling
+
+        // $existing_slugs[] = $slug;
       }
     }
-    Benchmark::stop('a');
-    var_dump(Benchmark::get('a'));exit;
-    /*
-     * foreach node
-     *   query db for slug
-     *   if not there, insert
-     * endforeach
-     *
-     */
 
     $this->unlock();
   }
@@ -203,5 +207,53 @@ EOF;
     }
 
     return true;
+  }
+
+  protected static function toSlug( $string, $limit = 0, $spacer = '-' )
+  {
+    if (function_exists('iconv')) {
+      $string = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
+    }
+
+    $slug = strtolower($string);
+    $slug = preg_replace('/[^a-z0-9-]/', $spacer, $slug);
+    $slug = trim( $slug, $spacer );
+    $slug = preg_replace("/$spacer+/", $spacer, $slug);
+    $slug = self::stripStopwords($slug);
+
+    if ($limit && is_int($limit)) {
+      if (
+        strlen($slug) > $limit
+        && substr($slug, $limit, 1) != '-'
+      ) {
+        // chopped in middle of word
+        preg_match("/^.{0,$limit}(?=-)/", $slug, $matches);
+        $slug = $matches[0];
+      }
+      else {
+        $slug = substr($slug, 0, $limit);
+      }
+    }
+
+    return $slug;
+  }
+
+  protected static function stripStopwords( $string, $stopwords = array() )
+  {
+    // TODO: perhaps make Collection-specific, overridden in collections.yml
+    // to allow for l10n
+    if (!$stopwords) {
+      $stopwords = array(
+        'an',
+        'a',
+        'the',
+        'of',
+        'and',
+      );
+    }
+
+    $pattern = '/\bs(' . join('|', $stopwords) . ')-?\b/';
+
+    return preg_replace( $pattern, '', $string );
   }
 }
