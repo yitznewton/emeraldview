@@ -57,6 +57,11 @@ class Collection
   {
     return $this->collectCfg;
   }
+
+  public function getBuildCfg()
+  {
+    return $this->buildCfg;
+  }
   
   public function getInfodb()
   {

@@ -5,6 +5,7 @@ abstract class BuildCfg
   private function __construct() {}
 
   abstract public function getIndexes();
+  abstract public function getBuildDate();
   
   public static function factory( Collection $collection )
   {
