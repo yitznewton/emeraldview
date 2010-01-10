@@ -171,9 +171,8 @@ class Collection
     try {
       return new Collection( $name );
     }
-    catch (Exception $e) {
-      throw $e;  //FIXME
-      Kohana::log('error', $e->getMessage());
+    catch (InvalidArgumentException $e) {
+      // TODO: add custom Exception subclasses?
       return false;
     }
   }
