@@ -59,15 +59,22 @@ class SlugLookup
     }
   }
 
-  protected function save( stdClass $slug )
+  public function retrieveSlug( $id )
   {
+    $query = 'SELECT slug FROM slugs WHERE key=?';
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( array( $id ) );
+
+    return $stmt->fetchColumn();
   }
 
   public function retrieveId( $slug_string )
   {
-    // if already set, return
+    $query = 'SELECT key FROM slugs WHERE slug=?';
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( array( $slug_string ) );
 
-    // not set - compose based on slug metadata config
+    return $stmt->fetchColumn();
   }
 
   protected function buildFull()

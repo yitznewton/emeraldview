@@ -9,7 +9,8 @@ abstract class Node
   
   abstract protected function recurse();
   abstract protected function getChild( $node_id );
-  
+  abstract public function format();
+
   protected function __construct(
     Collection $collection, $node_id = null, $root_only = false
   )
@@ -21,18 +22,6 @@ abstract class Node
     
     if (!$root_only) {
       $this->recurse();
-    }
-  }
-  
-  public function format()
-  {
-    //TODO: placeholder - write NodeFormatter or the like
-    if ($this->getChildren()) {
-      return $this->id;
-    }
-    else {
-      $url = Document::factory($this)->getUrl();
-      return html::anchor( $url, $this->id );
     }
   }
   

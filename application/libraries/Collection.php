@@ -7,6 +7,7 @@ class Collection
   protected $classifiers;
   protected $collectCfg;
   protected $infodb;
+  protected $slugLookup;
   
   protected function __construct( $name )
   {
@@ -34,6 +35,7 @@ class Collection
     $this->collectCfg = CollectCfg::factory( $this );
     $this->infodb     = Infodb::factory( $this );
     $this->buildCfg   = BuildCfg::factory( $this );
+    $this->slugLookup = new SlugLookup( $this );
     // $this->archive    = GreenstoneArchive::factory( $this );
   }
   
@@ -66,6 +68,11 @@ class Collection
   public function getInfodb()
   {
     return $this->infodb;
+  }
+
+  public function getSlugLookup()
+  {
+    return $this->slugLookup;
   }
   
   public function getName()

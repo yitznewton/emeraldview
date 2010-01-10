@@ -38,7 +38,7 @@ class Document
     if (!$metadata) {
       $error = 'Section metadata missing ('
         . $this->getCollection()->getGreenstoneName() . '/'
-        . $this->getId();
+        . $this->id;
 
       if ($subnode_id) {
         $error .= '.' . $subnode_id;
@@ -66,10 +66,14 @@ class Document
   
   public function getId()
   {
+    throw new Exception('do we need this function?');
   }
   
   public function getUrl()
   {
+    $slug = $this->collection->getSlugLookup()->retrieveSlug( $this->id );
+
+    return $this->collection->getUrl() . '/view/' . $slug;
   }
   
   public function getSourceDocumentUrl( $section_id = null )
@@ -86,7 +90,7 @@ class Document
   
   public static function factory( $object, $id = null )
   {
-    // compensate for lack of __callStatic in <5.3
+    // compensate for lack of __callStatic() in <5.3
     switch (get_class( $object )) {
       case 'Node_Document':
         return Document::factoryNodeDocument( $object );

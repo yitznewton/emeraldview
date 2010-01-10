@@ -10,6 +10,18 @@ class Node_Document extends Node
   {
   }
   
+  public function format()
+  {
+    //TODO: placeholder - write NodeFormatter or the like
+    if ($this->getChildren()) {
+      return $this->id;
+    }
+    else {
+      $url = Document::factory($this)->getUrl();
+      return html::anchor( $url, $this->id );
+    }
+  }
+
   public static function factory(
     Collection $collection, $node_id, $root_only = false
   )

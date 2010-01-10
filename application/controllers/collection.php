@@ -44,6 +44,18 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'tree',            $classifier->getTree()->getFormatter()->html() );
   }
   
+  public function view( $collection_name, $slug )
+  {
+    $collection = $this->loadCollection( $collection_name );
+    $document_id = $collection->getSlugLookup()->retrieveId( $slug );
+    $document = Document::factory( $collection, $document_id );
+
+    $this->view = new View( $this->theme . '/view' );
+
+    $this->template->set_global( 'collection',      $collection );
+    $this->template->set_global( 'document',        $document );
+  }
+
 	public function __call($method, $arguments)
 	{
 		/*
