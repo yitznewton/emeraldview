@@ -23,6 +23,7 @@ class SlugLookup
     }
 
     $this->pdo = new PDO( 'sqlite:' . $db_filename );
+    $this->pdo->setAttribute( PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION );
     
     ($elements = $collection->getConfig('slug_metadata_elements'))
       or $elements = array( 'Title' );

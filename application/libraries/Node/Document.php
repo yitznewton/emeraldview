@@ -34,7 +34,7 @@ class Node_Document extends Node
   
   protected function getChild( $node_id )
   {
-    return Node_Document::factory( $this->collection, $node_id, true );
+    return Node_Document::factory( $this->collection, $node_id );
   }
   
   public function format()

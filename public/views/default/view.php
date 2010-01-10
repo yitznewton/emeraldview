@@ -1,10 +1,8 @@
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#language-select-submit').hide();
-    $("#toc-tree").treeview({
-      animated:  "fast",
+    $(".browse-tree").treeview({
       collapsed: true,
-      persist:   "location"
+      animated:  "fast"
     });
   });
 </script>
