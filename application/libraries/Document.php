@@ -87,6 +87,16 @@ class Document
   public function isPaged()
   {
   }
+
+  public function getTree()
+  {
+    if ($this->tree) {
+      return $this->tree;
+    }
+
+    // TODO: should Node_Foo::factory() get refactored to just take the base Document/Classifier object?
+    return $this->tree = Node_Document::factory( $this->collection, $this->id );
+  }
   
   public static function factory( $object, $id = null )
   {

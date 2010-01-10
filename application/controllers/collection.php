@@ -64,6 +64,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'document',        $document );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
+    $this->template->set_global( 'tree',            $document->getTree()->getFormatter()->html() );
   }
 
 	public function __call($method, $arguments)

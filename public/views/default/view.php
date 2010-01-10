@@ -33,16 +33,8 @@
 <?php endif; ?>
 
 
-<?php
-
-// begin TOC section
-
-$toc = get_toc( $document, $section_id );
-$document_root  = $document->getCollection()->getUrl();
-$document_root .= 'view/' . $document->getMetadataElement('slug');
-
-?>
-<?php if ($toc): ?>
+<?php // begin TOC section ?>
+<?php if ($tree): ?>
   <div id="toc">
     <div id="toc-header"><?php echo L10n::_('Table of contents') ?>
       <span class="toc-toggle" id="toc-toggle-hide">
@@ -56,6 +48,8 @@ $document_root .= 'view/' . $document->getMetadataElement('slug');
     <div id="toc-container">
       <div id="tree-pager">
         <?php
+          // FIXME: refactor this whole mess
+          /*
           $prev_url = $document->getIntervalUrl( $section_id, -1 );
           $next_url = $document->getIntervalUrl( $section_id, 1 );
 
@@ -80,10 +74,11 @@ $document_root .= 'view/' . $document->getMetadataElement('slug');
               'span', L10n::_('Next page'), array('class' => 'inactive')
             );
           }
+          */
         ?>
       </div>
 
-      <?php echo $toc ?>
+      <?php echo $tree ?>
 
     </div>
   </div>
