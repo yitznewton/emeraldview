@@ -18,12 +18,18 @@ class SlugLookup
     $db_filename = $this->filepath . $collection->getName()
                 . '_slugs.db';
 
-    if (! file_exists( $db_filename ) && ! is_writable( $this->filepath )) {
+    $is_new_db = file_exists( $db_filename ) ? false : true;
+    
+    if ($is_new_db && ! is_writable( $this->filepath )) {
       throw new Exception("Could not write to data path $this->filepath");
     }
 
     $this->pdo = new PDO( 'sqlite:' . $db_filename );
     $this->pdo->setAttribute( PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION );
+
+    if ($is_new_db) {
+      return $this->buildFull();
+    }
     
     ($elements = $collection->getConfig('slug_metadata_elements'))
       or $elements = array( 'Title' );
@@ -36,27 +42,30 @@ class SlugLookup
     if (! $stmt || $stmt->fetchColumn() != $elements_string) {
       // changed metadata settings since last build; backup and rebuild
       copy( $db_filename, $db_filename . '.bak' );
-      $this->buildFull();
-
-      return;
+      return $this->buildFull();
     }
 
 
     $query  = 'SELECT value FROM metadata WHERE key="build_date"';
-    $stmt = $this->pdo->query( $query );
+
+    try {
+      $stmt = $this->pdo->query( $query );
+    }
+    catch (PDOException $e) {
+      // database corrupt or absent; full build
+      return $this->buildFull();
+    }
 
     if (! $stmt) {
-      // database corrupt or absent; full build
-      $this->buildFull();
+      copy( $db_filename, $db_filename . '.bak' );
+      return $this->buildFull();
     }
     
     $build_date = $stmt->fetchColumn();
 
     if ($collection->getBuildCfg()->getBuildDate() > $build_date) {
       // collection was built since last slug build; do incremental build
-      $this->buildIncremental();
-
-      return;
+      return $this->buildIncremental();
     }
   }
 

@@ -35,6 +35,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
     
+    $tree = NodeTreeFormatter::format( $classifier->getTree() );
     $node_formatter = $classifier->getNodeFormatter();
 
     $this->view = new View( $this->theme . '/browse' );
@@ -47,7 +48,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'classifier',      $classifier );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
-    $this->template->set_global( 'tree',            $classifier->getTree()->getFormatter()->html() );
+    $this->template->set_global( 'tree',            $tree );
   }
   
   public function view( $collection_name, $slug )

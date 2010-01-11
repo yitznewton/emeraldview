@@ -1,20 +1,13 @@
 <?php
 
-class Document
+class DocumentSection
 {
-  protected $id;
-  protected $collection;
-  protected $metadata;
+  protected $node;
   protected $tree;
   
-  protected function __construct(
-    Collection $collection, $id, array $metadata
-  )
+  protected function __construct( Node $node )
   {
-    $this->id = $id;
-    $this->collection = $collection;
-    // TODO what is this??  shouldn't this class be retrieving its own metadata?
-    $this->metadata = $metadata;
+    $this->node = $node;
   }
   
   public function getCoverUrl()
@@ -72,9 +65,9 @@ class Document
   
   public function getUrl()
   {
-    $slug = $this->collection->getSlugLookup()->retrieveSlug( $this->id );
+    $slug = $this->node->getCollection()->getSlugLookup()->retrieveSlug( $this->node->getId() );
 
-    return $this->collection->getUrl() . '/view/' . $slug;
+    return $this->node->getCollection()->getUrl() . '/view/' . $slug;
   }
   
   public function getSourceDocumentUrl( $section_id = null )
@@ -99,32 +92,7 @@ class Document
     return $this->tree = Node_Document::factory( $this->collection, $this->id );
   }
   
-  public static function factory( $object, $id = null )
-  {
-    // compensate for lack of __callStatic() in <5.3
-    switch (get_class( $object )) {
-      case 'Node_Document':
-        return Document::factoryNodeDocument( $object );
-      case 'Collection':
-        return Document::factoryCollection( $object, $id );
-      default:
-        $msg = 'First argument must be an instance of Node_Document '
-             . 'or Collection';
-        throw new Exception( $msg );
-    }
-  }
-
-  public static function factoryCollection( Collection $collection, $id )
-  {
-    // check existence of doc by id
-    if ( $metadata = $collection->getInfodb()->getDocumentMetadata( $id ) ) {
-      return new Document( $collection, $id, $metadata );
-    }
-
-    return false;
-  }
-
-  public static function factoryNodeDocument( Node_Document $node )
+  public static function factory( Node $node )
   {
     // TODO what's the difference betw Infodb::getDocumentMetadata() and Infodb::getNode() ?
     $id = $node->getId();
@@ -136,6 +104,6 @@ class Document
       $id = substr( $id, 0 );
     }
 
-    return Document::factoryCollection( $node->getCollection(), $id );
+    return new DocumentSection( $node );
   }
 }
