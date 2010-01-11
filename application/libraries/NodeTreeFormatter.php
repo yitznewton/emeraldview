@@ -22,13 +22,24 @@ class NodeTreeFormatter
   protected static function renderNode( Node $node, NodeFormatter $node_formatter )
   {
     $output = "<li>\n";
-    $output .= $node_formatter->format( $node );
+    
+    $node_output = $node_formatter->format( $node );
+
+    if (
+      $node instanceof Node_Document
+      && strpos( $node_output, '<a' ) === false
+    ) {
+      $url = DocumentSection::factory( $node )->getUrl();
+      $node_output = "<a href=\"$url\">$node_output</a>";
+    }
+
+    $output .= $node_output;
 
     if ($children = $node->getChildren()) {
       $output .= "<ul>\n";
       
       foreach ($children as $child) {
-        $output .= self::renderNode( $child );
+        $output .= self::renderNode( $child, $node_formatter );
       }
       
       $output .= "</ul>\n";

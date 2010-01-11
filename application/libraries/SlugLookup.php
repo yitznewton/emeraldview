@@ -37,14 +37,21 @@ class SlugLookup
     $elements_string = serialize( $elements );
 
     $query = 'SELECT value FROM metadata WHERE key="elements_string"';
-    $stmt = $this->pdo->query( $query );
+    
+    try {
+      $stmt = $this->pdo->query( $query );
+    }
+    catch (PDOException $e) {
+      // database corrupt or absent; full build
+      copy( $db_filename, $db_filename . '.bak' );
+      return $this->buildFull();
+    }
 
     if (! $stmt || $stmt->fetchColumn() != $elements_string) {
       // changed metadata settings since last build; backup and rebuild
       copy( $db_filename, $db_filename . '.bak' );
       return $this->buildFull();
     }
-
 
     $query  = 'SELECT value FROM metadata WHERE key="build_date"';
 
@@ -120,7 +127,7 @@ EOF;
 
     // go through all [nodes?] and formulate & store slugs for them
 
-    $this->buildIncremental();
+    return $this->buildIncremental();
   }
 
   public function buildIncremental()
@@ -143,8 +150,9 @@ EOF;
 
       $query = 'SELECT key FROM slugs WHERE key=?';
       $stmt = $this->pdo->prepare( $query );
-      
-      if (! $stmt->execute( array($key) ) ) {
+      $stmt->execute( array($key) );
+
+      if (! $stmt->fetchColumn() ) {
         // no slug for this document yet
 
         // FIXME: use specified metadata fields

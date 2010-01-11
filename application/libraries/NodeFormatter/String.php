@@ -47,7 +47,7 @@ class NodeFormatter_String extends NodeFormatter
     }
      */
 
-    $url = $node->getUrl();
+    $url = DocumentSection::factory( $node )->getUrl();
 
     if ($url) {
       $text = str_replace(
