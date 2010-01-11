@@ -35,6 +35,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
     
+    $node_formatter = $classifier->getNodeFormatter();
+
     $this->view = new View( $this->theme . '/browse' );
     
     $this->template->set_global( 'collection',      $collection );
@@ -60,6 +62,26 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $document = Document::factory( $collection, $document_id );
 
+    if (!$document) {
+      url::redirect( $collection->getUrl() );
+    }
+
+    if ($collection->getConfig( 'document_tree_format' )) {
+      $node_formatter = new NodeFormatter_String(
+        $collection->getConfig( 'document_tree_format' )
+      );
+    }
+    elseif ($collection->getConfig( 'document_tree_format_function' )) {
+      $node_formatter = new NodeFormatter_Function(
+        $collection->getConfig( 'document_tree_format_function' )
+      );
+    }
+    else {
+      $node_formatter = new NodeFormatter_String( '[Title]' );
+    }
+
+    //$document->getTree()->getFormatter()->html()
+
     $this->view = new View( $this->theme . '/view' );
 
     $this->template->set_global( 'collection',      $collection );
@@ -69,6 +91,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'document',        $document );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'tree',            $document->getTree()->getFormatter()->html() );
+    $this->template->set_global( 'tree',            $tree );
   }
 }

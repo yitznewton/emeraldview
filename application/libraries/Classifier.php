@@ -45,4 +45,23 @@ class Classifier
     
     return $this->tree = Node_Classifier::factory( $this->getCollection(), $this->id );
   }
+
+  public function getNodeFormatter()
+  {
+    $name = $this->getName();
+
+    if ($this->getCollection()->getConfig( "classifiers.$name.format" )) {
+      return new NodeFormatter_String(
+        $this->getCollection()->getConfig( "classifiers.$name.format" )
+      );
+    }
+    elseif ($this->getCollection()->getConfig( "classifiers.$name.format_function" )) {
+      return new NodeFormatter_Function(
+        $this->getCollection()->getConfig( "classifiers.$name.format_function" )
+      );
+    }
+    else {
+      return new NodeFormatter();
+    }
+  }
 }

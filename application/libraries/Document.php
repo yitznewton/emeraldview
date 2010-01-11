@@ -13,13 +13,14 @@ class Document
   {
     $this->id = $id;
     $this->collection = $collection;
+    // TODO what is this??  shouldn't this class be retrieving its own metadata?
     $this->metadata = $metadata;
   }
   
   public function getCoverUrl()
   {
   }
-  
+
   public function getMetadata( $subnode_id = null )
   {
     $node_id = $subnode_id ? "$this->id.$subnode_id" : $this->id;
