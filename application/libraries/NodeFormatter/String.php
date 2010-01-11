@@ -62,7 +62,7 @@ class NodeFormatter_String extends NodeFormatter
     }
 
     if ($node->getChildren()) {
-      $text = str_ireplace('[numleafdocs]', count( $this->getChildren() ), $text);
+      $text = str_ireplace('[numleafdocs]', count( $node->getChildren() ), $text);
     }
 
     // parse for remaining, generic metadata tokens

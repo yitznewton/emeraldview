@@ -51,7 +51,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'tree',            $tree );
   }
   
-  public function view( $collection_name, $slug )
+  public function view( $collection_name, $slug, $subnode_id = '' )
   {
     $collection = $this->loadCollection( $collection_name );
 
@@ -61,9 +61,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
-    $document = Document::factory( $collection, $document_id );
+    $document_id .= $subnode_id;
 
-    if (!$document) {
+    $node = Node_Document::factory( $collection, $document_id );
+    
+    if (!$node) {
       url::redirect( $collection->getUrl() );
     }
 
@@ -81,13 +83,14 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $node_formatter = new NodeFormatter_String( '[Title]' );
     }
 
-    //$document->getTree()->getFormatter()->html()
+    $document = DocumentSection::factory( $node );
+    $tree = NodeTreeFormatter::format( $document->getTree(), $node_formatter );
 
     $this->view = new View( $this->theme . '/view' );
 
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
-    $this->template->set_global( 'page_title',      $document->getMetadataElement('Title')
+    $this->template->set_global( 'page_title',      $node->getField('Title')
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'document',        $document );

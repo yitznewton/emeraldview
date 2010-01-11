@@ -8,6 +8,17 @@ class DocumentSection
   protected function __construct( Node $node )
   {
     $this->node = $node;
+
+    $id = $node->getId();
+    $root_id_length = strpos( $id, '.' );
+
+    if ($root_id_length) {
+      $root_id = substr( $id, 0, $root_id_length );
+      $this->tree = Node_Document::factory( $node->getCollection(), $root_id );
+    }
+    else {
+      $this->tree = $node;
+    }
   }
   
   public function getCoverUrl()
@@ -29,6 +40,11 @@ class DocumentSection
 
     return $this->node->getCollection()->getUrl() . '/view/' . $slug;
   }
+
+  public function getNode()
+  {
+    return $this->node;
+  }
   
   public function getSourceDocumentUrl( $section_id = null )
   {
@@ -44,26 +60,11 @@ class DocumentSection
 
   public function getTree()
   {
-    if ($this->tree) {
-      return $this->tree;
-    }
-
-    // TODO: should Node_Foo::factory() get refactored to just take the base Document/Classifier object?
-    return $this->tree = Node_Document::factory( $this->collection, $this->id );
+    return $this->tree;
   }
   
   public static function factory( Node $node )
   {
-    // TODO what's the difference betw Infodb::getDocumentMetadata() and Infodb::getNode() ?
-    $id = $node->getId();
-    $root_id_length = strpos( $id, '.' );
-    if ($root_id_length) {
-      $id = substr( $id, 0, $root_id_length );
-    }
-    else {
-      $id = substr( $id, 0 );
-    }
-
     return new DocumentSection( $node );
   }
 }

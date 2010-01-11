@@ -22,7 +22,7 @@
 
 <div id="document">
 
-<h1><?php echo $document->getMetadataElement('Title') ?></h1>
+<h1><?php echo $document->getNode()->getField('Title') ?></h1>
 
 <?php if ($document->getCoverUrl()): ?>
 <div id="cover-image">
