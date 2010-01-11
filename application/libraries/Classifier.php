@@ -17,6 +17,17 @@ class Classifier
     return $this->collection;
   }
   
+  public function getConfig( $subnode = null )
+  {
+    $node = 'classifiers.' . $this->id;
+    
+    if ($subnode) {
+      $node .= '.' . $subnode;
+    }
+    
+    return $this->collection->getConfig( $node );
+  }
+
   public function getId()
   {
     return $this->id;

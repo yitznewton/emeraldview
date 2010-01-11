@@ -35,8 +35,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
     
-    $tree = NodeTreeFormatter::format( $classifier->getTree() );
     $node_formatter = $classifier->getNodeFormatter();
+    $tree = NodeTreeFormatter::format( $classifier->getTree(), $node_formatter );
 
     $this->view = new View( $this->theme . '/browse' );
     

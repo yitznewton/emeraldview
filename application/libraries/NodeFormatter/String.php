@@ -26,8 +26,8 @@ class NodeFormatter_String extends NodeFormatter
   public function format( Node $node, $index = null )
   {
     $text = $node->getChildren()
-          ? $this->formatConfig[ 'branch' ]
-          : $this->formatConfig[ 'leaf'   ]
+          ? $this->branchFormat
+          : $this->leafFormat
           ;
 
     // FIXME this section
@@ -61,7 +61,7 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_replace( array('[a]', '[/a]'), '', $text );
     }
 
-    if ($this->getChildren()) {
+    if ($node->getChildren()) {
       $text = str_ireplace('[numleafdocs]', count( $this->getChildren() ), $text);
     }
 
