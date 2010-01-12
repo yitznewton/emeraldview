@@ -51,8 +51,14 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'tree',            $tree );
   }
   
-  public function view( $collection_name, $slug, $subnode_id = '' )
+  public function view( $collection_name, $slug )
   {
+    $subnode_id = '';
+    if (count( func_get_args() ) > 2) {
+      $subnodes = array_slice( func_get_args(), 2 );
+      $subnode_id = '.' . implode( '.', $subnodes );
+    }
+
     $collection = $this->loadCollection( $collection_name );
 
     $document_id = $collection->getSlugLookup()->retrieveId( $slug );
