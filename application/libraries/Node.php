@@ -30,6 +30,16 @@ abstract class Node
     return $this->id;
   }
 
+  public function getRootId()
+  {
+    if (strpos( $this->id, '.' )) {
+      return substr( $this->id, 0, strpos( $this->id, '.' ) );
+    }
+    else {
+      return $this->id;
+    }
+  }
+
   public function getCollection()
   {
     return $this->collection;

@@ -45,7 +45,7 @@
 
     <div id="toc-container">
       <div id="tree-pager">
-        <?php
+        <?php echo $tree_pager;
           // FIXME: refactor this whole mess
           /*
           $prev_url = $document->getIntervalUrl( $section_id, -1 );

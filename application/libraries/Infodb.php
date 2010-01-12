@@ -18,6 +18,7 @@ abstract class Infodb
   
   abstract public function getNode( $key );
   abstract public function getAllNodes();
+  abstract public function getRelatedNodeByDocnum( Node_Document $node, $docnum);
 
   public static function factory( Collection $collection )
   {

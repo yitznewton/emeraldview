@@ -32,6 +32,32 @@ class Node_Document extends Node
     }
   }
   
+  public function getNextNode()
+  {
+    return $this->getNodeFromInterval( 1 );
+  }
+
+  public function getPreviousNode()
+  {
+    return $this->getNodeFromInterval( -1 );
+  }
+
+  protected function getNodeFromInterval( $interval )
+  {
+    if (!is_int( $interval )) {
+      throw new Exception('Argument must be an integer');
+    }
+
+    $starting_docnum = (int) $this->getField( 'docnum' );
+    $new_docnum = $starting_docnum + $interval;
+
+    // use ad hoc function rather than write a whole ORM mapping
+    $new_node = $this->collection->getInfodb()
+                ->getRelatedNodeByDocnum( $this, $new_docnum );
+
+    return $new_node;
+  }
+
   protected function getChild( $node_id )
   {
     return Node_Document::factory( $this->collection, $node_id );

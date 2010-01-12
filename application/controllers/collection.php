@@ -54,6 +54,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function view( $collection_name, $slug )
   {
     $subnode_id = '';
+
     if (count( func_get_args() ) > 2) {
       $subnodes = array_slice( func_get_args(), 2 );
       $subnode_id = '.' . implode( '.', $subnodes );
@@ -89,8 +90,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $node_formatter = new NodeFormatter_String( '[Title]' );
     }
 
-    $document = DocumentSection::factory( $node );
-    $tree = NodeTreeFormatter::format( $document->getTree(), $node_formatter );
+    $document_section = DocumentSection::factory( $node );
+    $tree = NodeTreeFormatter::format( $document_section->getTree(), $node_formatter );
 
     $this->view = new View( $this->theme . '/view' );
 
@@ -99,8 +100,9 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'page_title',      $node->getField('Title')
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
-    $this->template->set_global( 'document',        $document );
+    $this->template->set_global( 'document',        $document_section );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree',            $tree );
+    $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
   }
 }

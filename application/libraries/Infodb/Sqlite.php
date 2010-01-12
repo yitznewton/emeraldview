@@ -99,6 +99,40 @@ class Infodb_Sqlite extends Infodb
     return $all_nodes;
   }
   
+  public function getRelatedNodeByDocnum( Node_Document $node, $docnum)
+  {
+    if (!is_int( $docnum )) {
+      throw new Exception( 'Second argument must be an integer' );
+    }
+
+    $params = array(
+      strlen( $node->getRootId() ),
+      $node->getRootId(),
+      "%<docnum>$docnum%"
+    );
+
+    $query  = 'SELECT key, value FROM data ';
+    $query .= "WHERE SUBSTR(key, 1, ?)=? ";
+    $query .= "AND value LIKE ?";
+
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( $params );
+    
+    $results = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+    if (!$results) {
+      return false;
+    }
+
+    foreach ($results as $node_data) {
+      if (strpos($node_data['value'], "<docnum>$docnum\n")) {
+        return Node_Document::factory( $node->getCollection(), $node_data['key'] );
+      }
+    }
+
+    return false;
+  }
+
   public static function parseFields( $blob )
   {
     $metadata_pattern = '/ \< ([^\>]+) \> (.*) /x';

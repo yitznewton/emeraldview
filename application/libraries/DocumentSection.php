@@ -38,8 +38,8 @@ class DocumentSection
   {
     $id = $this->node->getId();
 
-    if (strpos( $id, '.' )) {
-      $root_id = substr( $id, 0, strpos( $id, '.' ) );
+    if ( $this->node->getRootId() != $this->node->getId() ) {
+      $root_id = $this->node->getRootId();
       $section_id = substr( $id, strpos( $id, '.' ) + 1);
       $section_url = str_replace( '.', '/', $section_id );
     }
@@ -48,7 +48,8 @@ class DocumentSection
       $section_url = '';
     }
 
-    $slug = $this->node->getCollection()->getSlugLookup()->retrieveSlug( $root_id );
+    $slug = $this->node->getCollection()->getSlugLookup()
+            ->retrieveSlug( $root_id );
 
     return $this->node->getCollection()->getUrl() . "/view/$slug/$section_url";
   }
