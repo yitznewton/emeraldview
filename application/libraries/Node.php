@@ -40,6 +40,26 @@ abstract class Node
     }
   }
 
+  public function getSubnodeId()
+  {
+    if (strpos( $this->id, '.' )) {
+      return substr( $this->id, strpos( $this->id, '.' ) + 1 );
+    }
+    else {
+      return false;
+    }
+  }
+
+  public function getRootNode()
+  {
+    return self::factory( $this->collection, $this->getRootId() );
+  }
+
+  public function getRelatedNode( $subnode_id )
+  {
+    return self::factory( $this->collection, $this->getRootId() . $subnode_id );
+  }
+
   public function getCollection()
   {
     return $this->collection;

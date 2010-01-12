@@ -45,35 +45,7 @@
 
     <div id="toc-container">
       <div id="tree-pager">
-        <?php echo $tree_pager;
-          // FIXME: refactor this whole mess
-          /*
-          $prev_url = $document->getIntervalUrl( $section_id, -1 );
-          $next_url = $document->getIntervalUrl( $section_id, 1 );
-
-          if ($prev_url) {
-            echo html_element(
-              'a', L10n::_('Previous page'), array('href' => $prev_url)
-            );
-          }
-          else {
-            echo html_element(
-              'span', L10n::_('Previous page'), array('class' => 'inactive')
-            );
-          }
-
-          if ($next_url) {
-            echo html_element(
-              'a', L10n::_('Next page'), array('href' => $next_url)
-            );
-          }
-          else {
-            echo html_element(
-              'span', L10n::_('Next page'), array('class' => 'inactive')
-            );
-          }
-          */
-        ?>
+        <?php echo $tree_pager ?>
       </div>
 
       <?php echo $tree ?>
@@ -82,29 +54,20 @@
   </div>
 <?php endif; ?>
 
-<?php
+<?php if ($paged_urls): // begin PagedImage section ?>
 
-// end TOC section
-
-// begin paged image section
-$pager = get_pager_controls( $document, $section_id );
-
-if ($pager) {
-  $document_root = $document->getSluggedUrl();
-?>
-
-<div id="pager">
+<div id="image-pager">
 
 <h2>
-  Page <?php echo $document->getMetadataElement('Title', $section_id) ?>
+  Page <?php echo $document->getNode()->getField( $title ) ?>
 </h2>
 
 <form id="pager-form" method="get" action="<?php echo $document_root ?>"
 onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
-<?php if ($pager['prev_url']): ?>
+<?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
-  <a href="<?php echo $pager['prev_url'] ?>">
+  <a href="<?php echo $paged_urls['previous'] ?>">
     <?php echo L10n::_('Previous') ?></a>
 <?php else: ?>
   <span class="prev-button inactive">
@@ -116,9 +79,9 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 <?php printf(L10n::_('Go to page %s'), '<input type="text" name="page">') ?>
 <input type="submit" value="<?php echo L10n::_('Go') ?>">
 
-<?php if ($pager['next_url']): ?>
+<?php if ($paged_urls['next']): ?>
   <span class="next-button">
-  <a href="<?php echo $pager['next_url'] ?>">
+  <a href="<?php echo $paged_urls['next'] ?>">
     <?php echo L10n::_('Next') ?></a>
   </span>
 <?php else: ?>
@@ -131,10 +94,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 </div>
 
-<?php
-}
-// end paged image section
-?>
+<?php endif; // end PagedImage section ?>
 
 <?php if ($document->getSourceUrl( $section_id )
           && $document->getScreenIconUrl( $section_id )): ?>
@@ -164,7 +124,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 ?>
 
 <div id="body-text">
-  <?php if (!$pager && $section_id): ?>
+  <?php if (!$paged_urls && $section_id): ?>
     <h2>
     <?php echo $document->getMetadataElement('Title', $section_id) ?>
     </h2>
@@ -205,13 +165,13 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
     ?>
   </div>
 
-<?php elseif ($pager): ?>
+<?php elseif ($paged_urls): ?>
 
 <div id="bottom-pager">
 
-<?php if ($pager['prev_url']): ?>
+<?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
-  <a href="<?php echo $pager['prev_url'] ?>">
+  <a href="<?php echo $paged_urls['previous'] ?>">
     <?php echo L10n::_('Previous') ?></a>
 <?php else: ?>
   <span class="prev-button inactive">
@@ -220,9 +180,9 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 </span>
 
-<?php if ($pager['next_url']): ?>
+<?php if ($paged_urls['next']): ?>
   <span class="next-button">
-  <a href="<?php echo $pager['next_url'] ?>">
+  <a href="<?php echo $paged_urls['next'] ?>">
     <?php echo L10n::_('Next') ?></a>
 <?php else: ?>
   <span class="next-button inactive">

@@ -67,10 +67,6 @@ class DocumentSection
   {
   }
   
-  public function isPaged()
-  {
-  }
-
   public function getTree()
   {
     return $this->tree;
