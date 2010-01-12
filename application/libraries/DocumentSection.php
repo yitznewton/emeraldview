@@ -36,9 +36,21 @@ class DocumentSection
   
   public function getUrl()
   {
-    $slug = $this->node->getCollection()->getSlugLookup()->retrieveSlug( $this->node->getId() );
+    $id = $this->node->getId();
 
-    return $this->node->getCollection()->getUrl() . '/view/' . $slug;
+    if (strpos( $id, '.' )) {
+      $root_id = substr( $id, 0, strpos( $id, '.' ) );
+      $section_id = substr( $id, strpos( $id, '.' ) + 1);
+      $section_url = str_replace( '.', '/', $section_id );
+    }
+    else {
+      $root_id = $id;
+      $section_url = '';
+    }
+
+    $slug = $this->node->getCollection()->getSlugLookup()->retrieveSlug( $root_id );
+
+    return $this->node->getCollection()->getUrl() . "/view/$slug/$section_url";
   }
 
   public function getNode()
