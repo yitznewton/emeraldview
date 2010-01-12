@@ -24,10 +24,6 @@
 
 <h1><?php echo $document->getNode()->getRootNode()->getField('Title') ?></h1>
 
-<?php if ($document->getNode() != $document->getNode()->getRootNode()): ?>
-<h2><?php echo $document->getNode()->getField('Title') ?></h2>
-<?php endif; ?>
-
 <?php if ($document->getCoverUrl()): ?>
 <div id="cover-image">
   <img src="<?php echo $document->getCoverUrl() ?>" alt="cover image">
@@ -71,14 +67,14 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
-  <a href="<?php echo $paged_urls['previous'] ?>">
+    <a href="<?php echo $paged_urls['previous'] ?>">
     <?php echo L10n::_('Previous') ?></a>
+  </span>
 <?php else: ?>
   <span class="prev-button inactive">
-  <?php echo L10n::_('Previous') ?>
+    <?php echo L10n::_('Previous') ?>
+  </span>
 <?php endif; ?>
-
-</span>
 
 <?php printf(L10n::_('Go to page %s'), '<input type="text" name="page">') ?>
 <input type="submit" value="<?php echo L10n::_('Go') ?>">
@@ -100,18 +96,18 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php endif; // end PagedImage section ?>
 
-<?php if ($document->getSourceUrl( $section_id )
-          && $document->getScreenIconUrl( $section_id )): ?>
+<?php if ($document->getSourceDocumentUrl()
+          && $document->getScreenIconUrl()): ?>
 <div id="main-image">
-  <a href="<?php echo $document->getSourceUrl( $section_id ) ?>">
+  <a href="<?php echo $document->getSourceDocumentUrl( $section_id ) ?>">
     <img src="<?php echo $document->getScreenIconUrl( $section_id ) ?>"
     alt="page image" />
   </a>
 </div>
 
-<?php elseif ($document->getSourceUrl( $section_id )): ?>
+<?php elseif ($document->getSourceDocumentUrl()): ?>
 <div id="source-link">
-  <a href="<?php echo $document->getSourceLink( $section_id ) ?>">
+  <a href="<?php echo $document->getSourceLink() ?>">
     Download original document
   </a>
 </div>
@@ -119,19 +115,17 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php
   if (isset($_GET['search'])) {
-    $this->load->helper('search');
-    $text = highlight( $document->getHTML( $section_id ), $_GET['search'] );
+    //$this->load->helper('search');
+    //$text = highlight( $document->getHTML( $section_id ), $_GET['search'] );
   }
   else {
-    $text = $document->getHTML( $section_id );
+    $text = $document->getHTML();
   }
 ?>
 
 <div id="body-text">
-  <?php if (!$paged_urls && $section_id): ?>
-    <h2>
-    <?php echo $document->getMetadataElement('Title', $section_id) ?>
-    </h2>
+  <?php if (!$paged_urls && ( $document->getNode() != $document->getNode()->getRootNode() )): ?>
+    <h2><?php echo $document->getNode()->getField( 'Title' ) ?></h2>
   <?php endif; ?>
 
   <?php echo $text ?>
@@ -139,70 +133,10 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <div class="clearer"></div>
 
-<?php if ($toc): ?>
-  <div id="bottom-pager">
-    <?php
-      $prev_url = $document->getIntervalUrl( $section_id, -1 );
-      $next_url = $document->getIntervalUrl( $section_id, 1 );
-
-      if ($prev_url) {
-        echo html_element(
-          'a', L10n::_('Previous page'), array('href' => $prev_url)
-        );
-      }
-      else {
-        echo html_element(
-          'span', L10n::_('Previous page'), array('class' => 'inactive')
-        );
-      }
-
-      if ($next_url) {
-        echo html_element(
-          'a', L10n::_('Next page'), array('href' => $next_url)
-        );
-      }
-      else {
-        echo html_element(
-          'span', L10n::_('Next page'), array('class' => 'inactive')
-        );
-      }
-    ?>
-  </div>
-
-<?php elseif ($paged_urls): ?>
-
-<div id="bottom-pager">
-
-<?php if ($paged_urls['previous']): ?>
-  <span class="prev-button">
-  <a href="<?php echo $paged_urls['previous'] ?>">
-    <?php echo L10n::_('Previous') ?></a>
-<?php else: ?>
-  <span class="prev-button inactive">
-  <?php echo L10n::_('Previous') ?>
-<?php endif; ?>
-
-</span>
-
-<?php if ($paged_urls['next']): ?>
-  <span class="next-button">
-  <a href="<?php echo $paged_urls['next'] ?>">
-    <?php echo L10n::_('Next') ?></a>
-<?php else: ?>
-  <span class="next-button inactive">
-  <?php echo L10n::_('Next') ?>
-<?php endif; ?>
-
-</span>
-
-</div>
-
-<?php endif; ?>
-
 <?php if (
   $collection->getConfig('display_metadata')
   && $document->getMetadata()
-)?>
+) ?>
 
 <?php if ($document->getDisplayMetadata()): ?>
 
@@ -220,7 +154,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 <div class="metadata" dir="ltr">
   <h3><?php echo L10n::_('Section Metadata') ?></h3>
 
-  <?php echo metadata_list( $document->getDisplayMetadata( $section_id ) ) ?>
+  <?php //echo metadata_list( $document->getDisplayMetadata( $section_id ) ) ?>
 
   <div class="clearer"></div>
 </div>

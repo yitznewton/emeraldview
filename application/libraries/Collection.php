@@ -126,6 +126,11 @@ class Collection
   {
     return url::base() . $this->getName();
   }
+
+  public function getGreenstoneUrl()
+  {
+    return url::base() . 'files/' . $this->getName();
+  }
   
   public function getClassifier( $classifier_name )
   {

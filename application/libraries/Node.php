@@ -64,8 +64,11 @@ abstract class Node
     }
 
     $class = get_class( $this );
+
     // ugly workaround for lack of LSB in < 5.3
-    $this->rootNode = $this->staticFactory( $this->collection, $this->getRootId() );
+    $this->rootNode = $this->staticFactory(
+      $this->collection, $this->getRootId()
+    );
     
     return $this->rootNode;
   }
