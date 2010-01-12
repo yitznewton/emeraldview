@@ -6,6 +6,7 @@ abstract class Node
   protected $id;
   protected $data;
   protected $children = array();
+  protected $rootNode;
   
   abstract protected function recurse();
   abstract protected function getChild( $node_id );
@@ -52,7 +53,21 @@ abstract class Node
 
   public function getRootNode()
   {
-    return self::factory( $this->collection, $this->getRootId() );
+    if ($this->rootNode) {
+      return $this->rootNode;
+    }
+    
+    if ( $this->getRootId() == $this->getId() ) {
+      $this->rootNode = $this;
+      
+      return $this->rootNode;
+    }
+
+    $class = get_class( $this );
+    // ugly workaround for lack of LSB in < 5.3
+    $this->rootNode = $this->staticFactory( $this->collection, $this->getRootId() );
+    
+    return $this->rootNode;
   }
 
   public function getRelatedNode( $subnode_id )
@@ -84,4 +99,12 @@ abstract class Node
   {
     return NodeTreeFormatter::factory( $this );
   }
+
+  abstract public static function factory(
+    Collection $collection, $node_id, $root_only = false
+  );
+
+  abstract protected function staticFactory(
+    Collection $collection, $node_id, $root_only = false
+  );
 }

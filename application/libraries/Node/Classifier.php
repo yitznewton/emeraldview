@@ -42,4 +42,11 @@ class Node_Classifier extends Node
   {
     return new Node_Classifier( $collection, $node_id, $root_only );
   }
+
+  protected function staticFactory(
+    Collection $collection, $node_id, $root_only = false
+  )
+  {
+    return Node_Classifier::factory( $collection, $node_id, $root_only );
+  }
 }

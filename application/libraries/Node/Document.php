@@ -46,7 +46,7 @@ class Node_Document extends Node
   {
     if (
       $this->getField( 'contains' )
-      && $this->getField( 'childtype' == 'Paged' )
+      && $this->getField( 'childtype' ) == 'Paged'
     ) {
       return true;
     }
@@ -143,5 +143,12 @@ class Node_Document extends Node
   )
   {
     return new Node_Document( $collection, $node_id, $root_only );
+  }
+
+  protected function staticFactory(
+    Collection $collection, $node_id, $root_only = false
+  )
+  {
+    return Node_Document::factory( $collection, $node_id, $root_only );
   }
 }

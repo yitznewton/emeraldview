@@ -22,7 +22,11 @@
 
 <div id="document">
 
-<h1><?php echo $document->getNode()->getField('Title') ?></h1>
+<h1><?php echo $document->getNode()->getRootNode()->getField('Title') ?></h1>
+
+<?php if ($document->getNode() != $document->getNode()->getRootNode()): ?>
+<h2><?php echo $document->getNode()->getField('Title') ?></h2>
+<?php endif; ?>
 
 <?php if ($document->getCoverUrl()): ?>
 <div id="cover-image">
