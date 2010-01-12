@@ -65,7 +65,7 @@ class Router extends Router_Core {
 		Router::$rsegments = explode('/', Router::$rsegments);
     
     // Begin EmeraldView custom code for view controller
-    if (Router::$rsegments[1] == 'view') {
+    if (isset(Router::$rsegments[1]) && Router::$rsegments[1] == 'view') {
       $subnodes = array_slice( Router::$rsegments, 4 );
 
       if ($subnodes) {
