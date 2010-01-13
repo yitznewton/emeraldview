@@ -98,11 +98,6 @@ abstract class Node
     }
   }
 
-  public function getFormatter()
-  {
-    return NodeTreeFormatter::factory( $this );
-  }
-
   abstract public static function factory(
     Collection $collection, $node_id, $root_only = false
   );

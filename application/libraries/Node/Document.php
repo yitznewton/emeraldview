@@ -42,6 +42,22 @@ class Node_Document extends Node
     return $this->getNodeFromInterval( -1 );
   }
 
+  protected function getNodeFromInterval( $interval )
+  {
+    if (!is_int( $interval )) {
+      throw new Exception('Argument must be an integer');
+    }
+
+    $starting_docnum = (int) $this->getField( 'docnum' );
+    $new_docnum = $starting_docnum + $interval;
+
+    // use ad hoc function rather than write a whole ORM mapping
+    $new_node = $this->collection->getInfodb()
+                ->getRelatedNodeByDocnum( $this, $new_docnum );
+
+    return $new_node;
+  }
+
   public function isPaged()
   {
     if (
@@ -91,22 +107,6 @@ class Node_Document extends Node
       'previous' => $prev_url,
       'next'     => $next_url,
     );
-  }
-
-  protected function getNodeFromInterval( $interval )
-  {
-    if (!is_int( $interval )) {
-      throw new Exception('Argument must be an integer');
-    }
-
-    $starting_docnum = (int) $this->getField( 'docnum' );
-    $new_docnum = $starting_docnum + $interval;
-
-    // use ad hoc function rather than write a whole ORM mapping
-    $new_node = $this->collection->getInfodb()
-                ->getRelatedNodeByDocnum( $this, $new_docnum );
-
-    return $new_node;
   }
 
   protected function getChild( $node_id )
