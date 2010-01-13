@@ -27,5 +27,8 @@ collections:
       Title: Title
       Author: Author
     
+  paged:
+    active: true
+
   that:
     active: false

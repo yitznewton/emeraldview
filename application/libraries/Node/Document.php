@@ -61,8 +61,8 @@ class Node_Document extends Node
   public function isPaged()
   {
     if (
-      $this->getField( 'contains' )
-      && $this->getField( 'childtype' ) == 'Paged'
+      $this->getRootNode()->hasChildren()
+      && $this->getRootNode()->getField( 'childtype' ) == 'Paged'
     ) {
       return true;
     }
@@ -71,48 +71,20 @@ class Node_Document extends Node
     }
   }
 
-  public function getPagedUrls()
-  {
-    if (!$this->isPaged()) {
-      return false;
-    }
-
-    $root_node = $this->getRootNode();
-
-    $page_count = $root_node->getField( 'NumPages' );
-    $slug       = $this->getCollection()->getSlugLookup()
-                  ->retrieveSlug( $root_node->getId() );
-
-    if ( $this->getSubnodeId() == '1' ) {
-      $prev_url = '';
-    }
-    else {
-      // in paged documents, there SHOULD only be one level of section nodes,
-      // hence casting subnode id as integer SHOULD give us good results
-      $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
-      $prev_node = $this->getRelatedNode( $prev_section_id );
-      $prev_url = DocumentSection::factory( $prev_node )->getUrl();
-    }
-
-    if ( (int) $this->getSubnodeId() >= (int) $page_count ) {
-      $next_url = null;
-    }
-    else {
-      $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);
-      $next_node = $this->getRelatedNode( $next_section_id );
-      $next_url = DocumentSection::factory( $next_node )->getUrl();
-    }
-
-    return array(
-      'previous' => $prev_url,
-      'next'     => $next_url,
-    );
-  }
-
   protected function getChild( $node_id )
   {
     // TODO refactor this to take subnode/section id rather than full node id
     return Node_Document::factory( $this->collection, $node_id );
+  }
+
+  protected function hasChildren()
+  {
+    if ($this->children) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   public function getUrl()

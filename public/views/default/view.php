@@ -54,16 +54,17 @@
   </div>
 <?php endif; ?>
 
+<?php var_dump($paged_urls) ?>
 <?php if ($paged_urls): // begin PagedImage section ?>
 
 <div id="image-pager">
 
 <h2>
-  Page <?php echo $page->getNode()->getField( $title ) ?>
+  Page <?php echo $page->getNode()->getField( 'title' ) ?>
 </h2>
 
-<form id="pager-form" method="get" action="<?php echo $document_root ?>"
-onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
+<form id="pager-form" method="get" action="<?php echo $page->getUrl() ?>"
+onsubmit="return pageFormToUrl(this, '<?php echo $page->getUrl() ?>')">
 
 <?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
@@ -96,11 +97,12 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php endif; // end PagedImage section ?>
 
+<?php // FIXME is this the best possible if condition? ?>
 <?php if ($page->getSourceDocumentUrl()
           && $page->getScreenIconUrl()): ?>
 <div id="main-image">
-  <a href="<?php echo $page->getSourceDocumentUrl( $section_id ) ?>">
-    <img src="<?php echo $page->getScreenIconUrl( $section_id ) ?>"
+  <a href="<?php echo $page->getSourceDocumentUrl() ?>">
+    <img src="<?php echo $page->getScreenIconUrl() ?>"
     alt="page image" />
   </a>
 </div>

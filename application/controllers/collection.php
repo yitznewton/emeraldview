@@ -91,6 +91,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree',            $tree );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
-    $this->template->set_global( 'paged_urls',      $node->getPagedUrls() );
+    $this->template->set_global( 'paged_urls',      $document_section->getPagedUrls() );
   }
 }

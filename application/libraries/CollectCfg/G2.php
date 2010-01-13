@@ -115,6 +115,11 @@ class CollectCfg_G2 extends CollectCfg
   
   public function getMetadata( $element_name, $language )
   {
-    return $this->metadata[ $element_name ][ $language ];
+    if (isset( $this->metadata[ $element_name ][ $language ] )) {
+      return $this->metadata[ $element_name ][ $language ];
+    }
+    else {
+      return false;
+    }
   }
 }

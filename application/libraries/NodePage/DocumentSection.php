@@ -100,7 +100,7 @@ class NodePage_DocumentSection extends NodePage
   protected function getMetadataUrl( $element_name )
   {
     // FIXME: test this function
-    $element = $this->node->getField( $element_name );
+    $element = $this->getNode()->getField( $element_name );
 
     if (!$element) {
       return false;
@@ -114,17 +114,19 @@ class NodePage_DocumentSection extends NodePage
     );
 
     if ( $this->node->getId() != $this->node->getRootId() ) {
-      $assoc_path = $this->node->getField('assocfilepath');
+      $assoc_path = $this->getNode()->getRootNode()->getField('assocfilepath');
       $element
         = str_replace( '[parent(Top):assocfilepath]', $assoc_path, $element );
     }
 
     // interpolate bracketed metadata values
     // TODO: does this ever bring up unset indexes of $doc_metadata?
+    $metadata = $this->getNode()->getAllFields();
+    // FIXME: this preg_replace errors out if $metadata[x] doesn't exist
     $element = preg_replace(
-      '/ \[ (\w+) \] /ex', '$doc_metadata["\\1"]', $element);
+      '/ \[ (\w+) \] /ex', '$metadata["\\1"]', $element);
 
-    $url  = $this->getCollection()->getGreenstoneUrl()
+    $url  = $this->getNode()->getCollection()->getGreenstoneUrl()
             . '/index/assoc/' . $element;
 
     return $url;
@@ -205,5 +207,44 @@ class NodePage_DocumentSection extends NodePage
     else {
       return new NodeFormatter_String( '[Title]' );
     }
+  }
+
+  public function getPagedUrls()
+  {
+    if (!$this->getNode()->isPaged() ) {
+      return false;
+    }
+
+    return true;
+    $root_node = $this->getRootNode();
+
+    $page_count = $root_node->getField( 'NumPages' );
+    $slug       = $this->getCollection()->getSlugLookup()
+                  ->retrieveSlug( $root_node->getId() );
+
+    if ( $this->getSubnodeId() == '1' ) {
+      $prev_url = '';
+    }
+    else {
+      // in paged documents, there SHOULD only be one level of section nodes,
+      // hence casting subnode id as integer SHOULD give us good results
+      $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
+      $prev_node = $this->getRelatedNode( $prev_section_id );
+      $prev_url = DocumentSection::factory( $prev_node )->getUrl();
+    }
+
+    if ( (int) $this->getSubnodeId() >= (int) $page_count ) {
+      $next_url = null;
+    }
+    else {
+      $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);
+      $next_node = $this->getRelatedNode( $next_section_id );
+      $next_url = DocumentSection::factory( $next_node )->getUrl();
+    }
+
+    return array(
+      'previous' => $prev_url,
+      'next'     => $next_url,
+    );
   }
 }
