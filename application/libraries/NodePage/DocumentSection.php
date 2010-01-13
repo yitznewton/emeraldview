@@ -3,23 +3,11 @@
 class NodePage_DocumentSection extends NodePage
 {
   protected $node;
-  protected $tree;
   
   protected function __construct( Node $node )
   {
     $this->node = $node;
-
-    $id = $node->getId();
-    $root_id_length = strpos( $id, '.' );
-
-    if ($root_id_length) {
-      $root_id = substr( $id, 0, $root_id_length );
-      $this->tree = Node_Document::factory( $node->getCollection(), $root_id );
-    }
-    else {
-      $this->tree = $node;
-    }
-  }
+}
   
   public function getCoverUrl()
   {

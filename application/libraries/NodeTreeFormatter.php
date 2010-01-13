@@ -4,6 +4,7 @@ class NodeTreeFormatter
 {
   public static function format( Node $node, NodeFormatter $node_formatter )
   {
+    // TODO: it looks like this function is expensive; cache somehow?
     if (! $children = $node->getChildren()) {
       return false;
     }
