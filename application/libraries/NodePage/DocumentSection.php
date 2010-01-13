@@ -172,14 +172,14 @@ class NodePage_DocumentSection extends NodePage
 
   public function getNodeFormatter()
   {
-    if ($collection->getConfig( 'document_tree_format' )) {
+    if ($this->getNode()->getCollection()->getConfig( 'document_tree_format' )) {
       return new NodeFormatter_String(
-        $collection->getConfig( 'document_tree_format' )
+        $this->getNode()->getCollection()->getConfig( 'document_tree_format' )
       );
     }
-    elseif ($collection->getConfig( 'document_tree_format_function' )) {
+    elseif ($this->getNode()->getCollection()->getConfig( 'document_tree_format_function' )) {
       return new NodeFormatter_Function(
-        $collection->getConfig( 'document_tree_format_function' )
+        $this->getNode()->getCollection()->getConfig( 'document_tree_format_function' )
       );
     }
     else {
