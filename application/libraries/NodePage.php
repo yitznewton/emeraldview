@@ -10,7 +10,17 @@ abstract class NodePage
   }
 
   abstract public function getUrl();
-  abstract public function getTree( NodeFormatter $node_formatter );
+  abstract public function getNodeFormatter();
+  
+  public function getNode()
+  {
+    return $this->node;
+  }
+
+  public function getTree()
+  {
+    return NodeTreeFormatter::format( $this->getNode()->getRootNode(), $this->getNodeFormatter() );
+  }
 
   public static function factory( Node $node )
   {

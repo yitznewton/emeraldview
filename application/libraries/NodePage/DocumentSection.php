@@ -87,11 +87,6 @@ class NodePage_DocumentSection extends NodePage
     return $this->node->getCollection()->getUrl() . "/view/$slug/$section_url";
   }
 
-  public function getNode()
-  {
-    return $this->node;
-  }
-  
   public function getSourceDocumentUrl()
   {
     return $this->getMetadataUrl( 'srclink' );
@@ -174,9 +169,21 @@ class NodePage_DocumentSection extends NodePage
 
     return $url;
   }
-  
-  public function getTree( NodeFormatter $node_formatter )
+
+  public function getNodeFormatter()
   {
-    return NodeTreeFormatter::format( $this->node->getRootNode(), $node_formatter );
+    if ($collection->getConfig( 'document_tree_format' )) {
+      return new NodeFormatter_String(
+        $collection->getConfig( 'document_tree_format' )
+      );
+    }
+    elseif ($collection->getConfig( 'document_tree_format_function' )) {
+      return new NodeFormatter_Function(
+        $collection->getConfig( 'document_tree_format_function' )
+      );
+    }
+    else {
+      return new NodeFormatter_String( '[Title]' );
+    }
   }
 }

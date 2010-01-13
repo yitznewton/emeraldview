@@ -6,6 +6,7 @@ class NodeTreeFormatter
   {
     // TODO: it looks like this function is expensive; cache somehow?
     if (! $children = $node->getChildren()) {
+    var_dump($node->getChildren());
       return false;
     }
     

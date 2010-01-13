@@ -165,7 +165,8 @@ class Collection
         continue;
       }
       
-      $classifiers[] = new Classifier( $this, $id );
+      $node = Node_Classifier::factory( $this, $id );
+      $classifiers[] = NodePage_Classifier::factory( $node );
     }
     
     return $this->classifiers = $classifiers;

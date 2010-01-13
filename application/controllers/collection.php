@@ -29,20 +29,22 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function browse( $collection_name, $classifier_name )
   {
     $collection = $this->loadCollection( $collection_name );
-    $classifier = $collection->getClassifier( $classifier_name );
 
-    if (!$classifier) {
+    $root_node = Node_Classifier::factory( $collection, $classifier_name );
+    
+    if (!$root_node) {
       url::redirect( $collection->getUrl() );
     }
-    
-    $node_formatter = $classifier->getNodeFormatter();
-    $tree = NodeTreeFormatter::format( $classifier->getTree(), $node_formatter );
+
+    $classifier = NodePage_Classifier::factory( $root_node );
+
+    $tree = $classifier->getTree();
 
     $this->view = new View( $this->theme . '/browse' );
     
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
-    $this->template->set_global( 'page_title',      $classifier->getName()
+    $this->template->set_global( 'page_title',      $classifier->getTitle()
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'classifier',      $classifier );
@@ -76,22 +78,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
-    if ($collection->getConfig( 'document_tree_format' )) {
-      $node_formatter = new NodeFormatter_String(
-        $collection->getConfig( 'document_tree_format' )
-      );
-    }
-    elseif ($collection->getConfig( 'document_tree_format_function' )) {
-      $node_formatter = new NodeFormatter_Function(
-        $collection->getConfig( 'document_tree_format_function' )
-      );
-    }
-    else {
-      $node_formatter = new NodeFormatter_String( '[Title]' );
-    }
-
     $document_section = NodePage_DocumentSection::factory( $node );
-    $tree = $document_section->getTree( $node_formatter );
+    $tree = $document_section->getTree();
 
     $this->view = new View( $this->theme . '/view' );
 

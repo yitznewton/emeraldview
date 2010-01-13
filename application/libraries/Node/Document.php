@@ -142,7 +142,12 @@ class Node_Document extends Node
     Collection $collection, $node_id, $root_only = false
   )
   {
-    return new Node_Document( $collection, $node_id, $root_only );
+    try {
+      return new Node_Document( $collection, $node_id, $root_only );
+    }
+    catch (InvalidArgumentException $e) {
+      return false;
+    }
   }
 
   protected function staticFactory(

@@ -40,7 +40,12 @@ class Node_Classifier extends Node
     Collection $collection, $node_id, $root_only = false
   )
   {
-    return new Node_Classifier( $collection, $node_id, $root_only );
+    try {
+      return new Node_Classifier( $collection, $node_id, $root_only );
+    }
+    catch (InvalidArgumentException $e) {
+      return false;
+    }
   }
 
   protected function staticFactory(

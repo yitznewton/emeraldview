@@ -18,15 +18,20 @@ abstract class Node
   {
     $this->id = $node_id;
     
-    $this->collection = $collection;
     $this->data = $collection->getInfodb()->getNode( $this->id );
 
-    // clean up for later metadata retrieval
-    unset( $this->data['contains'] );
+    if (!$this->data) {
+      throw new InvalidArgumentException('No such node');
+    }
+
+    $this->collection = $collection;
     
     if (!$root_only) {
       $this->recurse();
     }
+
+    // clean up for later metadata retrieval
+    unset( $this->data['contains'] );
   }
   
   public function getId()
