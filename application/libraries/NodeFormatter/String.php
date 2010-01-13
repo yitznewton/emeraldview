@@ -30,24 +30,24 @@ class NodeFormatter_String extends NodeFormatter
           : $this->leafFormat
           ;
 
-    // FIXME this section
-    /*
+    $node_page = NodePage::factory( $node );
+
     if (
       stripos($text, '[thumbicon]') !== false
-      && $this->getField('thumbicon')
+      && $node->getField('thumbicon')
     )
     {
       // parse thumbicon URL and compose <img> tag
       // TODO: what if this is a section node, and thumb is doc-level?
-      $thumb_url = Document::extractThumbnailUrl(
-        $this->getClassifier()->getCollection(), $this->getAllFields()
-      );
+      $thumb_url = $node_page->getThumbnailUrl();
+      //// Document::extractThumbnailUrl(
+        //''$this->getClassifier()->getCollection(), $this->getAllFields()
+      //);
       $thumb_img = "<img src=\"$thumb_url\">";
       $text = str_ireplace('[thumbicon]', $thumb_img, $text);
     }
-     */
 
-    $url = NodePage::factory( $node )->getUrl();
+    $url = $node_page->getUrl();
 
     if ($url) {
       $text = str_replace(

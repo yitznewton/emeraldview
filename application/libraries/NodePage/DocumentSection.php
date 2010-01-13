@@ -142,6 +142,37 @@ class NodePage_DocumentSection extends NodePage
   
   public function getThumbnailUrl()
   {
+    if ($this->getNode()->getField('thumbicon')) {
+      $node = $this->getNode();
+      $url = $this->getNode()->getField('thumbicon');
+    }
+    elseif ($this->getNode()->getRootNode()->getField('thumbicon')) {
+      $node = $this->getNode()->getRootNode();
+      $url = $this->getNode()->getRootNode()->getField('thumbicon');
+    }
+    else {
+      return false;
+    }
+
+    // strip end quote and attributes
+    $url = preg_replace('/"[^"]+$/', '', $url);
+
+    if ($node->getField('assocfilepath')) {
+      $thumbicon = str_replace(
+        '[assocfilepath]', $node->getField('assocfilepath'), $url
+      );
+    }
+
+    $url = substr( $url, strpos($url, 'index/assoc/') + 12 );
+
+    // interpolate bracketed metadata values
+    $metadata = $this->getNode()->getAllFields();
+    $url = preg_replace('/ \[ (\w+) \] /ex', '$metadata["\\1"]', $url);
+
+    $url  = $this->getNode()->getCollection()->getUrl()
+            . '/index/assoc/' . $url;
+
+    return $url;
   }
   
   public function getTree( NodeFormatter $node_formatter )

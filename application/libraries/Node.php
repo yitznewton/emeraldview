@@ -20,6 +20,9 @@ abstract class Node
     
     $this->collection = $collection;
     $this->data = $collection->getInfodb()->getNode( $this->id );
+
+    // clean up for later metadata retrieval
+    unset( $this->data['contains'] );
     
     if (!$root_only) {
       $this->recurse();
@@ -96,6 +99,11 @@ abstract class Node
     else {
       return false;
     }
+  }
+
+  public function getAllFields()
+  {
+    return $this->data;
   }
 
   abstract public static function factory(
