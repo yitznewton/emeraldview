@@ -23,6 +23,9 @@ collections:
         format:
           branch: "[Title] ([numleafdocs])"
           leaf:   "[Title]"
+    display_metadata:
+      Title: Title
+      Author: Author
     
   that:
     active: false

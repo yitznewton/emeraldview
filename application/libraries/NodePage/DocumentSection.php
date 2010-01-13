@@ -132,7 +132,27 @@ class NodePage_DocumentSection extends NodePage
 
   public function getDisplayMetadata()
   {
-    
+    $fields_to_display
+      = $this->getNode()->getCollection()->getConfig( 'display_metadata' );
+
+    if (!$fields_to_display) {
+      return false;
+    }
+
+    $display_metadata = array();
+
+    foreach ($fields_to_display as $field_name => $display_name) {
+      if ($element = $this->getNode()->getField( $field_name )) {
+        // FIXME is this reimplemented properly in 0.2?
+        if (!is_array( $element )) {
+          $element = array( $element );
+        }
+
+        $display_metadata[ $display_name ] = $element;
+      }
+    }
+
+    return $display_metadata;
   }
   
   public function getThumbnailUrl()

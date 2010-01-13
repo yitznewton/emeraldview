@@ -22,11 +22,11 @@
 
 <div id="document">
 
-<h1><?php echo $document->getNode()->getRootNode()->getField('Title') ?></h1>
+<h1><?php echo $page->getNode()->getRootNode()->getField('Title') ?></h1>
 
-<?php if ($document->getCoverUrl()): ?>
+<?php if ($page->getCoverUrl()): ?>
 <div id="cover-image">
-  <img src="<?php echo $document->getCoverUrl() ?>" alt="cover image">
+  <img src="<?php echo $page->getCoverUrl() ?>" alt="cover image">
 </div>
 <?php endif; ?>
 
@@ -59,7 +59,7 @@
 <div id="image-pager">
 
 <h2>
-  Page <?php echo $document->getNode()->getField( $title ) ?>
+  Page <?php echo $page->getNode()->getField( $title ) ?>
 </h2>
 
 <form id="pager-form" method="get" action="<?php echo $document_root ?>"
@@ -96,18 +96,18 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php endif; // end PagedImage section ?>
 
-<?php if ($document->getSourceDocumentUrl()
-          && $document->getScreenIconUrl()): ?>
+<?php if ($page->getSourceDocumentUrl()
+          && $page->getScreenIconUrl()): ?>
 <div id="main-image">
-  <a href="<?php echo $document->getSourceDocumentUrl( $section_id ) ?>">
-    <img src="<?php echo $document->getScreenIconUrl( $section_id ) ?>"
+  <a href="<?php echo $page->getSourceDocumentUrl( $section_id ) ?>">
+    <img src="<?php echo $page->getScreenIconUrl( $section_id ) ?>"
     alt="page image" />
   </a>
 </div>
 
-<?php elseif ($document->getSourceDocumentUrl()): ?>
+<?php elseif ($page->getSourceDocumentUrl()): ?>
 <div id="source-link">
-  <a href="<?php echo $document->getSourceLink() ?>">
+  <a href="<?php echo $page->getSourceLink() ?>">
     Download original document
   </a>
 </div>
@@ -119,47 +119,43 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
     //$text = highlight( $document->getHTML( $section_id ), $_GET['search'] );
   }
   else {
-    $text = $document->getHTML();
+    $text = $page->getHTML();
   }
 ?>
 
 <div id="body-text">
-  <?php if (!$paged_urls && ( $document->getNode() != $document->getNode()->getRootNode() )): ?>
-    <h2><?php echo $document->getNode()->getField( 'Title' ) ?></h2>
+  <?php if (!$paged_urls && ( $page->getNode() != $page->getNode()->getRootNode() )): ?>
+    <h2><?php echo $page->getNode()->getField( 'Title' ) ?></h2>
   <?php endif; ?>
 
   <?php echo $text ?>
 </div>
 
-<div class="clearer"></div>
+<div class="clear"></div>
 
-<?php if (
-  $collection->getConfig('display_metadata')
-  && $document->getMetadata()
-) ?>
-
-<?php if ($document->getDisplayMetadata()): ?>
-
+<?php if ($page->getNode()->getRootNode() != $page->getNode() && NodePage::factory( $page->getNode()->getRootNode() )->getDisplayMetadata()): ?>
 <div class="metadata" dir="ltr">
   <h3><?php echo L10n::_('Document Metadata') ?></h3>
 
-  <?php echo metadata_list( $document->getDisplayMetadata() ) ?>
+  <?php echo myview::metadata_list( NodePage::factory( $page->getNode()->getRootNode() )->getDisplayMetadata() ) ?>
 
-  <div class="clearer"></div>
+  <div class="clear"></div>
 </div>
-
 <?php endif; ?>
 
-<?php //if ($document->getNode()->getRootNode() != $document->getNode() && $document->getDisplayMetadata( $section_id )): ?>
+<?php if ($page->getDisplayMetadata()): ?>
 <div class="metadata" dir="ltr">
+  <?php if ($page->getNode() == $page->getNode()->getRootNode()): ?>
+  <h3><?php echo L10n::_('Document Metadata') ?></h3>
+  <?php else: ?>
   <h3><?php echo L10n::_('Section Metadata') ?></h3>
+  <?php endif; ?>
 
-  <?php //echo metadata_list( $document->getDisplayMetadata( $section_id ) ) ?>
+  <?php echo myview::metadata_list( $page->getDisplayMetadata() ) ?>
 
-  <div class="clearer"></div>
+  <div class="clear"></div>
 </div>
-<?php //endif; ?>
-
+<?php endif; ?>
 
 </div>
 </div>

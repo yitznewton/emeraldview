@@ -49,7 +49,7 @@ src="<?php echo url::base() ?>js/default.js"></script>
         <?php echo $collection_display_name ?>
       </div>
     </div>
-    <div class="clearer"></div>
+    <div class="clear"></div>
   <?php else: ?>
     <span id="header-logo">
       <a href="<?php echo url::base() ?>">
@@ -62,7 +62,7 @@ src="<?php echo url::base() ?>js/default.js"></script>
     </div>
   <?php endif; ?>
 
-  <div class="clearer"></div>
+  <div class="clear"></div>
 </div>
 
 <?php echo $content ?>

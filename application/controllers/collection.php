@@ -37,7 +37,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     }
 
     $classifier = NodePage_Classifier::factory( $root_node );
-
     $tree = $classifier->getTree();
 
     $this->view = new View( $this->theme . '/browse' );
@@ -47,7 +46,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'page_title',      $classifier->getTitle()
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
-    $this->template->set_global( 'classifier',      $classifier );
+    $this->template->set_global( 'page',            $classifier );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'tree',            $tree );
@@ -88,7 +87,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'page_title',      $node->getField('Title')
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
-    $this->template->set_global( 'document',        $document_section );
+    $this->template->set_global( 'page',            $document_section );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree',            $tree );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
