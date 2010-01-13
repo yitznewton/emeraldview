@@ -90,8 +90,9 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $node_formatter = new NodeFormatter_String( '[Title]' );
     }
 
-    $document_section = DocumentSection::factory( $node );
-    $tree = NodeTreeFormatter::format( $document_section->getTree(), $node_formatter );
+    $document_section = NodePage_DocumentSection::factory( $node );
+    $tree = $document_section->getTree( $node_formatter );
+    //$tree = NodeTreeFormatter::format( $document_section->getTree(), $node_formatter );
 
     $this->view = new View( $this->theme . '/view' );
 

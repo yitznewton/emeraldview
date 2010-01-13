@@ -1,6 +1,6 @@
 <?php
 
-class DocumentSection
+class NodePage_DocumentSection extends NodePage
 {
   protected $node;
   protected $tree;
@@ -146,18 +146,18 @@ class DocumentSection
 
     return $url;
   }
+
+  public function getDisplayMetadata()
+  {
+    
+  }
   
   public function getThumbnailUrl()
   {
   }
   
-  public function getTree()
+  public function getTree( NodeFormatter $node_formatter )
   {
-    return $this->tree;
-  }
-  
-  public static function factory( Node $node )
-  {
-    return new DocumentSection( $node );
+    return NodeTreeFormatter::format( $this->node->getRootNode(), $node_formatter );
   }
 }

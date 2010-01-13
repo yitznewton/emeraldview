@@ -29,7 +29,7 @@ class NodeTreeFormatter
       $node instanceof Node_Document
       && strpos( $node_output, '<a' ) === false
     ) {
-      $url = DocumentSection::factory( $node )->getUrl();
+      $url = NodePage::factory( $node )->getUrl();
       $node_output = "<a href=\"$url\">$node_output</a>";
     }
 

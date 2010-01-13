@@ -150,7 +150,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
 <?php endif; ?>
 
-<?php if ($section_id && $document->getDisplayMetadata( $section_id )): ?>
+<?php //if ($document->getNode()->getRootNode() != $document->getNode() && $document->getDisplayMetadata( $section_id )): ?>
 <div class="metadata" dir="ltr">
   <h3><?php echo L10n::_('Section Metadata') ?></h3>
 
@@ -158,7 +158,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $document_root ?>')">
 
   <div class="clearer"></div>
 </div>
-<?php endif; ?>
+<?php //endif; ?>
 
 
 </div>

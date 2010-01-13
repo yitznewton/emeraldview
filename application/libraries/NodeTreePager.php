@@ -10,7 +10,7 @@ class NodeTreePager
     $next_node = $node->getNextNode();
 
     if ($prev_node) {
-      $prev_url = DocumentSection::factory( $prev_node )->getUrl();
+      $prev_url = NodePage::factory( $prev_node )->getUrl();
       $output .= myhtml::element(
         'a', L10n::_('Previous page'), array('href' => $prev_url)
       );
@@ -22,7 +22,7 @@ class NodeTreePager
     }
 
     if ($next_node) {
-      $next_url = DocumentSection::factory( $next_node )->getUrl();
+      $next_url = NodePage::factory( $next_node )->getUrl();
       $output .= myhtml::element(
         'a', L10n::_('Next page'), array('href' => $next_url)
       );
