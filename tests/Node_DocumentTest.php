@@ -1,7 +1,7 @@
 <?php
 
 require_once 'PHPUnit/Framework.php';
-require_once '../public/index.php';
+require_once dirname(__FILE__).'/../public/index.php';
 
 class Node_DocumentTest extends PHPUnit_Framework_TestCase
 {
@@ -29,6 +29,13 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
     $this->objects[] = Node_Document::factory( $paged_collection, $first_page_id );
     $this->objects[] = Node_Document::factory( $paged_collection, $middle_page_id );
     $this->objects[] = Node_Document::factory( $paged_collection, $last_page_id );
+
+    foreach ($this->objects as $object) {
+      if ( ! $object instanceof Node_Document ) {
+        echo "Node IDs need to be updated\n";
+        exit(1);
+      }
+    }
   }
 
   protected function tearDown()
@@ -73,6 +80,36 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
     }
   }
 
+  public function testGetPreviousNode()
+  {
+    foreach ($this->objects as $object) {
+      $node = $object->getPreviousNode();
+      $this->assertTrue( $node === false || $node instanceof Node_Document );
+    }
+  }
+
+  public function testGetNextNode()
+  {
+    foreach ($this->objects as $object) {
+      $node = $object->getNextNode();
+      $this->assertTrue( $node === false || $node instanceof Node_Document );
+    }
+  }
+
+  public function testGetRelatedNodeByTitle()
+  {
+    $titles = array(
+      '1', 'Acknowledgements',
+    );
+
+    foreach ($this->objects as $object) {
+      foreach ($titles as $title) {
+        $node = $object->getRelatedNodeByTitle( $title );
+        $this->assertTrue( $node === false || $object->getRootId() === $node->getRootId() );
+      }
+    }
+  }
+
   public function testGetRelatedNode()
   {
     foreach ($this->objects as $object) {
@@ -90,6 +127,13 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
   {
     foreach ($this->objects as $object) {
       $this->assertTrue( $object->getCollection() instanceof Collection );
+    }
+  }
+
+  public function testIsPaged()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertType( 'bool', $object->isPaged() );
     }
   }
 
