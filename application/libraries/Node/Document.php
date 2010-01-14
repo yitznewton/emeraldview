@@ -102,7 +102,7 @@ class Node_Document extends Node
 
     // FIXME adding the <a> should be contingent on not having been added by NodeFormatter, or moved there altogether
 
-    return html::anchor( $this->getUrl(), $text );
+    return html::anchor( $this->getPage()->getUrl(), $text );
   }
 
   public static function factory(

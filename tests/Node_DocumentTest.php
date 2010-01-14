@@ -180,5 +180,12 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
       $this->assertType( 'array', $object->getAllFields() );
     }
   }
+
+  public function testFormat()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertType( 'string', $object->format() );
+    }
+  }
 }
 
