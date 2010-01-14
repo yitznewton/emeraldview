@@ -55,9 +55,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function view( $collection_name, $slug )
   {
     $subnode_id = '';
+    $args = func_get_args();
 
-    if (count( func_get_args() ) > 2) {
-      $subnodes = array_slice( func_get_args(), 2 );
+    if (count( $args ) > 2) {
+      $subnodes = array_slice( $args, 2 );
       $subnode_id = '.' . implode( '.', $subnodes );
     }
 
@@ -69,16 +70,23 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
-    $document_id .= $subnode_id;
-
-    $node = Node_Document::factory( $collection, $document_id );
+    $node = Node_Document::factory( $collection, $document_id . $subnode_id );
     
     if (!$node) {
       url::redirect( $collection->getUrl() );
     }
 
-    $document_section = NodePage_DocumentSection::factory( $node );
-    $tree = $document_section->getTree();
+    if ($node->isPaged() && !$subnode_id) {
+      // there's no appropriate NodePage for root node of a Paged document;
+      // set to display first subnode
+      $node = Node_Document::factory( $collection, "$document_id.1" );
+
+      if (!$node) {
+        url::redirect( $collection->getUrl() );
+      }
+    }
+
+    $page = NodePage_DocumentSection::factory( $node );
 
     $this->view = new View( $this->theme . '/view' );
 
@@ -87,10 +95,9 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'page_title',      $node->getField('Title')
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
-    $this->template->set_global( 'page',            $document_section );
+    $this->template->set_global( 'page',            $page );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'tree',            $tree );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
-    $this->template->set_global( 'paged_urls',      $document_section->getPagedUrls() );
+    $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );
   }
 }

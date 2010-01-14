@@ -69,20 +69,15 @@ class NodePage_DocumentSection extends NodePage
   
   public function getUrl()
   {
-    $id = $this->node->getId();
-
-    if ( $this->node->getRootId() != $this->node->getId() ) {
-      $root_id = $this->node->getRootId();
-      $section_id = substr( $id, strpos( $id, '.' ) + 1);
-      $section_url = str_replace( '.', '/', $section_id );
+    if ( $this->getSubnodeId() ) {
+      $section_url = str_replace( '.', '/', $this->getSubnodeId() );
     }
     else {
-      $root_id = $id;
       $section_url = '';
     }
 
-    $slug = $this->node->getCollection()->getSlugLookup()
-            ->retrieveSlug( $root_id );
+    $slug = $this->getNode()->getCollection()->getSlugLookup()
+            ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
     return $this->node->getCollection()->getUrl() . "/view/$slug/$section_url";
   }
@@ -211,16 +206,16 @@ class NodePage_DocumentSection extends NodePage
 
   public function getPagedUrls()
   {
+    $prev_url = '';
+    $next_url = '';
     if (!$this->getNode()->isPaged() ) {
       return false;
     }
 
-    return true;
-    $root_node = $this->getRootNode();
-
-    $page_count = $root_node->getField( 'NumPages' );
-    $slug       = $this->getCollection()->getSlugLookup()
-                  ->retrieveSlug( $root_node->getId() );
+    $page_count = $this->getNode()->getRootNode()->getField( 'NumPages' );
+    // TODO: refactor to sthg like $collection->getSlugLookup()->retrieveNode()
+    $slug       = $this->getNode()->getCollection()->getSlugLookup()
+                  ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
     if ( $this->getSubnodeId() == '1' ) {
       $prev_url = '';
@@ -229,8 +224,8 @@ class NodePage_DocumentSection extends NodePage
       // in paged documents, there SHOULD only be one level of section nodes,
       // hence casting subnode id as integer SHOULD give us good results
       $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
-      $prev_node = $this->getRelatedNode( $prev_section_id );
-      $prev_url = DocumentSection::factory( $prev_node )->getUrl();
+      $prev_node = $this->getNode()->getRelatedNode( $prev_section_id );
+      $prev_url = NodePage_DocumentSection::factory( $prev_node )->getUrl();
     }
 
     if ( (int) $this->getSubnodeId() >= (int) $page_count ) {
@@ -238,8 +233,8 @@ class NodePage_DocumentSection extends NodePage
     }
     else {
       $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);
-      $next_node = $this->getRelatedNode( $next_section_id );
-      $next_url = DocumentSection::factory( $next_node )->getUrl();
+      $next_node = $this->getNode()->getRelatedNode( $next_section_id );
+      $next_url = NodePage_DocumentSection::factory( $next_node )->getUrl();
     }
 
     return array(

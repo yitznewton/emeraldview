@@ -32,7 +32,7 @@
 
 
 <?php // begin TOC section ?>
-<?php if ($tree): ?>
+<?php if ($page->getTree() && !$paged_urls): ?>
   <div id="toc">
     <div id="toc-header"><?php echo L10n::_('Table of contents') ?>
       <span class="toc-toggle" id="toc-toggle-hide">
@@ -48,7 +48,7 @@
         <?php echo $tree_pager ?>
       </div>
 
-      <?php echo $tree ?>
+      <?php echo $page->getTree() ?>
 
     </div>
   </div>

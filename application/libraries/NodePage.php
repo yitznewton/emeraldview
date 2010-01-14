@@ -22,6 +22,19 @@ abstract class NodePage
     return NodeTreeFormatter::format( $this->getNode()->getRootNode(), $this->getNodeFormatter() );
   }
 
+  public function getSubnodeId()
+  {
+    // TODO: refactor existing code to use this new method
+    $id = $this->getNode()->getId();
+
+    if (strpos( $id, '.' )) {
+      return substr( $id, strpos( $id, '.' ) + 1);
+    }
+    else {
+      return false;
+    }
+  }
+
   public static function factory( Node $node )
   {
     switch ( get_class( $node ) ) {
@@ -30,7 +43,7 @@ abstract class NodePage
       case 'Node_Document':
         return new NodePage_DocumentSection( $node );
       default:
-        throw new Exception('Unrecognized Node subclass');
+        throw new Exception( 'Unrecognized subclass of Node' );
     }
   }
 }

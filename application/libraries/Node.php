@@ -83,7 +83,7 @@ abstract class Node
 
   public function getRelatedNode( $subnode_id )
   {
-    return self::factory( $this->collection, $this->getRootId() . $subnode_id );
+    return $this->staticFactory( $this->collection, $this->getRootId() . '.' . $subnode_id );
   }
 
   public function getCollection()
