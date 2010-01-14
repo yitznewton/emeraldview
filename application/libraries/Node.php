@@ -81,9 +81,22 @@ abstract class Node
     return $this->rootNode;
   }
 
-  public function getRelatedNode( $subnode_id )
+  public function getPage()
   {
-    return $this->staticFactory( $this->collection, $this->getRootId() . '.' . $subnode_id );
+    return NodePage::factory( $this );
+  }
+
+  public function getRelatedNode( $id )
+  {
+    // TODO: find a better name for this method
+    if (strpos($id, $this->getRootId()) === false) {
+      // client did not specify the root ID (really this is the more sensible
+      // way to call, but we are accomodating certain methods that favor
+      // the full subnode id)
+      $id = $this->getRootId() . '.' . $id;
+    }
+
+    return $this->staticFactory( $this->collection, $id );
   }
 
   public function getCollection()

@@ -22,7 +22,7 @@
 
 <div id="document">
 
-<h1><?php echo $page->getNode()->getRootNode()->getField('Title') ?></h1>
+<h1><?php echo $root_node->getField('Title') ?></h1>
 
 <?php if ($page->getCoverUrl()): ?>
 <div id="cover-image">
@@ -54,17 +54,16 @@
   </div>
 <?php endif; ?>
 
-<?php var_dump($paged_urls) ?>
-<?php if ($paged_urls): // begin PagedImage section ?>
+<?php if ($node->isPaged()): // begin PagedImage section ?>
 
 <div id="image-pager">
 
 <h2>
-  Page <?php echo $page->getNode()->getField( 'title' ) ?>
+  Page <?php echo $node->getField( 'title' ) ?>
 </h2>
 
-<form id="pager-form" method="get" action="<?php echo $page->getUrl() ?>"
-onsubmit="return pageFormToUrl(this, '<?php echo $page->getUrl() ?>')">
+<form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>"
+onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
 
 <?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
@@ -126,8 +125,8 @@ onsubmit="return pageFormToUrl(this, '<?php echo $page->getUrl() ?>')">
 ?>
 
 <div id="body-text">
-  <?php if (!$paged_urls && ( $page->getNode() != $page->getNode()->getRootNode() )): ?>
-    <h2><?php echo $page->getNode()->getField( 'Title' ) ?></h2>
+  <?php if (!$node->isPaged() && ( $node != $root_node )): ?>
+    <h2><?php echo $node->getField( 'Title' ) ?></h2>
   <?php endif; ?>
 
   <?php echo $text ?>
@@ -135,11 +134,11 @@ onsubmit="return pageFormToUrl(this, '<?php echo $page->getUrl() ?>')">
 
 <div class="clear"></div>
 
-<?php if ($page->getNode()->getRootNode() != $page->getNode() && NodePage::factory( $page->getNode()->getRootNode() )->getDisplayMetadata()): ?>
+<?php if ($root_node != $node && $root_page->getDisplayMetadata()): ?>
 <div class="metadata" dir="ltr">
   <h3><?php echo L10n::_('Document Metadata') ?></h3>
 
-  <?php echo myview::metadata_list( NodePage::factory( $page->getNode()->getRootNode() )->getDisplayMetadata() ) ?>
+  <?php echo myview::metadata_list( $root_page->getDisplayMetadata() ) ?>
 
   <div class="clear"></div>
 </div>
@@ -147,7 +146,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $page->getUrl() ?>')">
 
 <?php if ($page->getDisplayMetadata()): ?>
 <div class="metadata" dir="ltr">
-  <?php if ($page->getNode() == $page->getNode()->getRootNode()): ?>
+  <?php if ($node == $root_node): ?>
   <h3><?php echo L10n::_('Document Metadata') ?></h3>
   <?php else: ?>
   <h3><?php echo L10n::_('Section Metadata') ?></h3>

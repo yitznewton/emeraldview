@@ -111,9 +111,9 @@ class Infodb_Sqlite extends Infodb
       "%<docnum>$docnum%"
     );
 
-    $query  = 'SELECT key, value FROM data ';
-    $query .= "WHERE SUBSTR(key, 1, ?)=? ";
-    $query .= "AND value LIKE ?";
+    $query  = 'SELECT key, value FROM data '
+              . "WHERE SUBSTR(key, 1, ?)=? "
+              . "AND value LIKE ?";
 
     $stmt = $this->pdo->prepare( $query );
     $stmt->execute( $params );
@@ -131,6 +131,28 @@ class Infodb_Sqlite extends Infodb
     }
 
     return false;
+  }
+
+  public function getRelatedNodeIdByTitle( Node_Document $node, $title )
+  {
+    if (!$title) {
+      return false;
+    }
+
+    $params = array(
+      strlen( $node->getRootId() ),
+      $node->getRootId(),
+      "%<Title>$title%"
+    );
+
+    $query  = 'SELECT key, value FROM data '
+              . "WHERE SUBSTR(key, 1, ?)=? "
+              . "AND value LIKE ?";
+
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( $params );
+
+    return $stmt->fetchColumn();
   }
 
   public static function parseFields( $blob )

@@ -58,6 +58,14 @@ class Node_Document extends Node
     return $new_node;
   }
 
+  public function getRelatedNodeByTitle( $title )
+  {
+    $id = $this->getCollection()->getInfodb()
+          ->getRelatedNodeIdByTitle( $this, $title );
+
+    return $this->getRelatedNode( $id );
+  }
+
   public function isPaged()
   {
     if (
