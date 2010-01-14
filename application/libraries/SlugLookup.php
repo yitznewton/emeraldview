@@ -130,7 +130,7 @@ EOF;
     return $this->buildIncremental();
   }
 
-  public function buildIncremental()
+  protected function buildIncremental()
   {
     $this->lock();
 

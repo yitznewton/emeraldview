@@ -1,0 +1,62 @@
+<?php
+
+require_once 'PHPUnit/Framework.php';
+require_once dirname(__FILE__).'/../public/index.php';
+
+class QueryBuilderTest extends PHPUnit_Framework_TestCase
+{
+  protected $objects = array();
+
+  protected function setUp()
+  {
+    $param_sets[ 'simple' ] = array(
+      'q' => 'boy',
+    );
+    /*
+    $param_sets[ 'fielded' ] = array(  // fielded
+      'i' => 'TI',
+      'q' => 'education',
+    );
+    $param_sets[ 'boolean' ] = array(  // boolean
+      'i1' => 'ti',
+      'q1' => 'education',
+      'i2' => '',
+      'q2' => 'boy',
+    );
+    */
+
+    $collection = Collection::factory( 'demo' );
+
+    foreach ($param_sets as $key => $set) {
+      $this->objects[ $key ] = QueryBuilder::factory( $set, $collection );
+    }
+  }
+
+  protected function tearDown()
+  {
+  }
+
+  public function testGetLevel()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertContains( $object->getLevel(), array( 'document', 'section' ) );
+    }
+  }
+
+  public function testGetQuery()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertTrue( $object->getQuery() instanceof Zend_Search_Lucene_Search_QueryParser );
+    }
+  }
+
+  public function testGetDisplayQuery()
+  {
+
+  }
+
+  public function testGetRawTerms()
+  {
+
+  }
+}

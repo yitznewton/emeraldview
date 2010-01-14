@@ -45,7 +45,7 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
   public function testGetId()
   {
     foreach ($this->objects as $object) {
-      $this->assertRegExp( '/^(HASH|D)[\d\.]+/', $object->getId() );
+      $this->assertRegExp( '/^(HASH|D)[\w\.]+$/', $object->getId() );
     }
   }
 
