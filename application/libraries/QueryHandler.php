@@ -1,7 +1,4 @@
 <?php
-ini_set('include_path', ini_get('include_path')
-        .PATH_SEPARATOR.APPPATH.'vendors/');
-require_once('Zend/Search/Lucene.php');
 
 class QueryHandler
 {

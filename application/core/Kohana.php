@@ -1119,7 +1119,9 @@ final class Kohana {
 		else
 		{
 			// Add a period before the extension
-			$ext = '.'.$ext;
+      // EmeraldView: this was causing a bug when $ext was passed back through
+      // for vendors; commenting out
+			// $ext = '.'.$ext;
 		}
 
 		// Search path
@@ -1163,6 +1165,12 @@ final class Kohana {
 			}
 		}
 
+    // EmeraldView vendor extension
+    if ($found === NULL && $directory === 'libraries')
+    {
+      $found = self::find_file('vendors', $filename, $required, $ext);
+    }
+    
 		if ($found === NULL)
 		{
 			if ($required === TRUE)

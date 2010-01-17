@@ -13,7 +13,7 @@
 
 <ul class="breadcrumbs">
   <li><a href="<?php echo url::base() ?>"><?php echo L10n::_('Home') ?></a> &gt;</li>
-  <li><a href="<?php echo $page->getUrl() ?>"><?php echo $collection_display_name ?></a> &gt;</li>
+  <li><a href="<?php echo $collection->getUrl() ?>"><?php echo $collection_display_name ?></a> &gt;</li>
   <li><?php echo L10n::_('Browse') ?></li>
 </ul>
 

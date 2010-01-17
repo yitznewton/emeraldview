@@ -8,14 +8,14 @@ class Search_Controller extends Emeraldview_Template_Controller
   
   public function index( $collection_name )
   {
-    if (!$this->getQueryParams()) {
+    if ( ! $this->input->get() ) {
       url::redirect( $collection_name );
     }
     
     $collection = $this->loadCollection( $collection_name );
     
     $this->queryBuilder = QueryBuilder::factory(
-      $this->queryParams, $collection
+      $this->input->get(), $collection
     );
       
     $query_handler = new QueryHandler( $this->queryBuilder );
@@ -33,34 +33,6 @@ class Search_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'hits_pager',      new HitsPager( $this, $query_handler->query() ) );
   }
   
-  public function getQueryParams()
-  {
-    if (isset( $this->queryParams )) {
-      return $this->queryParams;
-    }
-    
-    preg_match_all(
-      '_ [?&] ([^?&=]+) = ([^?&=]+) _x',
-      Router::$query_string,
-      $query_string_matches
-    );
-    
-    if (isset($query_string_matches[1]) && $query_string_matches[1]) {
-      $params = array_combine(
-        $query_string_matches[1], $query_string_matches[2]
-      );
-      
-      foreach ($params as $key => $value) {
-        $params[ $key ] = urldecode( $value );
-      }
-      
-      return $this->queryParams = $params;
-    }
-    else {
-      return $this->queryParams = false;
-    }
-  }
-  
   public function getQueryBuilder()
   {
     return $this->queryBuilder;
@@ -69,7 +41,7 @@ class Search_Controller extends Emeraldview_Template_Controller
   public function getCurrentPage()
   {
     // short name => easier to read
-    $pars = $this->queryParams;
+    $pars = $this->input->get();
     
     if ( isset($pars['p']) && is_numeric($pars['p']) && $pars['p'] > 0 ) {
       // a valid page number was passed in $_GET['p']
@@ -83,7 +55,7 @@ class Search_Controller extends Emeraldview_Template_Controller
   public function getSearchLevel()
   {
     // short name => easier to read
-    $pars = $this->queryParams;
+    $pars = $this->input->get();
 
     // FIXME
     return 'document';

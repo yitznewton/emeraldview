@@ -7,12 +7,13 @@ class QueryBuilder_Simple extends QueryBuilder
     if ($this->query) {
       return $this->query;
     }
+
+    $querystring = $this->params['q'];
     
     // run it against TX at regular boost, plus title with extra boost
-    $query = Zend_Search_Lucene_Search_QueryParser::parse(
-      $this->params['q']
-    );
+    $query = Zend_Search_Lucene_Search_QueryParser::parse( $querystring );
     
+    // FIXME what if there are multiple title indexes (Title, dc.Title, etc)?
     $title_index = null;
     
     foreach ($this->collection->getIndexes() as $key => $index) {

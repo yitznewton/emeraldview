@@ -59,6 +59,12 @@ define('MODPATH', str_replace('\\', '/', realpath($kohana_modules)).'/');
 define('SYSPATH', str_replace('\\', '/', realpath($kohana_system)).'/');
 define('PUBLICPATH', str_replace('\\', '/', realpath($kohana_public)).'/');
 
+$vendor_dir_name = APPPATH . 'vendors';
+
+if ( is_dir( $vendor_dir_name ) ) {
+  set_include_path( get_include_path() . PATH_SEPARATOR . $vendor_dir_name );
+}
+
 // Clean up
 unset($kohana_application, $kohana_modules, $kohana_system);
 

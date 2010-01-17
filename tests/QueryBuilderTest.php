@@ -9,6 +9,9 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
 
   protected function setUp()
   {
+    $param_sets[ 'blank' ] = array(
+      'q' => '',
+    );
     $param_sets[ 'simple' ] = array(
       'q' => 'boy',
     );
@@ -46,17 +49,21 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
   public function testGetQuery()
   {
     foreach ($this->objects as $object) {
-      $this->assertTrue( $object->getQuery() instanceof Zend_Search_Lucene_Search_QueryParser );
+      $this->assertTrue( $object->getQuery() instanceof Zend_Search_Lucene_Search_Query );
     }
   }
 
   public function testGetDisplayQuery()
   {
-
+    foreach ($this->objects as $object) {
+      $this->assertType( 'string', $object->getDisplayQuery() );
+    }
   }
 
   public function testGetRawTerms()
   {
-
+    foreach ($this->objects as $object) {
+      $this->assertType( 'array', $object->getRawTerms() );
+    }
   }
 }
