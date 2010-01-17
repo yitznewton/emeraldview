@@ -62,6 +62,10 @@ class search_Core
   
   public static function snippet( $hit, QueryBuilder $query_builder, $limit = 100 )
   {
+    if (!$hit->text) {
+      return false;
+    }
+
     $terms = $query_builder->getRawTerms();
     
     $text = $hit->text;

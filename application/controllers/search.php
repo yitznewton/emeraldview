@@ -27,7 +27,7 @@ class Search_Controller extends Emeraldview_Template_Controller
                                );
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'display_name',    $collection->getDisplayName( $this->language ) );
+    $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'query_builder',   $this->queryBuilder );
     $this->template->set_global( 'hits_pager',      new HitsPager( $this, $query_handler->query() ) );

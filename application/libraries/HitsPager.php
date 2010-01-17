@@ -59,36 +59,36 @@ class HitsPager
       $node_id = substr( $hit->docOID, strpos($hit->docOID, '.') + 1 );
     }
 
-    $document = Document::factory(
-      $this->controller->getCollection(), $doc_id
-    );
+    $node = Node_Document::factory( $this->controller->getCollection(), $hit->docOID );
 
     $processed_hit = new stdClass;
-    $processed_hit->node_id  = $node_id;
-    $processed_hit->title = $document->getMetadataElement('Title', $node_id);
+    $processed_hit->node_id  = $node_id;  //FIXME necessary?
+    $processed_hit->title = $node->getField( 'Title' );
     
-    // FIXME $slug   = $document->getMetadataElement('slug');
     $slug = 'FIXME';
     
     $docOID = $hit->docOID;
 
-    if ($document->isPaged()) {
+    if ($node->isPaged()) {
       $docOID = str_replace(".$node_id", '.' . $label, $docOID);
     }
 
-    $docOID = str_replace('.', '/', $docOID);
-    $docOID = str_replace($document->getId(), $slug, $docOID);
     $display_query = $this->controller->getQueryBuilder()->getDisplayQuery();
 
-    $processed_hit->url  = $this->controller->getCollection()->getUrl();
-    $processed_hit->url .= $docOID . '?search=';
-    $processed_hit->url .= htmlspecialchars( $display_query );
-
-    $processed_hit->thumb_url = $document->getThumbnailUrl( $node_id );
+    $page = NodePage::factory( $node );
     
-    // FIXME add error handling or failover in case user has not implemented
-    // our LuceneWrapper.jar
-    $processed_hit->text = $hit->getDocument()->getField('TX')->value;
+    $processed_hit->url = $page->getUrl()
+                        . '?search=' . htmlspecialchars( $display_query );
+
+    $processed_hit->thumb_url = $page ->getThumbnailUrl( $node_id );
+    
+    try {
+      $processed_hit->text = $hit->getDocument()->getField('TX')->value;
+    }
+    catch (Zend_Search_Lucene_Exception $e) {
+      // EmeraldView modified LuceneWrapper.jar for snippets not implemented
+      $processed_hit->text = '';
+    }
 
     return $processed_hit;
   }
