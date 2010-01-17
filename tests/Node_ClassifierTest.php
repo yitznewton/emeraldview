@@ -21,8 +21,7 @@ class Node_ClassifierTest extends PHPUnit_Framework_TestCase
 
     foreach ($this->objects as $object) {
       if ( ! $object instanceof Node_Classifier ) {
-        echo "Node IDs need to be updated\n";
-        exit(1);
+        throw new Exception('Node IDs need to be updated');
       }
     }
   }

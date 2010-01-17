@@ -32,8 +32,7 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
 
     foreach ($this->objects as $object) {
       if ( ! $object instanceof Node_Document ) {
-        echo "Node IDs need to be updated\n";
-        exit(1);
+        throw new Exception('Node IDs need to be updated');
       }
     }
   }

@@ -9,13 +9,13 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
 
   protected function setUp()
   {
-    $param_sets[ 'blank' ] = array(
-      'q' => '',
-    );
     $param_sets[ 'simple' ] = array(
       'q' => 'boy',
     );
     /*
+    $param_sets[ 'blank' ] = array(
+      'q' => '',
+    );
     $param_sets[ 'fielded' ] = array(  // fielded
       'i' => 'TI',
       'q' => 'education',
