@@ -12,10 +12,10 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
     $param_sets[ 'simple' ] = array(
       'q' => 'boy',
     );
-    /*
     $param_sets[ 'blank' ] = array(
       'q' => '',
     );
+    /*
     $param_sets[ 'fielded' ] = array(  // fielded
       'i' => 'TI',
       'q' => 'education',
@@ -31,7 +31,8 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
     $collection = Collection::factory( 'demo' );
 
     foreach ($param_sets as $key => $set) {
-      $this->objects[ $key ] = QueryBuilder::factory( $set, $collection );
+      $object = QueryBuilder::factory( $set, $collection );
+      if ($object) { $this->objects[ $key ] = $object; }
     }
   }
 

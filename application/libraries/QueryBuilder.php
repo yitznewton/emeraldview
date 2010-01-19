@@ -19,10 +19,14 @@ abstract class QueryBuilder
   
   public static function factory( array $params, Collection $collection )
   {
-    if (array_key_exists( 'i', $params)) {
+    if ( empty( $params['q'] ) && empty( $params['q1'] ) ) {
+      return false;
+    }
+    
+    if (array_key_exists( 'i', $params )) {
       return new QueryBuilder_Fielded( $params, $collection );
     }
-    elseif (array_key_exists( 'q1', $params)) {
+    elseif (array_key_exists( 'q1', $params )) {
       return new QueryBuilder_Boolean( $params, $collection );
     }
     else {

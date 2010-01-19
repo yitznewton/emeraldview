@@ -3,7 +3,7 @@
 require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../public/index.php';
 
-class SlugLookupTest extends PHPUnit_Framework_TestCase
+class NodeTreeFormatterTest extends PHPUnit_Framework_TestCase
 {
   protected $objects = array();
   protected $formatter;

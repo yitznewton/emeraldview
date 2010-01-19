@@ -2,8 +2,6 @@
 
 class NodeFormatter
 {
-  public function __construct() {}
-
   public function format( Node $node )
   {
     $title = '';
