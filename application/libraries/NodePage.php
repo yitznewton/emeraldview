@@ -17,6 +17,11 @@ abstract class NodePage
     return $this->node;
   }
 
+  public function getId()
+  {
+    return $this->getNode()->getId();
+  }
+
   public function getTree()
   {
     return NodeTreeFormatter::format( $this->getNode()->getRootNode(), $this->getNodeFormatter() );
@@ -33,6 +38,11 @@ abstract class NodePage
     else {
       return false;
     }
+  }
+
+  public function getCollection()
+  {
+    return $this->getNode()->getCollection();
   }
 
   public static function factory( Node $node )

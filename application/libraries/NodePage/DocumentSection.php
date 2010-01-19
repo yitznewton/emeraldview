@@ -15,14 +15,14 @@ class NodePage_DocumentSection extends NodePage
 
   public function getHTML()
   {
-    $xml_file = $this->node->getCollection()->getGreenstoneDirectory()
-                . '/index/text/' . $this->node->getRootNode()->getField( 'archivedir' )
+    $xml_file = $this->getCollection()->getGreenstoneDirectory()
+                . '/index/text/' . $this->getNode()->getRootNode()->getField( 'archivedir' )
                 . '/doc.xml';
 
     $dom = DOMDocument::load( $xml_file );
 
     $xpath = new DOMXPath( $dom );
-    $query = '/Doc/Sec[@gs2:docOID=\'' . $this->node->getId() . '\']';
+    $query = '/Doc/Sec[@gs2:docOID=\'' . $this->getId() . '\']';
     $dom_nodes = $xpath->query( $query );
 
     if ($dom_nodes->length == 0) {
@@ -32,8 +32,8 @@ class NodePage_DocumentSection extends NodePage
     $html = trim( $dom_nodes->item(0)->nodeValue );
 
     // fix Greenstone macro'ed internal URLs
-    $path  = '/files/' . $this->node->getCollection()->getName();
-    $path .= '/index/assoc/' . $this->node->getField( 'archivedir' );
+    $path  = '/files/' . $this->getCollection()->getName();
+    $path .= '/index/assoc/' . $this->getNode()->getField( 'archivedir' );
     $html = str_replace( '_httpdocimg_', $path, $html );
 
     // fix Greenstone macro'ed external URLs
@@ -62,11 +62,6 @@ class NodePage_DocumentSection extends NodePage
     return $html;
   }
   
-  public function getId()
-  {
-    throw new Exception('do we need this function?');
-  }
-  
   public function getUrl()
   {
     if ( $this->getSubnodeId() ) {
@@ -76,10 +71,10 @@ class NodePage_DocumentSection extends NodePage
       $section_url = '';
     }
 
-    $slug = $this->getNode()->getCollection()->getSlugLookup()
+    $slug = $this->getCollection()->getSlugLookup()
             ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
-    return $this->node->getCollection()->getUrl() . "/view/$slug/$section_url";
+    return $this->getCollection()->getUrl() . "/view/$slug/$section_url";
   }
 
   public function getSourceDocumentUrl()
@@ -108,7 +103,7 @@ class NodePage_DocumentSection extends NodePage
       strpos( $element, 'index/assoc/' ) + 12
     );
 
-    if ( $this->node->getId() != $this->node->getRootId() ) {
+    if ( $this->getId() != $this->getNode()->getRootId() ) {
       $assoc_path = $this->getNode()->getRootNode()->getField('assocfilepath');
       $element
         = str_replace( '[parent(Top):assocfilepath]', $assoc_path, $element );
@@ -121,7 +116,7 @@ class NodePage_DocumentSection extends NodePage
     $element = preg_replace(
       '/ \[ (\w+) \] /ex', '$metadata["\\1"]', $element);
 
-    $url  = $this->getNode()->getCollection()->getGreenstoneUrl()
+    $url  = $this->getCollection()->getGreenstoneUrl()
             . '/index/assoc/' . $element;
 
     return $url;
@@ -130,10 +125,10 @@ class NodePage_DocumentSection extends NodePage
   public function getDisplayMetadata()
   {
     $fields_to_display
-      = $this->getNode()->getCollection()->getConfig( 'display_metadata' );
+      = $this->getCollection()->getConfig( 'display_metadata' );
 
     if (!$fields_to_display) {
-      return false;
+      return array();
     }
 
     $display_metadata = array();
@@ -181,7 +176,7 @@ class NodePage_DocumentSection extends NodePage
     $metadata = $this->getNode()->getAllFields();
     $url = preg_replace('/ \[ (\w+) \] /ex', '$metadata["\\1"]', $url);
 
-    $url  = $this->getNode()->getCollection()->getUrl()
+    $url  = $this->getCollection()->getUrl()
             . '/index/assoc/' . $url;
 
     return $url;
@@ -189,14 +184,14 @@ class NodePage_DocumentSection extends NodePage
 
   public function getNodeFormatter()
   {
-    if ($this->getNode()->getCollection()->getConfig( 'document_tree_format' )) {
+    if ($this->getCollection()->getConfig( 'document_tree_format' )) {
       return new NodeFormatter_String(
-        $this->getNode()->getCollection()->getConfig( 'document_tree_format' )
+        $this->getCollection()->getConfig( 'document_tree_format' )
       );
     }
-    elseif ($this->getNode()->getCollection()->getConfig( 'document_tree_format_function' )) {
+    elseif ($this->getCollection()->getConfig( 'document_tree_format_function' )) {
       return new NodeFormatter_Function(
-        $this->getNode()->getCollection()->getConfig( 'document_tree_format_function' )
+        $this->getCollection()->getConfig( 'document_tree_format_function' )
       );
     }
     else {
@@ -214,22 +209,24 @@ class NodePage_DocumentSection extends NodePage
 
     $page_count = $this->getNode()->getRootNode()->getField( 'NumPages' );
     // TODO: refactor to sthg like $collection->getSlugLookup()->retrieveNode()
-    $slug       = $this->getNode()->getCollection()->getSlugLookup()
+    $slug       = $this->getCollection()->getSlugLookup()
                   ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
-    if ( $this->getSubnodeId() == '1' ) {
-      $prev_url = '';
-    }
-    else {
+    if ( $this->getSubnodeId() && $this->getSubnodeId() !== '1' ) {
+      // current node is not the first page
       // in paged documents, there SHOULD only be one level of section nodes,
       // hence casting subnode id as integer SHOULD give us good results
       $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
       $prev_url = $this->getNode()->getRelatedNode( $prev_section_id )
                   ->getPage()->getUrl();
     }
+    else {
+      // current node is the first page or root node
+      $prev_url = '';
+    }
 
     if ( (int) $this->getSubnodeId() >= (int) $page_count ) {
-      $next_url = null;
+      $next_url = '';
     }
     else {
       $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);

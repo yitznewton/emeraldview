@@ -2,30 +2,20 @@
 
 class NodePage_Classifier extends NodePage
 {
-  public function getCollection()
-  {
-    return $this->getNode()->getCollection();
-  }
-  
   public function getConfig( $subnode = null )
   {
-    $node = 'classifiers.' . $this->getNode()->getId();
+    $node = 'classifiers.' . $this->getId();
     
     if ($subnode) {
       $node .= '.' . $subnode;
     }
     
-    return $this->getNode()->getCollection()->getConfig( $node );
+    return $this->getCollection()->getConfig( $node );
   }
 
-  public function getId()
-  {
-    return $this->getNode()->getId();
-  }
-  
   public function getUrl()
   {
-    return $this->getNode()->getCollection()->getUrl() . '/browse/' . $this->getId();
+    return $this->getCollection()->getUrl() . '/browse/' . $this->getId();
   }
   
   public function getTitle()
@@ -44,7 +34,7 @@ class NodePage_Classifier extends NodePage
     }
     elseif ($this->getCollection()->getConfig( "classifiers.$id.format_function" )) {
       return new NodeFormatter_Function(
-        $this->getCollection()->getConfig( "classifiers.$id.format_function" )
+        $this->getConfig( "classifiers.$id.format_function" )
       );
     }
     else {

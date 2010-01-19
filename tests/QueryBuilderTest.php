@@ -16,11 +16,11 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
       'q' => '',
     );
     /*
-    $param_sets[ 'fielded' ] = array(  // fielded
+    $param_sets[ 'fielded' ] = array(
       'i' => 'TI',
       'q' => 'education',
     );
-    $param_sets[ 'boolean' ] = array(  // boolean
+    $param_sets[ 'boolean' ] = array(
       'i1' => 'ti',
       'q1' => 'education',
       'i2' => '',
