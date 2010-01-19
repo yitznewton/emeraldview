@@ -95,16 +95,6 @@ class Node_Document extends Node
     }
   }
 
-  public function format()
-  {
-    $node_formatter = new NodeFormatter();
-    $text = $node_formatter->format( $this );
-
-    // FIXME adding the <a> should be contingent on not having been added by NodeFormatter, or moved there altogether
-
-    return html::anchor( $this->getPage()->getUrl(), $text );
-  }
-
   public static function factory(
     Collection $collection, $node_id, $root_only = false
   )

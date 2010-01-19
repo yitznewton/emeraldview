@@ -30,12 +30,6 @@ class Node_Classifier extends Node
     }
   }
   
-  public function format()
-  {
-    //TODO: placeholder - write NodeFormatter or the like
-    return $this->id;
-  }
-
   public static function factory(
     Collection $collection, $node_id, $root_only = false
   )

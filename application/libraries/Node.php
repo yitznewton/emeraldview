@@ -10,7 +10,6 @@ abstract class Node
   
   abstract protected function recurse();
   abstract protected function getChild( $node_id );
-  abstract public function format();
 
   protected function __construct(
     Collection $collection, $node_id = null, $root_only = false
@@ -34,6 +33,18 @@ abstract class Node
     unset( $this->data['contains'] );
   }
   
+  public function format()
+  {
+    $node_formatter = NodeFormatter::factory( $this );
+    $text = $node_formatter->format( $this );
+
+    if ( strpos( $text, '<a' ) === false ) {
+      $text = html::anchor( $this->getPage()->getUrl(), $text );
+    }
+
+    return $text;
+  }
+
   public function getId()
   {
     return $this->id;

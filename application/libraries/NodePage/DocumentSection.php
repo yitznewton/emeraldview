@@ -11,6 +11,12 @@ class NodePage_DocumentSection extends NodePage
   
   public function getCoverUrl()
   {
+    if ( ! $this->getNode()->getField('hascover') ) {
+      return false;
+    }
+
+    return $this->getNode()->getCollection()->getGreenstoneUrl() . '/archives'
+           . $this->getNode()->getField('assocfilepath') . '/cover.jpg';
   }
 
   public function getHTML()
@@ -180,23 +186,6 @@ class NodePage_DocumentSection extends NodePage
             . '/index/assoc/' . $url;
 
     return $url;
-  }
-
-  public function getNodeFormatter()
-  {
-    if ($this->getCollection()->getConfig( 'document_tree_format' )) {
-      return new NodeFormatter_String(
-        $this->getCollection()->getConfig( 'document_tree_format' )
-      );
-    }
-    elseif ($this->getCollection()->getConfig( 'document_tree_format_function' )) {
-      return new NodeFormatter_Function(
-        $this->getCollection()->getConfig( 'document_tree_format_function' )
-      );
-    }
-    else {
-      return new NodeFormatter_String( '[Title]' );
-    }
   }
 
   public function getPagedUrls()

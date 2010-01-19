@@ -74,8 +74,7 @@ class NodePage_DocumentSectionTest extends PHPUnit_Framework_TestCase
 
   public function testGetCoverUrl()
   {
-    $this->markTestIncomplete( 'This function has not been implemented yet.' );
-
+    // TODO: use curl to test the URLs themselves?
     foreach ($this->objects as $object) {
       $this->assertTrue( $object->getCoverUrl() === false || is_string( $object->getCoverUrl() ) );
     }
@@ -113,6 +112,20 @@ class NodePage_DocumentSectionTest extends PHPUnit_Framework_TestCase
   {
     foreach ($this->objects as $object) {
       $this->assertTrue( $object->getScreenIconUrl() === false || is_string( $object->getScreenIconUrl() ) );
+    }
+  }
+
+  public function testGetSourceDocumentUrl()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertTrue( $object->getSourceDocumentUrl() === false || is_string( $object->getSourceDocumentUrl() ) );
+    }
+  }
+
+  public function testGetThumbnailUrl()
+  {
+    foreach ($this->objects as $object) {
+      $this->assertTrue( $object->getThumbnailUrl() === false || is_string( $object->getThumbnailUrl() ) );
     }
   }
 }
