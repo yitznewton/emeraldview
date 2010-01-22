@@ -23,7 +23,7 @@ class HitsPage
     $this->perPage = $per_page;
 
     $this->hits = $search_handler->execute();
-    $this->totalPages = ceil( count($this->hits) / $per_page );
+    $this->totalPages = ceil( count( $this->hits ) / $per_page );
 
     if ( $this->totalPages >= $page_number ) {
       $this->pageNumber = $page_number;
@@ -44,27 +44,45 @@ class HitsPage
 
   public function links()
   {
-    $pages = array();
+    $links = new stdClass();
+    $params = $this->searchHandler->getParams();
+
+    if ( $this->pageNumber > 1 ) {
+      $params['p'] = 1;
+      $links->first = $this->searchHandler->getCollection()->getUrl()
+                      . '/search?' . http_build_query( $params );
+
+      $params['p'] = $this->pageNumber - 1;
+      $links->previous = $this->searchHandler->getCollection()->getUrl()
+                         . '/search?' . http_build_query( $params );
+    }
+
+    if ( $this->pageNumber < $this->totalPages ) {
+      $params['p'] = $this->pageNumber + 1;
+      $links->next = $this->searchHandler->getCollection()->getUrl()
+                      . '/search?' . http_build_query( $params );
+
+      $params['p'] = $this->totalPages;
+      $links->last = $this->searchHandler->getCollection()->getUrl()
+                      . '/search?' . http_build_query( $params );
+    }
+    
+    $links->pages = array();
     
     for ( $i = 1; $i < $this->pageNumber; $i++ )
     {
-      $params = $this->searchHandler->getParams();
       $params['p'] = $i;
-      $pages[] = $this->searchHandler->getCollection()->getUrl()
-               . '/search?' . http_build_query( $params );
+      $links->pages[ $i ] = $this->searchHandler->getCollection()->getUrl()
+                          . '/search?' . http_build_query( $params );
     }
 
     for ( $i = $this->pageNumber + 1; $i < $this->totalPages + 1; $i++ )
     {
-      $params = $this->searchHandler->getParams();
       $params['p'] = $i;
-      $pages[] = $this->searchHandler->getCollection()->getUrl()
-               . '/search?' . http_build_query( $params );
+      $links->pages[ $i ] = $this->searchHandler->getCollection()->getUrl()
+                          . '/search?' . http_build_query( $params );
     }
     
-    $links = new stdClass();
-    $links->pages = $pages;
-
     return $links;
   }
 }
