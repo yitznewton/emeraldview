@@ -14,14 +14,6 @@ class Search_Controller extends Emeraldview_Template_Controller
     
     $collection = $this->loadCollection( $collection_name );
     
-    /*
-    $this->queryBuilder = QueryBuilder::factory(
-      $this->input->get(), $collection
-    );
-      
-    $query_handler = new QueryHandler( $this->queryBuilder );
-     */
-
     if ( (int) $this->input->get( 'p' ) ) {
       $page_number = (int) $this->input->get( 'p' );
     }
