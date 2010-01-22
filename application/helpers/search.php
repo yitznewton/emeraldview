@@ -47,14 +47,14 @@ class search_Core
   {
   }
   
-  public static function result_summary( HitsPager $pager, $display_query )
+  public static function result_summary( HitsPage $hits_page, $display_query )
   {
     $summary = sprintf(
       L10n::_( 'Results <strong>%d</strong> - <strong>%d</strong> of '
                . '<strong>%d</strong> for <strong>%s</strong>'
              ),
-      $pager->getStartHit(), $pager->getEndHit(),
-      $pager->getTotalHits(), $display_query
+      $hits_page->firstHit, $hits_page->lastHit,
+      $hits_page->totalHitCount, $display_query
     );
     
     return $summary;
@@ -130,44 +130,70 @@ class search_Core
     return $text;
   }
   
-  public static function pager( HitsPager $hits_pager )
+  public static function pager( HitsPage $hits_page, Collection $collection )
   {
-    $base_url = $hits_pager->getController()->getCollection()->getUrl()
-              . 'search' . Router::$query_string;
-    
-    $base_url = preg_replace('/&p=\d+/', '', $base_url);
+    // FIXME: still need the individual page links
     
     $pages = '';
     
-    if ($first = $hits_pager->getLinkPages()->first) {
+    if ($hits_page->links->first) {
       $pages .= myhtml::element(
-        'li', html::anchor( $base_url . '&p=' . $first, '<<' )
+        'li', html::anchor( $hits_page->links->first, '<<' )
+      );
+    }
+    else {
+      $pages .= myhtml::element(
+        'li', '<<'
       );
     }
     
-    if ($prev = $hits_pager->getLinkPages()->prev) {
+    if ($hits_page->links->previous) {
       $pages .= myhtml::element(
-        'li', html::anchor( $base_url . '&p=' . $prev, '<' )
+        'li', html::anchor( $hits_page->links->previous, '<' )
       );
       
-      if ($hits_pager->getLinkPages()->first_number != 1) {
-        $pages .= myhtml::element( 'li', '...' );
+      //if ($hits_page->getLinkPages()->first_number != 1) {
+      //  $pages .= myhtml::element( 'li', '...' );
+      //}
+    }
+    else {
+      $pages .= myhtml::element(
+        'li', '<'
+      );
+    }
+
+    // TODO add support for truncation of page links
+    foreach ($hits_page->links->pages as $page_number => $page_link) {
+      if ($page_link) {
+        $pages .= myhtml::element(
+          'li', html::anchor( $page_link, $page_number )
+        );
+      }
+      else {
+        $pages .= myhtml::element(
+          'li', $page_number
+        );
       }
     }
     
-    if ($next = $hits_pager->getLinkPages()->next) {
-      if ($last_number != $hits_pager->getLinkPages()->last) {
-        $pages .= myhtml::element( 'li', '...' );
-      }
+    if ($hits_page->links->next) {
+      //if ($last_number != $hits_page->getLinkPages()->last) {
+      //  $pages .= myhtml::element( 'li', '...' );
+      //}
       
       $pages .= myhtml::element(
-        'li', html::anchor( $base_url . '&p=' . $next, '>' )
+        'li', html::anchor( $hits_page->links->next, '>' )
+      );
+    }
+    else {
+      $pages .= myhtml::element(
+        'li', '>'
       );
     }
     
-    if ($last = $hits_pager->getLinkPages()->last) {
+    if ($hits_page->links->last) {
       $pages .= myhtml::element(
-        'li', html::anchor( $base_url . '&p=' . $last, '>>' )
+        'li', html::anchor( $hits_page->links->last, '>>' )
       );
     }
     

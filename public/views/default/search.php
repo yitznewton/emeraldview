@@ -40,8 +40,7 @@
 <div id="search-results-container">
   <?php if ($hits_page->hits): ?>
     <div id="search-results-count">
-      Showing <?php echo $hits_page->firstHit ?>-<?php echo $hits_page->lastHit ?> of <?php echo $hits_page->totalHitCount ?>
-      <?php //echo search::result_summary( $hits_pager, $query_builder->getDisplayQuery() ) ?>
+      <?php echo search::result_summary( $hits_page, $query_builder->getDisplayQuery() ) ?>
     </div>
   <?php else: ?>
     <div id="search-results-fail">
@@ -55,8 +54,7 @@
       <li>
         <div>
           <a href="<?php echo $hit->link ?>">
-            <?php echo $hit->title ?>
-            <?php //echo search::highlight( $hit->title, $query_builder ) ?>
+            <?php echo search::highlight( $hit->title, $query_builder ) ?>
           </a>
         </div>
 
@@ -69,7 +67,7 @@
     <?php endforeach; ?>
   </ol>
 
-  <?php //echo search::pager( $hits_pager ) ?>
+  <?php echo search::pager( $hits_page, $collection ) ?>
   <?php endif; ?>
 </div>
 

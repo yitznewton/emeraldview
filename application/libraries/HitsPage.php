@@ -49,14 +49,17 @@ class HitsPage
       $this->lastHit = $this->totalHitCount;
     }
 
-    $this->hits = array_slice( $all_hits, $this->firstHit, $this->perPage );
+    $this->hits = array_slice( $all_hits, $this->firstHit - 1, $this->perPage );
     $this->links = $this->buildLinks();
   }
 
   protected function buildLinks()
   {
-    $links = new stdClass();
+    $links = new HitsPageLinks();
+
     $params = $this->searchHandler->getParams();
+
+    // first, the first-previous-next-last links...
 
     if ( $this->pageNumber > 1 ) {
       $params['p'] = 1;
@@ -77,16 +80,20 @@ class HitsPage
       $links->last = $this->searchHandler->getCollection()->getUrl()
                       . '/search?' . http_build_query( $params );
     }
-    
-    $links->pages = array();
-    
+
+    // now, the individual page links...
+
     for ( $i = 1; $i < $this->pageNumber; $i++ )
     {
+      // add pages before this one
       $params['p'] = $i;
       $links->pages[ $i ] = $this->searchHandler->getCollection()->getUrl()
                           . '/search?' . http_build_query( $params );
     }
 
+    $links->pages[ $this->pageNumber ] = null;
+
+    // add pages after this one
     for ( $i = $this->pageNumber + 1; $i < $this->totalPages + 1; $i++ )
     {
       $params['p'] = $i;
