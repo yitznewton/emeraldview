@@ -2,6 +2,7 @@
 
 class SearchHandler
 {
+  protected $params;
   protected $collection;
   protected $queryBuilder;
   protected $indexLevel;
@@ -9,6 +10,7 @@ class SearchHandler
 
   public function __construct( array $params, Collection $collection )
   {
+    $this->params = $params;
     $this->collection = $collection;
     $this->queryBuilder = QueryBuilder::factory( $params, $collection );
     $this->indexLevel = SearchHandler::getIndexLevel( $params, $collection );
@@ -48,6 +50,16 @@ class SearchHandler
     }
 
     return $hits;
+  }
+
+  public function getParams()
+  {
+    return $this->params;
+  }
+
+  public function getCollection()
+  {
+    return $this->collection;
   }
   
   protected static function getIndexLevel( array $params, Collection $collection )
