@@ -61,6 +61,11 @@ class SearchHandler
   {
     return $this->collection;
   }
+
+  public function getQueryBuilder()
+  {
+    return $this->queryBuilder;
+  }
   
   protected static function getIndexLevel( array $params, Collection $collection )
   {

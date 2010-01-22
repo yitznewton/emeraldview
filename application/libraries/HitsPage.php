@@ -2,8 +2,13 @@
 
 class HitsPage
 {
+  public $totalHitCount;
+  public $links;
+  public $hits;
+  public $firstHit;
+  public $lastHit;
+
   protected $searchHandler;
-  protected $hits;
   protected $perPage;
   protected $pageNumber;
   protected $totalPages;
@@ -22,27 +27,33 @@ class HitsPage
     
     $this->perPage = $per_page;
 
-    $this->hits = $search_handler->execute();
-    $this->totalPages = ceil( count( $this->hits ) / $per_page );
+    $all_hits = $search_handler->execute();
+    $this->totalHitCount = count( $all_hits );
+    $this->totalPages = ceil( $this->totalHitCount / $per_page );
+
+    // FIXME: what if no hits
 
     if ( $this->totalPages >= $page_number ) {
       $this->pageNumber = $page_number;
     }
     else {
-      $this->pageNumber = 1;
+      throw new InvalidArgumentException( 'Page number exceeds total pages' );
     }
 
-    var_dump($this->links());exit;
+    $this->firstHit = ( $this->pageNumber - 1 ) * $this->perPage + 1;
+    
+    if ( $this->firstHit + $this->perPage <= $this->totalHitCount ) {
+      $this->lastHit = $this->firstHit + $this->perPage;
+    }
+    else {
+      $this->lastHit = $this->totalHitCount;
+    }
+
+    $this->hits = array_slice( $all_hits, $this->firstHit, $this->perPage );
+    $this->links = $this->buildLinks();
   }
 
-  public function hits()
-  {
-    $first_hit = $this->$pageNumber * $this->perPage;
-
-    return array_slice( $this->hits, $first_hit, $this->perPage );
-  }
-
-  public function links()
+  protected function buildLinks()
   {
     $links = new stdClass();
     $params = $this->searchHandler->getParams();

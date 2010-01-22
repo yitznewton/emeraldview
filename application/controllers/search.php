@@ -33,7 +33,12 @@ class Search_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
-    $hits_page  = new HitsPage( $search_handler, $page_number, $per_page );
+    try {
+      $hits_page  = new HitsPage( $search_handler, $page_number, $per_page );
+    }
+    catch (InvalidArgumentException $e) {
+      url::redirect( $collection->getUrl() );
+    }
     
     $this->view                 = new View( $this->theme . '/search' );
     $this->template->set_global( 'page_title',      'Search | '
@@ -44,8 +49,8 @@ class Search_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
-    $this->template->set_global( 'query_builder',   $this->queryBuilder );
-    //$this->template->set_global( 'hits_page',       $hits_page );
+    $this->template->set_global( 'query_builder',   $search_handler->getQueryBuilder() );
+    $this->template->set_global( 'hits_page',       $hits_page );
   }
   
   public function getQueryBuilder()

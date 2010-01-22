@@ -38,9 +38,10 @@
 </div>
 
 <div id="search-results-container">
-  <?php if ($hits_pager->getProcessedHits()): ?>
+  <?php if ($hits_page->hits): ?>
     <div id="search-results-count">
-      <?php echo search::result_summary( $hits_pager, $query_builder->getDisplayQuery() ) ?>
+      Showing <?php echo $hits_page->firstHit ?>-<?php echo $hits_page->lastHit ?> of <?php echo $hits_page->totalHitCount ?>
+      <?php //echo search::result_summary( $hits_pager, $query_builder->getDisplayQuery() ) ?>
     </div>
   <?php else: ?>
     <div id="search-results-fail">
@@ -48,23 +49,27 @@
     </div>
   <?php endif; ?>
 
-  <?php if ($hits_pager->getProcessedHits()): ?>
-  <ol id="search-hits" start="<?php echo $hits_pager->getStartHit() ?>">
-    <?php foreach ($hits_pager->getProcessedHits() as $hit): ?>
+  <?php if ($hits_page->hits): ?>
+  <ol id="search-hits" start="<?php echo $hits_page->firstHit ?>">
+    <?php foreach ($hits_page->hits as $hit): ?>
       <li>
         <div>
-          <a href="<?php echo $hit->url ?>">
-            <?php echo search::highlight( $hit->title, $query_builder ) ?>
+          <a href="<?php echo $hit->link ?>">
+            <?php echo $hit->title ?>
+            <?php //echo search::highlight( $hit->title, $query_builder ) ?>
           </a>
         </div>
-        <div class="search-snippet">
-          <?php echo search::snippet( $hit, $query_builder ) ?>
-        </div>
+
+        <?php if ($hit->snippet): ?>
+          <div class="search-snippet">
+            <?php echo search::snippet( $hit, $query_builder ) ?>
+          </div>
+        <?php endif; ?>
       </li>
     <?php endforeach; ?>
   </ol>
 
-  <?php echo search::pager( $hits_pager ) ?>
+  <?php //echo search::pager( $hits_pager ) ?>
   <?php endif; ?>
 </div>
 
