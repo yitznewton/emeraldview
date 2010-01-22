@@ -14,11 +14,34 @@ class Search_Controller extends Emeraldview_Template_Controller
     
     $collection = $this->loadCollection( $collection_name );
     
+    /*
     $this->queryBuilder = QueryBuilder::factory(
       $this->input->get(), $collection
     );
       
     $query_handler = new QueryHandler( $this->queryBuilder );
+     */
+
+    if ( (int) $this->input->get( 'p' ) ) {
+      $page_number = (int) $this->input->get( 'p' );
+    }
+    else {
+      $page_number = 1;
+    }
+
+    // FIXME
+    $per_page = 20;
+
+    try {
+      $search_handler = new SearchHandler(
+        $this->input->get(), $collection
+      );
+    }
+    catch (Exception $e) {
+      url::redirect( $collection->getUrl() );
+    }
+
+    $hits_page  = new HitsPage( $search_handler, $page_number, $per_page );
     
     $this->view                 = new View( $this->theme . '/search' );
     $this->template->set_global( 'page_title',      'Search | '
@@ -30,7 +53,7 @@ class Search_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'query_builder',   $this->queryBuilder );
-    $this->template->set_global( 'hits_pager',      new HitsPager( $this, $query_handler->query() ) );
+    //$this->template->set_global( 'hits_page',       $hits_page );
   }
   
   public function getQueryBuilder()

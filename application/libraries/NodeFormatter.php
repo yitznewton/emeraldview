@@ -24,7 +24,7 @@ class NodeFormatter
 
   public static function factory( Node $node )
   {
-    switch (get_class( $node )) {
+    switch ( get_class( $node ) ) {
       case 'Node_Document':
         if ( $node->getCollection()->getConfig( 'document_tree_format' ) ) {
           return new NodeFormatter_String(
