@@ -19,7 +19,9 @@ abstract class QueryBuilder
   
   public static function factory( array $params, Collection $collection )
   {
-    if (array_key_exists( 'i', $params )) {
+    $indexes = array_keys( $collection->getIndexes() );
+
+    if ( array_key_exists( 'i', $params ) && in_array( $params['i'], $indexes ) ) {
       return new QueryBuilder_Fielded( $params, $collection );
     }
     elseif (array_key_exists( 'q1', $params )) {
