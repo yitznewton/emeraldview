@@ -2,7 +2,17 @@
 
 class QueryBuilder_Fielded extends QueryBuilder
 {
-  public function getQuerystring()
+  public function getQuery()
+  {
+    
+  }
+  
+  public function getDisplayQuery()
+  {
+    
+  }
+
+  public function getRawTerms()
   {
   }
 }

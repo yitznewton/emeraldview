@@ -8,7 +8,7 @@
     <a href="<?php echo $collection->getUrl() ?>"><?php echo $collection_display_name ?></a> &gt;
   </li>
   <li>
-    Search results for <strong><?php echo $query_builder->getDisplayQuery() ?></strong>
+    Search results for <strong><?php echo $search_handler->getQueryBuilder()->getDisplayQuery() ?></strong>
   </li>
 </ul>
 
@@ -16,8 +16,8 @@
 
   <h2><?php echo L10n::_('Search') ?></h2>
 
-  <?php echo search::form_simple(  $collection, $query_builder ) ?>
-  <?php //echo search::form_fielded( $collection ) ?>
+  <?php echo search::form_simple(  $collection, $search_handler ) ?>
+  <?php echo search::form_fielded( $collection ) ?>
   <?php //echo search::form_boolean( $collection ) ?>
 
   <ul id="search-form-chooser">
@@ -40,7 +40,7 @@
 <div id="search-results-container">
   <?php if ($hits_page->hits): ?>
     <div id="search-results-count">
-      <?php echo search::result_summary( $hits_page, $query_builder->getDisplayQuery() ) ?>
+      <?php echo search::result_summary( $hits_page, $search_handler ) ?>
     </div>
   <?php else: ?>
     <div id="search-results-fail">
@@ -54,7 +54,7 @@
       <li>
         <div>
           <a href="<?php echo $hit->link ?>">
-            <?php echo search::highlight( $hit->title, $query_builder ) ?>
+            <?php echo search::highlight( $hit->title, $search_handler ) ?>
           </a>
         </div>
 

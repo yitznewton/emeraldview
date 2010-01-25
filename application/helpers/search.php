@@ -3,18 +3,19 @@
 class search_Core
 {
   public static function form_simple(
-    Collection $collection, QueryBuilder $query_builder = null
-  ) {
+    Collection $collection, SearchHandler $search_handler = null
+  )
+  {
     $text_attributes = array(
       'type'  => 'text',
       'name'  => 'q',
     );
 
-    if ( $query_builder instanceof QueryBuilder_Simple ) {
+    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Simple ) {
       // this page is the result of a simple search, so fill in the form
-      $text_attributes['value'] = htmlspecialchars(
-        $query_builder->getDisplayQuery()
-      );
+      $params = $search_handler->getParams();
+      // FIXME the params should be sanitized earlier, on SearchHandler construct
+      $text_attributes['value'] = $params['q'];
     }
 
     $text_element = myhtml::element('input', null, $text_attributes);
@@ -39,22 +40,100 @@ class search_Core
     return myhtml::element('form', $form_contents, $form_attributes);
   }
   
-  public static function form_fielded( Collection $collection )
+  public static function form_fielded(
+    Collection $collection, SearchHandler $search_handler = null
+  )
   {
+    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Fielded ) {
+      $params = $search_handler->getParams();
+      $index_default = $params['i'];
+      $level_default = $params['l'];
+      $text_default = $params['q'];
+    }
+    else {
+      $index_default = null;
+      $level_default = null;
+      $text_default = null;
+    }
+
+    $index_select = myhtml::select_element(
+      $collection->getIndexes(), array('name' => 'i'), $index_default
+    );
+
+    if ( ! $level_default || ! in_array( $level_default, $collection->getIndexLevels() )) {
+      $level_default = $collection->getDefaultIndexLevel();
+    }
+
+    if ( count( $collection->getIndexLevels() > 1 ) ) {
+      // FIXME if paragraph is included, Lucene doesn't support
+      $level_options = array();
+
+      foreach ( $collection->getIndexLevels() as $level ) {
+        $level_options[ $level ] = L10n::_( $level );
+      }
+
+      $level_select = myhtml::select_element(
+        $level_options, array('name' => 'l'), $level_default
+      );
+    }
+    else {
+      $level_select = null;
+    }
+    
+    $text_attr = array(
+      'type' => 'text',
+      'name' => 'q',
+      'value' => $text_default,
+    );
+            
+    $text_input = myhtml::element( 'input', null, $text_attr );
+
+    $submit_attr = array(
+      'type' => 'submit',
+      'value' => L10n::_('Search'),
+    );
+
+    $submit_input = myhtml::element( 'input', null, $submit_attr );
+
+    if ($level_select) {
+      $form_contents = sprintf(
+        'Search %1$s at the %2$s level for %3$s',
+        $index_select,
+        $level_select,
+        $text_input
+      ) . $submit_input;
+    }
+    else {
+      $form_contents = sprintf(
+        'Search %1$s for %2$s',
+        $index_select,
+        $text_input
+      ) . $submit_input;
+    }
+
+    $form_attributes = array(
+      'name'   => 'search',
+      'id'     => 'search-form-fielded',
+      'class'  => 'search-form',
+      'action' => $collection->getUrl() . '/search',
+      'method' => 'GET',
+    );
+
+    return myhtml::element( 'form', $form_contents, $form_attributes );
   }
   
   public static function form_boolean( Collection $collection )
   {
   }
   
-  public static function result_summary( HitsPage $hits_page, $display_query )
+  public static function result_summary( HitsPage $hits_page, SearchHandler $search_handler )
   {
     $summary = sprintf(
       L10n::_( 'Results <strong>%d</strong> - <strong>%d</strong> of '
                . '<strong>%d</strong> for <strong>%s</strong>'
              ),
       $hits_page->firstHit, $hits_page->lastHit,
-      $hits_page->totalHitCount, $display_query
+      $hits_page->totalHitCount, $search_handler->getQueryBuilder()->getDisplayQuery()
     );
     
     return $summary;
@@ -66,14 +145,12 @@ class search_Core
       return false;
     }
 
-    $terms = $query_builder->getRawTerms();
-    
     $text = $hit->text;
     $text = preg_replace('/\s{2,}/u', ' ', $text);
     
     $first_hit_position = strlen( $text ) - 1;
     
-    foreach ($terms as $term) {
+    foreach ($query_builder->getRawTerms() as $term) {
       // remove special search characters
       $term = str_replace( array('*', '?'), '', $term );
       
@@ -121,9 +198,9 @@ class search_Core
     return search::highlight( $snippet, $query_builder );
   }
   
-  public static function highlight( $text, QueryBuilder $query_builder )
+  public static function highlight( $text, SearchHandler $search_handler )
   {
-    foreach ($query_builder->getRawTerms() as $term) {
+    foreach ($search_handler->getQueryBuilder()->getRawTerms() as $term) {
       $text = preg_replace( "/$term.*?\b/iu", "<strong>\\0</strong>", $text );
     }
     

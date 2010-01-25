@@ -43,7 +43,7 @@ class HitsPage
     $this->firstHit = ( $this->pageNumber - 1 ) * $this->perPage + 1;
     
     if ( $this->firstHit + $this->perPage <= $this->totalHitCount ) {
-      $this->lastHit = $this->firstHit + $this->perPage;
+      $this->lastHit = $this->firstHit + $this->perPage - 1;
     }
     else {
       $this->lastHit = $this->totalHitCount;
