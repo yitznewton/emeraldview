@@ -24,34 +24,19 @@ class QueryBuilder_Boolean extends QueryBuilder
     return $this->query;
   }
 
-  public function getRawTerms()
-  {
-    if ($this->rawTerms) {
-      return $this->rawTerms;
-    }
-
-    $terms = array();
-
-    foreach ( $this->query->getTerms() as $term ) {
-      $terms[] = $term->text;
-    }
-
-    return $this->rawTerms = $terms;
-  }
-
   public function getDisplayQuery()
   {
     $query = '';
 
-    $terms = $this->query->getTerms();
-    $signs = $this->query->getSigns();
+    $terms = $this->getQuery()->getTerms();
+    $signs = $this->getQuery()->getSigns();
 
     $query .= $terms[0]->field . ':' . $terms[0]->text;
 
     for ( $i = 1; $i < count( $terms ); $i++ ) {
       if ( $signs === null ) {
         // when Zend_Search_Lucene_Search_Query_MultiTerm::getSigns() returns
-        // false and not an array, it means all terms are ANDed
+        // null and not an array, it means all terms are ANDed
         $query .= ' AND ';
       }
       elseif ( $signs[ $i ] === true ) {

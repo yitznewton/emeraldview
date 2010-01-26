@@ -15,8 +15,22 @@ abstract class QueryBuilder
   
   abstract public function getQuery();
   abstract public function getDisplayQuery();
-  abstract public function getRawTerms();
-  
+
+  public function getRawTerms()
+  {
+    if ($this->rawTerms) {
+      return $this->rawTerms;
+    }
+
+    $terms = array();
+
+    foreach ( $this->getQuery()->getTerms() as $term ) {
+      $terms[] = $term->text;
+    }
+
+    return $this->rawTerms = $terms;
+  }
+
   public static function factory( array $params, Collection $collection )
   {
     $indexes = array_keys( $collection->getIndexes() );
