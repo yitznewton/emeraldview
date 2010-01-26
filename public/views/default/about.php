@@ -40,8 +40,8 @@
   <h2><?php echo L10n::_('Search') ?></h2>
 
   <?php echo search::form_simple(  $collection ) ?>
-  <?php //echo search::form_fielded( $collection ) ?>
-  <?php //echo search::form_boolean( $collection ) ?>
+  <?php echo search::form_fielded( $collection ) ?>
+  <?php echo search::form_boolean( $collection ) ?>
 
   <ul id="search-form-chooser">
     <li>

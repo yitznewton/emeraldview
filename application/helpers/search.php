@@ -51,6 +51,7 @@ class search_Core
       $text_default = $params['q'];
     }
     else {
+      $params = null;
       $index_default = null;
       $level_default = null;
       $text_default = null;
@@ -60,7 +61,7 @@ class search_Core
       $collection->getIndexes(), array('name' => 'i'), $index_default
     );
 
-    $level_select = search::level_select( $collection, $search_handler->getParams() );
+    $level_select = search::level_select( $collection, $params );
 
     $text_attr = array(
       'type' => 'text',
@@ -104,10 +105,13 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
   
-  public static function form_boolean( Collection $collection, SearchHandler $search_handler )
+  public static function form_boolean( Collection $collection, SearchHandler $search_handler = null )
   {
     if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Boolean ) {
       $params = $search_handler->getParams();
+    }
+    else {
+      $params = null;
     }
 
     $boolean_options = array(
@@ -200,7 +204,7 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
 
-  public static function level_select( Collection $collection, array $params )
+  public static function level_select( Collection $collection, array $params = null )
   {
     if ( count( $collection->getIndexLevels() ) == 1 ) {
       return false;
