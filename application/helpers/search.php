@@ -209,8 +209,10 @@ class search_Core
   
   public static function pager( HitsPage $hits_page, Collection $collection )
   {
-    // FIXME: still need the individual page links
-    
+    if ( ! $hits_page->links ) {
+      return '';
+    }
+
     $pages = '';
     
     if ($hits_page->links->first) {
@@ -228,7 +230,8 @@ class search_Core
       $pages .= myhtml::element(
         'li', html::anchor( $hits_page->links->previous, '<' )
       );
-      
+
+      // FIXME implement this
       //if ($hits_page->getLinkPages()->first_number != 1) {
       //  $pages .= myhtml::element( 'li', '...' );
       //}
@@ -254,6 +257,7 @@ class search_Core
     }
     
     if ($hits_page->links->next) {
+      // FIXME implement this
       //if ($last_number != $hits_page->getLinkPages()->last) {
       //  $pages .= myhtml::element( 'li', '...' );
       //}

@@ -28,33 +28,44 @@ class HitsPage
     $this->perPage = $per_page;
 
     $all_hits = $search_handler->execute();
-    $this->totalHitCount = count( $all_hits );
-    $this->totalPages = ceil( $this->totalHitCount / $per_page );
-
-    // FIXME: what if no hits
-
-    if ( $this->totalPages >= $page_number ) {
-      $this->pageNumber = $page_number;
-    }
-    else {
-      throw new InvalidArgumentException( 'Page number exceeds total pages' );
-    }
-
-    $this->firstHit = ( $this->pageNumber - 1 ) * $this->perPage + 1;
     
-    if ( $this->firstHit + $this->perPage <= $this->totalHitCount ) {
-      $this->lastHit = $this->firstHit + $this->perPage - 1;
+    $this->totalHitCount = count( $all_hits );
+
+    if ( $this->totalHitCount === 0 ) {
+      $this->totalPages = 0;
+      $this->hits = array();
+      $this->links = false;
     }
     else {
-      $this->lastHit = $this->totalHitCount;
-    }
+      $this->totalPages = ceil( $this->totalHitCount / $per_page );
 
-    $this->hits = array_slice( $all_hits, $this->firstHit - 1, $this->perPage );
-    $this->links = $this->buildLinks();
+      if ( $this->totalPages >= $page_number ) {
+        $this->pageNumber = $page_number;
+      }
+      else {
+        throw new InvalidArgumentException( 'Page number exceeds total pages' );
+      }
+
+      $this->firstHit = ( $this->pageNumber - 1 ) * $this->perPage + 1;
+
+      if ( $this->firstHit + $this->perPage <= $this->totalHitCount ) {
+        $this->lastHit = $this->firstHit + $this->perPage - 1;
+      }
+      else {
+        $this->lastHit = $this->totalHitCount;
+      }
+
+      $this->hits = array_slice( $all_hits, $this->firstHit - 1, $this->perPage );
+      $this->links = $this->buildLinks();
+    }
   }
 
   protected function buildLinks()
   {
+    if ($this->totalPages == 1) {
+      return false;
+    }
+
     $links = new HitsPageLinks();
 
     $params = $this->searchHandler->getParams();

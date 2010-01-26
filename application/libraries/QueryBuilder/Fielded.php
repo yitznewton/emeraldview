@@ -4,6 +4,10 @@ class QueryBuilder_Fielded extends QueryBuilder
 {
   public function getQuery()
   {
+    if ($this->query) {
+      return $this->query;
+    }
+
     $index = $this->params['i'];
 
     if ( ! in_array( $index, array_keys( $this->collection->getIndexes() ) ) ) {
