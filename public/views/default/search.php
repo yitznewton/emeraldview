@@ -18,7 +18,7 @@
 
   <?php echo search::form_simple(  $collection, $search_handler ) ?>
   <?php echo search::form_fielded( $collection, $search_handler ) ?>
-  <?php //echo search::form_boolean( $collection ) ?>
+  <?php echo search::form_boolean( $collection, $search_handler ) ?>
 
   <ul id="search-form-chooser">
     <li>

@@ -60,26 +60,8 @@ class search_Core
       $collection->getIndexes(), array('name' => 'i'), $index_default
     );
 
-    if ( ! $level_default || ! in_array( $level_default, $collection->getIndexLevels() )) {
-      $level_default = $collection->getDefaultIndexLevel();
-    }
+    $level_select = search::level_select( $collection, $search_handler->getParams() );
 
-    if ( count( $collection->getIndexLevels() > 1 ) ) {
-      // FIXME if paragraph is included, Lucene doesn't support
-      $level_options = array();
-
-      foreach ( $collection->getIndexLevels() as $level ) {
-        $level_options[ $level ] = L10n::_( $level );
-      }
-
-      $level_select = myhtml::select_element(
-        $level_options, array('name' => 'l'), $level_default
-      );
-    }
-    else {
-      $level_select = null;
-    }
-    
     $text_attr = array(
       'type' => 'text',
       'name' => 'q',
@@ -122,8 +104,123 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
   
-  public static function form_boolean( Collection $collection )
+  public static function form_boolean( Collection $collection, SearchHandler $search_handler )
   {
+    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Boolean ) {
+      $params = $search_handler->getParams();
+    }
+
+    $boolean_options = array(
+      'AND' => strtoupper( L10n::_( 'and' ) ),
+      'OR'  => strtoupper( L10n::_( 'or'  ) ),
+      'NOT' => strtoupper( L10n::_( 'not' ) ),
+    );
+
+    for ( $i = 1; $i<4; $i++ ) {
+      // Create three sets of inputs representing three search terms
+
+      // Boolean selects
+      $attrs = array( 'name' => "b$i" );
+
+      if ( isset( $params["b$i"] ) ) {
+        $default = $params["b$i"];
+      }
+      else {
+        $default = null;
+      }
+
+      $varname = "boolean$i";
+      $$varname = myhtml::select_element( $boolean_options, $attrs, $default );
+
+      // query text inputs
+      $attrs = array( 'type' => 'text', 'name' => "q$i" );
+
+      if ( isset( $params["q$i"] ) ) {
+        $attrs['value'] = $params["q$i"];
+      }
+
+      $varname = "text$i";
+      $$varname = myhtml::element( 'input', null, $attrs );
+
+      // index selects
+      if ( isset( $params["i$i"] ) ) {
+        $default = $params["i$i"];
+      }
+      else {
+        $default = null;
+      }
+
+      $varname = "index$i";
+      $$varname = myhtml::select_element(
+        $collection->getIndexes(), array( 'name' => "i$i" ), $default
+      );
+    }
+
+    $submit_attributes = array(
+      'type'  => 'submit',
+      'value' => L10n::_('Search'),
+    );
+
+    $reset_attributes = array(
+      'type'  => 'reset',
+      'value' => L10n::_('Reset'),
+    );
+
+    $submit = myhtml::element( 'input', null, $submit_attributes );
+    $reset  = myhtml::element( 'input', null, $reset_attributes );
+
+    $level_select = search::level_select( $collection, $params );
+
+    if ( $level_select ) {
+      $first_line
+        = sprintf( L10n::_('Search at the %s level for'), $level_select );
+    }
+    else {
+      $first_line = L10n::_('Search for');
+    }
+
+    $form_contents = '';
+    $form_contents .= "<div>$first_line:</div>\n";
+    $form_contents .= "<div>\n$text1 " . L10n::_('in') ." $index1</div>\n";
+    $form_contents .= "<div>\n" . $boolean2 . $text2;
+    $form_contents .= L10n::_('in') . " $index2 </div>\n";
+    $form_contents .= "<div>\n" . $boolean3 . $text3;
+    $form_contents .= L10n::_('in') . " $index3 </div>\n";
+
+    $form_contents .= $submit . $reset;
+
+    $form_attributes = array(
+      'name'   => 'search',
+      'id'     => 'search-form-boolean',
+      'class'  => 'search-form',
+      'action' => $collection->getUrl() . '/search',
+      'method' => 'GET',
+    );
+
+    return myhtml::element( 'form', $form_contents, $form_attributes );
+  }
+
+  public static function level_select( Collection $collection, array $params )
+  {
+    if ( count( $collection->getIndexLevels() ) == 1 ) {
+      return false;
+    }
+
+    if ( isset( $params['l'] ) && in_array( $params['l'], $collection->getIndexLevels() )) {
+      $level_default = $params['l'];
+    }
+    else {
+      $level_default = $collection->getDefaultIndexLevel();
+    }
+
+    // FIXME if paragraph is included, Lucene doesn't support
+    $level_options = array();
+
+    foreach ( $collection->getIndexLevels() as $level ) {
+      $level_options[ $level ] = L10n::_( $level );
+    }
+
+    return myhtml::select_element( $level_options, array('name' => 'l'), $level_default );
   }
   
   public static function result_summary( HitsPage $hits_page, SearchHandler $search_handler )
