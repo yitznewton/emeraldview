@@ -18,14 +18,44 @@ abstract class QueryBuilder
 
   public function getRawTerms()
   {
-    if ($this->rawTerms) {
+    if ( $this->rawTerms ) {
       return $this->rawTerms;
     }
 
     $terms = array();
 
-    foreach ( $this->getQuery()->getTerms() as $term ) {
-      $terms[] = $term->text;
+    if ( method_exists( $this->getQuery(), 'getTerms' ) ) {
+      // query is instance of e.g. Zend_Search_Lucene_Search_Query_MultiTerm -
+      // leverage Zend_Search_Lucene API for this
+
+      // TODO: this will cause the highlighters to rehighlight repeated
+      // term words; may want to rewrite
+      $all_terms = $this->getQuery()->getTerms();
+      $signs = $this->getQuery()->getSigns();
+
+      for ( $i = 0; $i < count($all_terms); $i++ ) {
+        if ( $signs === null || $signs[ $i ] !== false ) {
+          // not a NOT term
+          $terms[] = $all_terms[ $i ]->text;
+        }
+      }
+    }
+    elseif ( isset( $this->params['q'] ) ) {
+      $pattern = '/ " \b (.+?) \b " | \S+ /ux';
+      preg_match_all( $pattern, $this->params['q'], $term_matches );
+
+      for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {
+        if ( $term_matches[1][$i] ) {
+          // matched a quoted segment
+          $terms[] = $term_matches[1][$i];
+        }
+        else {
+          $terms[] = $term_matches[0][$i];
+        }
+      }
+    }
+    else {
+      throw new Exception( 'Could not get raw query terms' );
     }
 
     return $this->rawTerms = $terms;

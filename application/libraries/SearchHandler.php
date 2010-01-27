@@ -46,7 +46,7 @@ class SearchHandler
     $hits = array();
 
     foreach ($lucene_hits as $lucene_hit) {
-      $hits[] = new Hit( $lucene_hit, $this->collection );
+      $hits[] = new Hit( $lucene_hit, $this );
     }
 
     return $hits;
