@@ -91,7 +91,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
           url::redirect( $node->getPage()->getUrl() );
         }
       }
-      elseif (!$subnode_id) {
+      elseif ( ! $subnode_id ) {
         // there's no appropriate NodePage for root node of a Paged document;
         // set to display first subnode
         $node = Node_Document::factory( $collection, "$document_id.1" );
@@ -101,7 +101,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
         }
       }
     }
-    //var_dump($node->getId());
 
     $page = $node->getPage();
 
@@ -119,5 +118,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
     $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );
+    $this->template->set_global( 'search_terms',    $this->input->get('search') );
   }
 }

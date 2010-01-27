@@ -115,9 +115,8 @@ onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
 <?php endif; ?>
 
 <?php
-  if (isset($_GET['search'])) {
-    //$this->load->helper('search');
-    //$text = highlight( $document->getHTML( $section_id ), $_GET['search'] );
+  if ( $search_terms ) {
+    $text = search::highlight( $page->getHTML(), $search_terms );
   }
   else {
     $text = $page->getHTML();

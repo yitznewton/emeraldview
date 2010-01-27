@@ -296,13 +296,13 @@ class search_Core
       $snippet = '... ' . $snippet;
     }
     
-    return search::highlight( $snippet, $query_builder );
+    return search::highlight( $snippet, $query_builder->getRawTerms() );
   }
   
-  public static function highlight( $text, SearchHandler $search_handler )
+  public static function highlight( $text, array $terms )
   {
-    foreach ($search_handler->getQueryBuilder()->getRawTerms() as $term) {
-      $text = preg_replace( "/$term.*?\b/iu", "<strong>\\0</strong>", $text );
+    foreach ( $terms as $term ) {
+      $text = preg_replace( "/$term.*?\b/iu", "<span class=\"highlight\">\\0</span>", $text );
     }
     
     return $text;

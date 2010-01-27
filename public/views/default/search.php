@@ -54,7 +54,7 @@
       <li>
         <div>
           <a href="<?php echo $hit->link ?>">
-            <?php echo search::highlight( $hit->title, $search_handler ) ?>
+            <?php echo search::highlight( $hit->title, $search_handler->getQueryBuilder()->getRawTerms() ) ?>
           </a>
         </div>
 
