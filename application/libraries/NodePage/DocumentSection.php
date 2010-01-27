@@ -116,11 +116,16 @@ class NodePage_DocumentSection extends NodePage
     }
 
     // interpolate bracketed metadata values
-    // TODO: does this ever bring up unset indexes of $doc_metadata?
     $metadata = $this->getNode()->getAllFields();
-    // FIXME: this preg_replace errors out if $metadata[x] doesn't exist
-    $element = preg_replace(
+    $element = @preg_replace(
       '/ \[ (\w+) \] /ex', '$metadata["\\1"]', $element);
+    
+    if ( preg_last_error() ) {
+      // probably tried to get a metadata element that was not set
+      // FIXME: turn off the dump once we test this
+      var_dump('regex error in NodePage_DocumentSection::getMetadataUrl()');
+      return false;
+    }
 
     $url  = $this->getCollection()->getGreenstoneUrl()
             . '/index/assoc/' . $element;
@@ -140,9 +145,10 @@ class NodePage_DocumentSection extends NodePage
     $display_metadata = array();
 
     foreach ($fields_to_display as $field_name => $display_name) {
-      if ($element = $this->getNode()->getField( $field_name )) {
-        // FIXME is this reimplemented properly in 0.2?
-        if (!is_array( $element )) {
+      $element = $this->getNode()->getField( $field_name );
+
+      if ( $element ) {
+        if ( ! is_array( $element ) ) {
           $element = array( $element );
         }
 

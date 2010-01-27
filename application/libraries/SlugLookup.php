@@ -152,16 +152,36 @@ EOF;
       $stmt = $this->pdo->prepare( $query );
       $stmt->execute( array($key) );
 
-      if (! $stmt->fetchColumn() ) {
+      if ( ! $stmt->fetchColumn() ) {
         // no slug for this document yet
 
-        // FIXME: use specified metadata fields
-        $slug_base = self::toSlug( $node['Title'] );
+        // determine which metadata element to slugify
+        $element_to_use = null;
+        $config_elements = $this->collection->getConfig( 'slug_metadata_elements' );
+
+        if ( $config_elements && ! is_array( $config_elements ) ) {
+          $config_elements = array( $config_elements );
+        }
+
+        if ( $config_elements ) {
+          foreach ( $config_elements as $element ) {
+            if ( isset( $node[ $element ] ) ) {
+              $element_to_use = $element;
+              break;
+            }
+          }
+        }
+
+        if ( ! $element_to_use ) {
+          $element_to_use = 'Title';
+        }
+
+        $slug_base = self::toSlug( $node[ $element_to_use ] );
         $slug = $slug_base;
 
         // check for existing identical slugs and suffix them
         $count = 2;
-        while (isset( $existing_slugs[ $slug ] )) {
+        while ( isset( $existing_slugs[ $slug ] ) ) {
           $slug = "$slug_base-$count";
           $count++;
         }

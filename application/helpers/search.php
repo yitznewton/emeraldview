@@ -217,7 +217,6 @@ class search_Core
       $level_default = $collection->getDefaultIndexLevel();
     }
 
-    // FIXME if paragraph is included, Lucene doesn't support
     $level_options = array();
 
     foreach ( $collection->getIndexLevels() as $level ) {
@@ -310,6 +309,8 @@ class search_Core
   
   public static function pager( HitsPage $hits_page, Collection $collection )
   {
+    // TODO: implement limiting of search pages, e.g. << < ... 3 4 5 6 7 ... > >>
+
     if ( ! $hits_page->links ) {
       return '';
     }
@@ -331,11 +332,6 @@ class search_Core
       $pages .= myhtml::element(
         'li', html::anchor( $hits_page->links->previous, '<' )
       );
-
-      // FIXME implement this
-      //if ($hits_page->getLinkPages()->first_number != 1) {
-      //  $pages .= myhtml::element( 'li', '...' );
-      //}
     }
     else {
       $pages .= myhtml::element(
@@ -343,14 +339,14 @@ class search_Core
       );
     }
 
-    // TODO add support for truncation of page links
-    foreach ($hits_page->links->pages as $page_number => $page_link) {
-      if ($page_link) {
+    foreach ( $hits_page->links->pages as $page_number => $page_link ) {
+      if ( $page_link ) {
         $pages .= myhtml::element(
           'li', html::anchor( $page_link, $page_number )
         );
       }
       else {
+        // no link; this is current page
         $pages .= myhtml::element(
           'li', $page_number
         );
@@ -358,11 +354,6 @@ class search_Core
     }
     
     if ($hits_page->links->next) {
-      // FIXME implement this
-      //if ($last_number != $hits_page->getLinkPages()->last) {
-      //  $pages .= myhtml::element( 'li', '...' );
-      //}
-      
       $pages .= myhtml::element(
         'li', html::anchor( $hits_page->links->next, '>' )
       );

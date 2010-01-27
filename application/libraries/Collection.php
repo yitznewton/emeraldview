@@ -178,7 +178,6 @@ class Collection
       return new Collection( $name );
     }
     catch (InvalidArgumentException $e) {
-      // TODO: add custom Exception subclasses?
       return false;
     }
   }

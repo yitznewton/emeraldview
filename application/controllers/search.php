@@ -53,6 +53,6 @@ class Search_Controller extends Emeraldview_Template_Controller
   
   protected function getSearchHistory()
   {
-    // TODO implement
+    // TODO implement search history
   }
 }
