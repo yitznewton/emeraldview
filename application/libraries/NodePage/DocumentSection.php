@@ -38,8 +38,8 @@ class NodePage_DocumentSection extends NodePage
     $html = trim( $dom_nodes->item(0)->nodeValue );
 
     // fix Greenstone macro'ed internal URLs
-    $path  = '/files/' . $this->getCollection()->getName();
-    $path .= '/index/assoc/' . $this->getNode()->getField( 'archivedir' );
+    $path = '/files/' . $this->getCollection()->getName() . '/index/assoc/'
+            . $this->getNode()->getRootNode()->getField( 'archivedir' );
     $html = str_replace( '_httpdocimg_', $path, $html );
 
     // fix Greenstone macro'ed external URLs
