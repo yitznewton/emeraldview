@@ -56,7 +56,14 @@ class CollectCfg_G2 extends CollectCfg
     
     if (substr($line, 0, 6) == 'levels') {
       preg_match_all( '/\S+/', $line, $matches, null, 6 );
-      $this->levels = $matches[0];
+
+      foreach ( $matches[0] as $match ) {
+        if ( $match != 'paragraph' ) {
+          // Lucene builds do not support paragraph level
+          $this->levels[] = $match;
+        }
+      }
+
       return true;
     }
     

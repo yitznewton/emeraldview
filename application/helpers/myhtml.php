@@ -70,8 +70,7 @@ class myhtml_Core {
     $submit_attr = array(
       'id'    => 'language-select-submit',
       'type'  => 'submit',
-      'value' => 'Submit',
-      // FIXME 'value' => $l10n->_('Submit'),
+      'value' => L10n::_('Submit'),
     );
 
     $submit_element = myhtml::element('input', null, $submit_attr);
