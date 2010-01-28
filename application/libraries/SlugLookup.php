@@ -136,23 +136,20 @@ EOF;
 
     $all_nodes = $this->collection->getInfodb()->getAllNodes();
 
-    // TODO: check the slug formulation code; written without thorough testing, e.g. duplicate slug detection
+    $query = 'SELECT key, slug FROM slugs';
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute();
+
+    $existing_keys  = $stmt->fetchAll( PDO::FETCH_COLUMN );
+    $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN );
+
     foreach ( $all_nodes as $key => $node ) {
       if ( substr( $key, 0, 2 ) == 'CL' || strpos( $key, '.' ) ) {
-        // only do documents
+        // only do root nodes of documents
         continue;
       }
 
-      $query = 'SELECT slug FROM slugs';
-      $stmt = $this->pdo->prepare( $query );
-      $stmt->execute();
-      $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN );
-
-      $query = 'SELECT key FROM slugs WHERE key=?';
-      $stmt = $this->pdo->prepare( $query );
-      $stmt->execute( array($key) );
-
-      if ( ! $stmt->fetchColumn() ) {
+      if ( ! isset( $existing_keys[$key] ) ) {
         // no slug for this document yet
 
         // determine which metadata element to slugify
@@ -180,18 +177,24 @@ EOF;
         $slug = $slug_base;
 
         // check for existing identical slugs and suffix them
+        // TODO: untested
         $count = 2;
         while ( isset( $existing_slugs[ $slug ] ) ) {
           $slug = "$slug_base-$count";
           $count++;
         }
 
-        $query = 'INSERT INTO slugs VALUES (?, ?)';
-        $stmt = $this->pdo->prepare( $query );
-        $stmt->execute( array( $key, $slug ) );
+        try {
+          $query = 'INSERT INTO slugs VALUES (?, ?)';
+          $stmt = $this->pdo->prepare( $query );
+          $stmt->execute( array( $key, $slug ) );
+        }
+        catch (Exception $e) {
+          Log::add( 'error', 'insert into slug database failed' );
+          throw $e;
+        }
 
-        // FIXME: error handling
-
+        $existing_keys[]  = $key;
         $existing_slugs[] = $slug;
       }
     }
