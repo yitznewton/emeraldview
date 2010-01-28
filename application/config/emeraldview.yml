@@ -14,9 +14,17 @@ languages:
 collections:
   demo:
     active: true
+    slug_max_length: 30
+    slug_spacer: "-"
     slug_metadata_elements:
       - Title
       - Subject
+    slug_stopwords:
+      - a
+      - an
+      - the
+      - of
+      - and
     document_tree_format: "[Title]"
     classifiers:
       CL1:

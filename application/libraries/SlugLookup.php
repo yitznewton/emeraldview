@@ -125,13 +125,13 @@ EOF;
     $stmt = $this->pdo->prepare( $query );
     $stmt->execute( array( $elements_string ) );
 
-    // go through all [nodes?] and formulate & store slugs for them
-
     return $this->buildIncremental();
   }
 
   protected function buildIncremental()
   {
+    // go through all [nodes?] and formulate & store slugs for them
+    
     $this->lock();
 
     $all_nodes = $this->collection->getInfodb()->getAllNodes();
@@ -176,7 +176,7 @@ EOF;
           $element_to_use = 'Title';
         }
 
-        $slug_base = self::toSlug( $node[ $element_to_use ] );
+        $slug_base = $this->toSlug( $node[ $element_to_use ] );
         $slug = $slug_base;
 
         // check for existing identical slugs and suffix them
@@ -259,40 +259,57 @@ EOF;
     return true;
   }
 
-  protected static function toSlug( $string, $limit = 0, $spacer = '-' )
+  protected function toSlug( $string )
   {
+    $max_length = $this->collection->getConfig( 'slug_max_length' );
+    $spacer     = $this->collection->getConfig( 'slug_spacer' );
+
+    if ( ! $max_length || ! is_int( $max_length ) ) {
+      $max_length = 30;
+    }
+
+    if ( ! $spacer || ! is_string( $spacer ) ) {
+      $spacer = '-';
+    }
+
     if (function_exists('iconv')) {
       $string = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
     }
 
-    $slug = strtolower($string);
-    $slug = preg_replace('/[^a-z0-9-]/', $spacer, $slug);
+    $slug = strtolower( $string );
+    $slug = preg_replace( '/[^a-z0-9-]/', $spacer, $slug );
     $slug = trim( $slug, $spacer );
-    $slug = preg_replace("/$spacer+/", $spacer, $slug);
-    $slug = self::stripStopwords($slug);
+    $slug = preg_replace( "/$spacer+/", $spacer, $slug );
+    $slug = $this->stripStopwords( $slug );
 
-    if ($limit && is_int($limit)) {
+    if ( $max_length && is_int( $max_length ) ) {
       if (
-        strlen($slug) > $limit
-        && substr($slug, $limit, 1) != '-'
+        strlen( $slug ) > $max_length
+        && substr( $slug, $max_length, 1 ) != '-'
       ) {
         // chopped in middle of word
-        preg_match("/^.{0,$limit}(?=-)/", $slug, $matches);
+        preg_match( "/^ .{0,$max_length} (?=-) /x", $slug, $matches );
         $slug = $matches[0];
       }
       else {
-        $slug = substr($slug, 0, $limit);
+        $slug = substr( $slug, 0, $max_length );
       }
     }
 
     return $slug;
   }
 
-  protected static function stripStopwords( $string, $stopwords = array() )
+  protected function stripStopwords( $string )
   {
     // TODO: perhaps make Collection-specific, overridden in collections.yml
     // to allow for l10n
-    if (!$stopwords) {
+    $stopwords = $this->collection->getConfig( 'slug_stopwords' );
+
+    if ( is_string( $stopwords ) ) {
+      $stopwords = array( $stopwords );
+    }
+
+    if ( ! $stopwords || ! is_array( $stopwords ) ) {
       $stopwords = array(
         'an',
         'a',
@@ -302,7 +319,7 @@ EOF;
       );
     }
 
-    $pattern = '/\b(' . join('|', $stopwords) . ')-?\b/';
+    $pattern = '/\b(' . implode( '|', $stopwords ) . ')-?\b/';
 
     return preg_replace( $pattern, '', $string );
   }

@@ -68,7 +68,7 @@ src="<?php echo url::base() ?>js/default.js"></script>
 <?php echo $content ?>
 
 <div id="footer">
-  <?php // FIXME for homepage (reads '.../collection'): ?>
+  <?php // FIXME for homepage (reads '/collection'): ?>
   <div id="footer-url">URL: <?php echo url::site( url::current( true ) ) ?></div>
 
   <div>Copyright &copy; 2009

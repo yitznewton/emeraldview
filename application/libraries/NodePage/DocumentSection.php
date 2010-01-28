@@ -71,7 +71,7 @@ class NodePage_DocumentSection extends NodePage
   public function getUrl()
   {
     if ( $this->getSubnodeId() ) {
-      $section_url = str_replace( '.', '/', $this->getSubnodeId() );
+      $section_url = '/' . str_replace( '.', '/', $this->getSubnodeId() );
     }
     else {
       $section_url = '';
@@ -80,7 +80,7 @@ class NodePage_DocumentSection extends NodePage
     $slug = $this->getCollection()->getSlugLookup()
             ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
-    return $this->getCollection()->getUrl() . "/view/$slug/$section_url";
+    return $this->getCollection()->getUrl() . "/view/$slug$section_url";
   }
 
   public function getSourceDocumentUrl()

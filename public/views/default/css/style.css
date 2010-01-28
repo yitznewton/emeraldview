@@ -218,7 +218,9 @@ ul#toc-tree{
 }
 
 #footer-url{
+  /* FIXME restore this declaration after testing is done
   display: none;
+  */
 }
 
 ul.hits-pager{
