@@ -95,10 +95,9 @@ class NodePage_DocumentSection extends NodePage
 
   protected function getMetadataUrl( $element_name )
   {
-    // FIXME: test this function
     $element = $this->getNode()->getField( $element_name );
 
-    if (!$element) {
+    if ( ! $element ) {
       return false;
     }
 
@@ -122,8 +121,13 @@ class NodePage_DocumentSection extends NodePage
     
     if ( preg_last_error() ) {
       // probably tried to get a metadata element that was not set
-      // FIXME: turn off the dump once we test this
-      var_dump('regex error in NodePage_DocumentSection::getMetadataUrl()');
+      $msg = 'regex error in NodePage_DocumentSection::getMetadataUrl() '
+             . 'in collection ' . $this->getNode()->getCollection() . ' '
+             . 'for node ' . $this->getNode()->getId() . 'trying to retrieve '
+             . 'element ' . $element_name;
+
+      Log::add( 'error', $msg );
+
       return false;
     }
 
@@ -203,9 +207,6 @@ class NodePage_DocumentSection extends NodePage
     }
 
     $page_count = $this->getNode()->getRootNode()->getField( 'NumPages' );
-    // TODO: refactor to sthg like $collection->getSlugLookup()->retrieveNode()
-    $slug       = $this->getCollection()->getSlugLookup()
-                  ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
     if ( $this->getSubnodeId() && $this->getSubnodeId() !== '1' ) {
       // current node is not the first page

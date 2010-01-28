@@ -15,6 +15,7 @@ class NodePage_Classifier extends NodePage
 
   public function getUrl()
   {
+    // TODO: implement slugs
     return $this->getCollection()->getUrl() . '/browse/' . $this->getId();
   }
   
