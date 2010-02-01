@@ -96,9 +96,7 @@ onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
 
 <?php endif; // end PagedImage section ?>
 
-<?php // FIXME is this the best possible if condition? ?>
-<?php if ($page->getSourceDocumentUrl()
-          && $page->getScreenIconUrl()): ?>
+<?php if ( $page->getSourceDocumentUrl() && $page->getScreenIconUrl() ): ?>
 <div id="main-image">
   <a href="<?php echo $page->getSourceDocumentUrl() ?>">
     <img src="<?php echo $page->getScreenIconUrl() ?>"
