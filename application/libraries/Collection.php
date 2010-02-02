@@ -177,7 +177,7 @@ class Collection
     try {
       return new Collection( $name );
     }
-    catch (InvalidArgumentException $e) {
+    catch (Exception $e) {
       return false;
     }
   }

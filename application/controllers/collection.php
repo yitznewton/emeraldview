@@ -54,6 +54,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
   public function search( $collection_name )
   {
+    // TODO: implement search history
+
     if ( ! $this->input->get() ) {
       url::redirect( $collection_name );
     }

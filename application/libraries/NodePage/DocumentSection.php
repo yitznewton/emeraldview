@@ -80,6 +80,10 @@ class NodePage_DocumentSection extends NodePage
     $slug = $this->getCollection()->getSlugLookup()
             ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
 
+    if ( ! $slug ) {
+      throw new Exception( 'Slug lookup failed' );
+    }
+
     return $this->getCollection()->getUrl() . "/view/$slug$section_url";
   }
 

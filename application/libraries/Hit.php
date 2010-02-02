@@ -17,8 +17,11 @@ class Hit
     $this->title = $node->getField( 'Title' );
     $this->link = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
 
-    if (isset( $lucene_hit->TX )) {
-      $this->snipped = $lucene_hit->TX;
+    $lucene_document = $lucene_hit->getDocument();
+
+    $text_field = $lucene_document->getField('TX');
+    if ( $text_field ) {
+      $this->snippet = $text_field->value;
     }
   }
 }
