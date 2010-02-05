@@ -112,15 +112,6 @@ onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
 </div>
 <?php endif; ?>
 
-<?php
-  if ( $search_terms ) {
-    $text = search::highlight( $page->getHTML(), $search_terms );
-  }
-  else {
-    $text = $page->getHTML();
-  }
-?>
-
 <div id="body-text">
   <?php if (!$node->isPaged() && ( $node != $root_node )): ?>
     <h2><?php echo $node->getField( 'Title' ) ?></h2>

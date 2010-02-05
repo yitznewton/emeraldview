@@ -150,6 +150,17 @@ class Collection_Controller extends Emeraldview_Template_Controller
     }
 
     $page = $node->getPage();
+    $search_terms = $this->input->get('search');
+
+    if ( $search_terms ) {
+      $highlighter = new Highlighter_Text();
+      $highlighter->setTerms( $search_terms );
+      $highlighter->setDocument( $page->getHTML() );
+      $text = $highlighter->execute();
+    }
+    else {
+      $text = $page->getHTML();
+    }
 
     $this->view = new View( $this->theme . '/view' );
 
@@ -166,5 +177,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
     $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );
     $this->template->set_global( 'search_terms',    $this->input->get('search') );
+    $this->template->set_global( 'text',            $text );
   }
 }
