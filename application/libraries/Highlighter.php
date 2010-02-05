@@ -11,8 +11,8 @@ abstract class Highlighter
     foreach ( $raw_terms as $term ) {
       // replace wildcards with regex equivalents
       $term = preg_quote( $term );
-      //$term = str_replace( array('\\*', '\\?'), array('.*\\b', '.'), $term );
-      $term = str_replace( array('\\*', '\\?'), array('.*', '.'), $term );
+      //$term = str_replace( array('\\*', '\\?'), array('.*?', '.'), $term );
+      $term = str_replace( array('\\*', '\\?'), array('.*?', '.'), $term );
 
       $this->terms[] = $term;
     }

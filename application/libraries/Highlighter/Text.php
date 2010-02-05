@@ -6,8 +6,9 @@ class Highlighter_Text extends Highlighter
 
   public function execute()
   {
-    $search  = '/' . implode( '.*?\\b|', $this->terms ) . '/iu';
+    $search  = '/\\b' . implode( '\\b|\\b', $this->terms ) . '\\b/iu';
     $replace = "<span class=\"highlight\">\\0</span>";
+
     return preg_replace( $search, $replace, $this->document );
   }
 

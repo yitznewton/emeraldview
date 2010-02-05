@@ -15,6 +15,7 @@ class Hit
     $terms = $search_handler->getQueryBuilder()->getRawTerms();
     $term_string = implode( '&search[]=', $terms );
 
+    Benchmark::start('a');
     $node = Node_Document::factory( $collection, $lucene_hit->docOID );
     // FIXME: designate field(s) used in config
     $this->title = $node->getField( 'Title' );
@@ -26,6 +27,8 @@ class Hit
     if ( $text_field ) {
       $this->snippet = $this->snippet( $text_field->value );
     }
+    Benchmark::stop('a');
+    var_dump(Benchmark::get('a'));
   }
 
   protected function snippet( $text )
