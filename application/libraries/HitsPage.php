@@ -56,6 +56,10 @@ class HitsPage
       }
 
       $this->hits = array_slice( $all_hits, $this->firstHit - 1, $this->perPage );
+      foreach( $this->hits as $hit ) {
+        $hit->build();
+      }
+
       $this->links = $this->buildLinks();
     }
   }

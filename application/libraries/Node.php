@@ -16,16 +16,15 @@ abstract class Node
   )
   {
     $this->id = $node_id;
-    
     $this->data = $collection->getInfodb()->getNode( $this->id );
 
-    if (!$this->data) {
+    if ( ! $this->data ) {
       throw new InvalidArgumentException('No such node');
     }
 
     $this->collection = $collection;
     
-    if (!$root_only) {
+    if ( ! $root_only ) {
       $this->recurse();
     }
 
@@ -128,6 +127,17 @@ abstract class Node
     else {
       return false;
     }
+  }
+
+  public function getFirstFieldFound( array $field_names )
+  {
+    foreach ( $field_names as $field ) {
+      if ( $this->getField( $field ) ) {
+        return $this->getField( $field );
+      }
+    }
+
+    return false;
   }
 
   public function getAllFields()

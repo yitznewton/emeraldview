@@ -2,33 +2,60 @@
 
 class Hit
 {
-  protected $search_handler;
   public $title;
   public $link;
   public $snippet;
 
+  protected $search_handler;
+  protected $lucene_hit;
+
   public function __construct( Zend_Search_Lucene_Search_QueryHit $lucene_hit, SearchHandler $search_handler )
   {
     $this->search_handler = $search_handler;
+    $this->lucene_hit = $lucene_hit;
+  }
 
-    $collection = $search_handler->getCollection();
-    $terms = $search_handler->getQueryBuilder()->getRawTerms();
+  public function build()
+  {
+    // this is expensive, hence not calling from __construct() to avoid
+    // building nodes for all hits in search results
+    
+    $collection = $this->search_handler->getCollection();
+    $terms = $this->search_handler->getQueryBuilder()->getRawTerms();
     $term_string = implode( '&search[]=', $terms );
 
-    Benchmark::start('a');
-    $node = Node_Document::factory( $collection, $lucene_hit->docOID );
-    // FIXME: designate field(s) used in config
+    $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
+
+    /*
+    $title_fields = $node->getCollection()->getConfig('search_hit_title_metadata_elements');
+
+    if ( $title_fields ) {
+      if ( ! is_array( $title_fields ) ) {
+        $title_fields = array( $title_fields );
+      }
+
+      $this->title = $node->getFirstFieldFound( $title_fields );
+
+      if ( ! $this->title ) {
+        $this->title = $node->getField( 'Title' );
+      }
+    }
+    else {
+      $this->title = $node->getField( 'Title' );
+    }
+    */
+
     $this->title = $node->getField( 'Title' );
+
+    // FIXME: a string in the search arg on that controller seems to break the controller
     $this->link = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
 
-    $lucene_document = $lucene_hit->getDocument();
+    $lucene_document = $this->lucene_hit->getDocument();
 
     $text_field = $lucene_document->getField('TX');
     if ( $text_field ) {
       $this->snippet = $this->snippet( $text_field->value );
     }
-    Benchmark::stop('a');
-    var_dump(Benchmark::get('a'));
   }
 
   protected function snippet( $text )
