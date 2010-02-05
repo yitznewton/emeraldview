@@ -59,9 +59,7 @@
         </div>
 
         <?php if ($hit->snippet): ?>
-          <div class="search-snippet">
-            <?php echo search::snippet( $hit, $query_builder ) ?>
-          </div>
+          <div class="search-snippet"><?php echo $hit->snippet ?></div>
         <?php endif; ?>
       </li>
     <?php endforeach; ?>
