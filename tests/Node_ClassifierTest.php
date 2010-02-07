@@ -71,11 +71,11 @@ class Node_ClassifierTest extends PHPUnit_Framework_TestCase
   public function testGetRelatedNode()
   {
     foreach ($this->objects as $object) {
-      $related = $object->getRelatedNode( '1' );
+      $related = $object->getCousin( '1' );
       $this->assertTrue( $related === false || $related instanceof Node_Classifier );
       $this->assertTrue( $related === false || $object->getRootId() === $related->getRootId() );
 
-      $related = $object->getRelatedNode( '3.4' );
+      $related = $object->getCousin( '3.4' );
       $this->assertTrue( $related === false || $related instanceof Node_Classifier );
       $this->assertTrue( $related === false || $object->getRootId() === $related->getRootId() );
     }

@@ -3,7 +3,6 @@
 abstract class Infodb
 {
   protected $collection;
-  protected $allNodes;
   
   abstract public function getDocumentMetadata( $id );
   abstract public function getClassifierMetadata();
@@ -13,12 +12,13 @@ abstract class Infodb
   protected function __construct( Collection $collection )
   {
     $this->collection = $collection;
-    $this->allNodes = $this->getAllNodes();
+    // FIXME: get rid of this once we see it doesn't break stuff
+    //$this->allNodes = $this->getAllNodes();
   }
   
   abstract public function getNode( $key );
   abstract public function getAllNodes();
-  abstract public function getRelatedNodeByDocnum( Node_Document $node, $docnum );
+  abstract public function getRelatedNodeIdByDocnum( Node_Document $node, $docnum );
   abstract public function getRelatedNodeIdByTitle(  Node_Document $node, $title );
 
   public static function factory( Collection $collection )

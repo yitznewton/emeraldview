@@ -95,7 +95,7 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
     }
   }
 
-  public function testGetRelatedNodeByTitle()
+  public function testGetCousinByTitle()
   {
     $titles = array(
       '1', 'Acknowledgements',
@@ -103,7 +103,7 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
 
     foreach ($this->objects as $object) {
       foreach ($titles as $title) {
-        $node = $object->getRelatedNodeByTitle( $title );
+        $node = $object->getCousinByTitle( $title );
         $this->assertTrue( $node === false || $object->getRootId() === $node->getRootId() );
       }
     }
@@ -112,11 +112,11 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
   public function testGetRelatedNode()
   {
     foreach ($this->objects as $object) {
-      $related = $object->getRelatedNode( '1' );
+      $related = $object->getCousin( '1' );
       $this->assertTrue( $related === false || $related instanceof Node_Document );
       $this->assertTrue( $related === false || $object->getRootId() === $related->getRootId() );
 
-      $related = $object->getRelatedNode( '3.4' );
+      $related = $object->getCousin( '3.4' );
       $this->assertTrue( $related === false || $related instanceof Node_Document );
       $this->assertTrue( $related === false || $object->getRootId() === $related->getRootId() );
     }

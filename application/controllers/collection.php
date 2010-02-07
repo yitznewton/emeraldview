@@ -127,7 +127,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       if ( $this->input->get('page') ) {
         // user submitted the 'go to page' form
         $page_number = (int) $this->input->get('page');
-        $paged_node = $node->getRelatedNodeByTitle( $page_number );
+        $paged_node = $node->getCousinByTitle( $page_number );
 
         if ($paged_node) {
           // found a subnode with the requested page number

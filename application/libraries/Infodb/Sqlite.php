@@ -99,7 +99,7 @@ class Infodb_Sqlite extends Infodb
     return $all_nodes;
   }
   
-  public function getRelatedNodeByDocnum( Node_Document $node, $docnum)
+  public function getRelatedNodeIdByDocnum( Node_Document $node, $docnum)
   {
     if (!is_int( $docnum )) {
       throw new Exception( 'Second argument must be an integer' );
@@ -126,7 +126,7 @@ class Infodb_Sqlite extends Infodb
 
     foreach ($results as $node_data) {
       if (strpos($node_data['value'], "<docnum>$docnum\n")) {
-        return Node_Document::factory( $node->getCollection(), $node_data['key'] );
+        return $node_data['key'];
       }
     }
 

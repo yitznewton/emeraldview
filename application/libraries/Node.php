@@ -96,7 +96,7 @@ abstract class Node
     return NodePage::factory( $this );
   }
 
-  public function getRelatedNode( $id )
+  public function getCousin( $id )
   {
     // TODO: find a better name for this method - use getCousin
     if (strpos($id, $this->getRootId()) === false) {

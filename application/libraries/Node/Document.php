@@ -54,18 +54,18 @@ class Node_Document extends Node
     $new_docnum = $starting_docnum + $interval;
 
     // use ad hoc function rather than write a whole ORM mapping
-    $new_node = $this->collection->getInfodb()
-                ->getRelatedNodeByDocnum( $this, $new_docnum );
+    $new_id = $this->collection->getInfodb()
+              ->getRelatedNodeIdByDocnum( $this, $new_docnum );
 
-    return $new_node;
+    return $this->getCousin( $new_id );
   }
 
-  public function getRelatedNodeByTitle( $title )
+  public function getCousinByTitle( $title )
   {
     $id = $this->getCollection()->getInfodb()
           ->getRelatedNodeIdByTitle( $this, $title );
 
-    return $this->getRelatedNode( $id );
+    return $this->getCousin( $id );
   }
 
   public function isPaged()

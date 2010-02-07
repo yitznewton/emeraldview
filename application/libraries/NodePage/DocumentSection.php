@@ -217,7 +217,7 @@ class NodePage_DocumentSection extends NodePage
       // in paged documents, there SHOULD only be one level of section nodes,
       // hence casting subnode id as integer SHOULD give us good results
       $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
-      $prev_url = $this->getNode()->getRelatedNode( $prev_section_id )
+      $prev_url = $this->getNode()->getCousin( $prev_section_id )
                   ->getPage()->getUrl();
     }
     else {
@@ -230,7 +230,7 @@ class NodePage_DocumentSection extends NodePage
     }
     else {
       $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);
-      $next_url = $this->getNode()->getRelatedNode( $next_section_id )
+      $next_url = $this->getNode()->getCousin( $next_section_id )
                   ->getPage()->getUrl();
     }
 
