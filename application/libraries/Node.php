@@ -129,8 +129,12 @@ abstract class Node
     }
   }
 
-  public function getFirstFieldFound( array $field_names )
+  public function getFirstFieldFound( $field_names )
   {
+    if ( ! is_array( $field_names ) ) {
+      $field_names = array( $field_names );
+    }
+
     foreach ( $field_names as $field ) {
       if ( $this->getField( $field ) ) {
         return $this->getField( $field );

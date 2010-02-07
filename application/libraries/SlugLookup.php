@@ -134,8 +134,6 @@ EOF;
     
     $this->lock();
 
-    $all_nodes = $this->collection->getInfodb()->getAllNodes();
-
     $query = 'SELECT key, slug FROM slugs';
     $stmt = $this->pdo->prepare( $query );
     $stmt->execute();
@@ -143,37 +141,22 @@ EOF;
     $existing_keys  = $stmt->fetchAll( PDO::FETCH_COLUMN );
     $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN );
 
-    foreach ( $all_nodes as $key => $node ) {
-      if ( substr( $key, 0, 2 ) == 'CL' || strpos( $key, '.' ) ) {
-        // only do root nodes of documents
-        continue;
-      }
-
-      if ( ! isset( $existing_keys[$key] ) ) {
+    foreach ( Node_Document::getAllRootNodes( $this->collection ) as $node ) {
+      if ( ! isset( $existing_keys[ $node->getId() ] ) ) {
         // no slug for this document yet
 
-        // determine which metadata element to slugify
-        $element_to_use = null;
         $config_elements = $this->collection->getConfig( 'slug_metadata_elements' );
+        $element = $node->getFirstFieldFound( $config_elements );
 
-        if ( $config_elements && ! is_array( $config_elements ) ) {
-          $config_elements = array( $config_elements );
+        if ( ! $element ) {
+          $element = $node->getField( 'Title' );
         }
 
-        if ( $config_elements ) {
-          foreach ( $config_elements as $element ) {
-            if ( isset( $node[ $element ] ) ) {
-              $element_to_use = $element;
-              break;
-            }
-          }
+        if ( ! $element ) {
+          $element = $node->getId();
         }
 
-        if ( ! $element_to_use ) {
-          $element_to_use = 'Title';
-        }
-
-        $slug_base = $this->toSlug( $node[ $element_to_use ] );
+        $slug_base = $this->toSlug( $element );
         $slug = $slug_base;
 
         // check for existing identical slugs and suffix them
@@ -187,14 +170,14 @@ EOF;
         try {
           $query = 'INSERT INTO slugs VALUES (?, ?)';
           $stmt = $this->pdo->prepare( $query );
-          $stmt->execute( array( $key, $slug ) );
+          $stmt->execute( array( $node->getId(), $slug ) );
         }
         catch (Exception $e) {
           Log::add( 'error', 'insert into slug database failed' );
           throw $e;
         }
 
-        $existing_keys[]  = $key;
+        $existing_keys[]  = $node->getId();
         $existing_slugs[] = $slug;
       }
     }

@@ -8,7 +8,9 @@ class Node_Document extends Node
     Collection $collection, $node_id = null, $root_only = false
   )
   {
-    if ($pos = strpos( $node_id, '.') ) {
+    $pos = strpos( $node_id, '.');
+
+    if ( $pos ) {
       $this->subnode_id = substr( $node_id, $pos + 1 );
     }
 
@@ -93,6 +95,25 @@ class Node_Document extends Node
     else {
       return false;
     }
+  }
+
+  public static function getAllRootNodes( Collection $collection )
+  {
+    $nodes = array();
+
+    $infodb_nodes = array_keys( $collection->getInfodb()->getAllNodes() );
+
+    foreach ( $infodb_nodes as $id )
+    {
+      if ( substr( $id, 0, 2 ) == 'CL' || strpos( $id, '.' ) ) {
+        // only do root nodes of documents
+        continue;
+      }
+
+      $nodes[] = Node_Document::factory( $collection, $id );
+    }
+
+    return $nodes;
   }
 
   public static function factory(

@@ -39,6 +39,10 @@ class Hit
       if ( ! $this->title ) {
         $this->title = $node->getField( 'Title' );
       }
+     *
+     *if ( ! $this->title ) {
+     *  $this->title = $node->getId();
+     *}
     }
     else {
       $this->title = $node->getField( 'Title' );
