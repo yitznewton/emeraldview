@@ -86,9 +86,9 @@ class Infodb_Sqlite extends Infodb
       $key = $node['key'];
       
       if (
-        // FIXME: what do the other OIDtypes generate for documents?
         substr( $key, 0, 4 ) == 'HASH'
         || substr( $key, 0, 1 ) == 'D'
+        || substr( $key, 0, 1 ) == 'J'
         || substr( $key, 0, 2 ) == 'CL')
       {
         // this is a document or classifier node, so store it

@@ -25,10 +25,12 @@ class NodeFormatter_String extends NodeFormatter
 
   public function format( Node $node, $index = null )
   {
-    $text = $node->getChildren()
-          ? $this->branchFormat
-          : $this->leafFormat
-          ;
+    if ( $node->getChildren() ) {
+      $text = $this->branchFormat;
+    }
+    else {
+      $text = $this->leafFormat;
+    }
 
     $node_page = NodePage::factory( $node );
 
@@ -40,9 +42,6 @@ class NodeFormatter_String extends NodeFormatter
       // parse thumbicon URL and compose <img> tag
       // TODO: what if this is a section node, and thumb is doc-level?
       $thumb_url = $node_page->getThumbnailUrl();
-      //// Document::extractThumbnailUrl(
-        //''$this->getClassifier()->getCollection(), $this->getAllFields()
-      //);
       $thumb_img = "<img src=\"$thumb_url\">";
       $text = str_ireplace('[thumbicon]', $thumb_img, $text);
     }
@@ -51,7 +50,7 @@ class NodeFormatter_String extends NodeFormatter
 
     if ($url) {
       $text = str_replace(
-        // compose explicit <a> tags
+        // compose explicitly-specified <a> tags
         array('[a]', '[/a]'),
         array("<a href=\"$url\">", '</a>'),
         $text

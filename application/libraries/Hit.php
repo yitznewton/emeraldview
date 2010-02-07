@@ -51,7 +51,6 @@ class Hit
 
     $this->title = $node->getField( 'Title' );
 
-    // FIXME: a string in the search arg on that controller seems to break the controller
     $this->link = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
 
     $lucene_document = $this->lucene_hit->getDocument();
@@ -97,7 +96,7 @@ class Hit
       }
     }
 
-    // TODO: I18n-ify this?
+    // TODO: I18n-ify this (LTR...)?
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;
     $prev_sentence_end = strripos( $text, '. ', $first_hit_reverse_position );
 
@@ -135,7 +134,7 @@ class Hit
       $snippet = '... ' . $snippet;
     }
 
-    // TODO: fine-tune highlight for refined regex-based $terms
+    // TODO: fine-tune highlight for refined regex-based $terms [note: what the heck does this mean?]
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $snippet );
     $highlighter->setTerms( $terms );
