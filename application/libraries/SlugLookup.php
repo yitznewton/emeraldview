@@ -74,6 +74,7 @@ class SlugLookup
       // collection was built since last slug build; do incremental build
       return $this->buildIncremental();
     }
+    $this->buildIncremental();
   }
 
   public function retrieveSlug( $id )
@@ -136,13 +137,16 @@ EOF;
 
     $query = 'SELECT key, slug FROM slugs';
     $stmt = $this->pdo->prepare( $query );
+
     $stmt->execute();
-
     $existing_keys  = $stmt->fetchAll( PDO::FETCH_COLUMN );
-    $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN );
+    $stmt->execute();
+    $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN, 1 );
 
-    foreach ( Node_Document::getAllRootNodes( $this->collection ) as $node ) {
-      if ( ! isset( $existing_keys[ $node->getId() ] ) ) {
+    $all_nodes = Node_Document::getAllRootNodes( $this->collection );
+
+    foreach ( $all_nodes as $node ) {
+      if ( ! in_array( $node->getId(), $existing_keys ) ) {
         // no slug for this document yet
 
         $config_elements = $this->collection->getConfig( 'slug_metadata_elements' );
@@ -162,7 +166,7 @@ EOF;
         // check for existing identical slugs and suffix them
         // TODO: untested
         $count = 2;
-        while ( isset( $existing_slugs[ $slug ] ) ) {
+        while ( in_array( $slug, $existing_slugs ) ) {
           $slug = "$slug_base-$count";
           $count++;
         }
