@@ -12,14 +12,12 @@ abstract class Infodb
   protected function __construct( Collection $collection )
   {
     $this->collection = $collection;
-    // FIXME: get rid of this once we see it doesn't break stuff
-    //$this->allNodes = $this->getAllNodes();
   }
   
   abstract public function getNode( $key );
   abstract public function getAllNodes();
-  abstract public function getRelatedNodeIdByDocnum( Node_Document $node, $docnum );
-  abstract public function getRelatedNodeIdByTitle(  Node_Document $node, $title );
+  abstract public function getCousinIdByDocnum( Node_Document $node, $docnum );
+  abstract public function getCousinIdByTitle(  Node_Document $node, $title );
 
   public static function factory( Collection $collection )
   {

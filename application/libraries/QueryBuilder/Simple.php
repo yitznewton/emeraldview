@@ -26,8 +26,7 @@ class QueryBuilder_Simple extends QueryBuilder
         $querystring, '', $title_index
       );
       
-      // $subquery_title->setBoost( 10 );
-      // TODO: evaluate this experimental value
+      // set to boost title fields collectively to 10
       $subquery_title->setBoost( 10 / count( $title_indexes ) );
       $query->addSubquery( $subquery_title, null );
     }

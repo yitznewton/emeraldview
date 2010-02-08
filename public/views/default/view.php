@@ -2,7 +2,8 @@
   $(document).ready(function(){
     $(".browse-tree").treeview({
       collapsed: true,
-      animated:  "fast"
+      animated:  "fast",
+      persist:   "location"
     });
   });
 </script>

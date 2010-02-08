@@ -99,7 +99,7 @@ class Infodb_Sqlite extends Infodb
     return $all_nodes;
   }
   
-  public function getRelatedNodeIdByDocnum( Node_Document $node, $docnum)
+  public function getCousinIdByDocnum( Node_Document $node, $docnum)
   {
     if (!is_int( $docnum )) {
       throw new Exception( 'Second argument must be an integer' );
@@ -133,7 +133,7 @@ class Infodb_Sqlite extends Infodb
     return false;
   }
 
-  public function getRelatedNodeIdByTitle( Node_Document $node, $title )
+  public function getCousinIdByTitle( Node_Document $node, $title )
   {
     if (!$title) {
       return false;

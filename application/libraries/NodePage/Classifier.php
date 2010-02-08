@@ -29,4 +29,23 @@ class NodePage_Classifier extends NodePage
 
     return $slug_generator->toSlug( $this->getTitle() );
   }
+
+  public static function retrieveBySlug( Collection $collection, $slug )
+  {
+    if ( ! is_string( $slug ) ) {
+      throw new InvalidArgumentException( 'Second argument must be a string' );
+    }
+
+    $all_classifiers = $collection->getClassifiers();
+    $classifier = false;
+
+    foreach ( $all_classifiers as $test_classifier ) {
+      if ( $slug == $test_classifier->getSlug() ) {
+        $classifier = $test_classifier;
+        break;
+      }
+    }
+
+    return $classifier;
+  }
 }

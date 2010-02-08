@@ -28,19 +28,6 @@ abstract class NodePage
     );
   }
 
-  public function getSubnodeId()
-  {
-    // TODO: refactor existing code to use this new method
-    $id = $this->getNode()->getId();
-
-    if (strpos( $id, '.' )) {
-      return substr( $id, strpos( $id, '.' ) + 1);
-    }
-    else {
-      return false;
-    }
-  }
-
   public function getCollection()
   {
     return $this->getNode()->getCollection();

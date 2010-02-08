@@ -15,7 +15,7 @@ class NodePage_DocumentSection extends NodePage
       return false;
     }
 
-    return $this->getNode()->getCollection()->getGreenstoneUrl() . '/archives'
+    return $this->getNode()->getCollection()->getGreenstoneUrl() . '/archives/'
            . $this->getNode()->getField('assocfilepath') . '/cover.jpg';
   }
 
@@ -70,8 +70,10 @@ class NodePage_DocumentSection extends NodePage
   
   public function getUrl()
   {
-    if ( $this->getSubnodeId() ) {
-      $section_url = '/' . str_replace( '.', '/', $this->getSubnodeId() );
+    $subnode_id = $this->getNode()->getSubnodeId();
+
+    if ( $subnode_id ) {
+      $section_url = '/' . str_replace( '.', '/', $subnode_id );
     }
     else {
       $section_url = '';
@@ -211,12 +213,13 @@ class NodePage_DocumentSection extends NodePage
     }
 
     $page_count = $this->getNode()->getRootNode()->getField( 'NumPages' );
+    $subnode_id = $this->getNode()->getSubnodeId();
 
-    if ( $this->getSubnodeId() && $this->getSubnodeId() !== '1' ) {
+    if ( $subnode_id && $subnode_id !== '1' ) {
       // current node is not the first page
       // in paged documents, there SHOULD only be one level of section nodes,
       // hence casting subnode id as integer SHOULD give us good results
-      $prev_section_id = ((string) ((int) $this->getSubnodeId()) - 1);
+      $prev_section_id = ((string) ((int) $subnode_id) - 1);
       $prev_url = $this->getNode()->getCousin( $prev_section_id )
                   ->getPage()->getUrl();
     }
@@ -225,11 +228,11 @@ class NodePage_DocumentSection extends NodePage
       $prev_url = '';
     }
 
-    if ( (int) $this->getSubnodeId() >= (int) $page_count ) {
+    if ( (int) $subnode_id >= (int) $page_count ) {
       $next_url = '';
     }
     else {
-      $next_section_id = ((string) ((int) $this->getSubnodeId()) + 1);
+      $next_section_id = ((string) ((int) $subnode_id) + 1);
       $next_url = $this->getNode()->getCousin( $next_section_id )
                   ->getPage()->getUrl();
     }

@@ -55,7 +55,7 @@ class Node_Document extends Node
 
     // use ad hoc function rather than write a whole ORM mapping
     $new_id = $this->collection->getInfodb()
-              ->getRelatedNodeIdByDocnum( $this, $new_docnum );
+              ->getCousinIdByDocnum( $this, $new_docnum );
 
     return $this->getCousin( $new_id );
   }
@@ -63,7 +63,7 @@ class Node_Document extends Node
   public function getCousinByTitle( $title )
   {
     $id = $this->getCollection()->getInfodb()
-          ->getRelatedNodeIdByTitle( $this, $title );
+          ->getCousinIdByTitle( $this, $title );
 
     return $this->getCousin( $id );
   }

@@ -26,19 +26,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
   }
   
-  public function browse( $collection_name, $classifier_name )
+  public function browse( $collection_name, $classifier_slug )
   {
     $collection = $this->loadCollection( $collection_name );
-    $classifiers = $collection->getClassifiers();
-
-    $classifier = null;
-
-    foreach ( $classifiers as $test_classifier ) {
-      if ( $classifier_name == $test_classifier->getSlug() ) {
-        $classifier = $test_classifier;
-        break;
-      }
-    }
+    $classifier = NodePage_Classifier::retrieveBySlug( $collection, $classifier_slug );
 
     if ( ! $classifier ) {
       url::redirect( $collection->getUrl() );
