@@ -9,30 +9,30 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <link rel="stylesheet" type="text/css"
-href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/reset.css">
+href="/views/<?php echo $theme ?>/css/reset.css">
 
 <link rel="stylesheet" type="text/css" media="screen"
-href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
+href="/libraries/treeview/jquery.treeview.css">
 
 <link rel="stylesheet" type="text/css"
-href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/style.css">
+href="/views/<?php echo $theme ?>/css/style.css">
 
 <link rel="stylesheet" type="text/css" media="print"
-href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/style-print.css">
+href="/views/<?php echo $theme ?>/css/style-print.css">
 
 <?php if (L10n::_('ltr') == 'rtl'): ?>
   <link rel="stylesheet" type="text/css"
-  href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/rtl.css">
+  href="/views/<?php echo $theme ?>/css/rtl.css">
 <?php endif; ?>
 
 <script type="text/javascript"
-src="<?php echo url::base() ?>libraries/jquery.js"></script>
+src="/libraries/jquery.js"></script>
 
 <script type="text/javascript"
-src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
+src="/libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
-src="<?php echo url::base() ?>js/default.js"></script>
+src="/js/default.js"></script>
 
 </head>
 
@@ -41,8 +41,10 @@ src="<?php echo url::base() ?>js/default.js"></script>
 <div id="header">
   <?php if (isset($collection)): ?>
     <span id="header-logo">
-      <img src="<?php echo url::base() ?>images/emeraldview2.png"
-      alt="EmeraldView logo" />
+      <a href="<?php echo url::base() ?>">
+        <img src="<?php echo url::base() ?>images/emeraldview2.png"
+        alt="EmeraldView logo" />
+      </a>
     </span>
     <div id="header-collection-title">
       <div>
@@ -52,10 +54,8 @@ src="<?php echo url::base() ?>js/default.js"></script>
     <div class="clear"></div>
   <?php else: ?>
     <span id="header-logo">
-      <a href="<?php echo url::base() ?>">
-        <img src="<?php echo url::base() ?>images/emeraldview2.png"
-        alt="EmeraldView logo" />
-      </a>
+      <img src="<?php echo url::base() ?>images/emeraldview2.png"
+      alt="EmeraldView logo" />
     </span>
     <div id="header-emeraldview-title">
       <div>EmeraldView</div>
@@ -91,7 +91,7 @@ src="<?php echo url::base() ?>js/default.js"></script>
   </div>
   <div>Powered by
     <a href="http://www.greenstone.org/">Greenstone</a> and
-    <a href="http://emeraldview.tourolib.org/">EmeraldView</a>
+    <a href="http://bitbucket.org/yitznewton/emeraldview">EmeraldView</a>
   </div>
   
   <div>

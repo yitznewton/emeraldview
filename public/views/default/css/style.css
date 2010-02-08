@@ -6,7 +6,7 @@ body{
 }
 
 h1{
-  color: #006957;
+  color: #2D766B;
   margin: 0 0 0.75em;
   font-size: 1.6em;
 }
@@ -63,13 +63,12 @@ dl{
 #header{
   -moz-border-radius: 10px 10px 0 0;
   -webkit-border-radius: 10px 10px 0 0;
-	background: #5ED0BD;
+	background: #51CDBA;
   padding: 0 30px 0 30px;
   display: table;
   /* position: relative; */
   overflow: hidden;
   height: 135px;
-  width: 690px;
   margin: 0;
 }
 
@@ -83,7 +82,7 @@ dl{
   vertical-align: middle;
   font-size: 32px;
   font-weight: bold;
-  color: #1E796A;
+  color: #1E7B6D;
   width: 530px;
 }
 
@@ -111,7 +110,7 @@ dl{
 
 #main-content{
   padding: 1em;
-  background: #C9F1E9;
+  background: #7BEADA;
   min-height: 300px;
 }
 
@@ -124,7 +123,7 @@ dl{
   font-size: 0.7em;
   line-height: 1.4em;
   text-align: center;
-  background: #5ED0BD;
+  background: #51CDBA;
   padding: 1em 0;
   -moz-border-radius: 0 0 10px 10px;
   -webkit-border-radius: 0 0 10px 10px;
@@ -330,7 +329,7 @@ ol#search-history li{
   margin: 0 1.25em 0.75em 0;
   padding: 0.5em;
   border: 1px solid #777;
-  background: #B6E6DC;
+  background: #7BEADA;
 }
 
 #toc-header{
@@ -350,7 +349,7 @@ ol#search-history li{
 }
 
 .treeview, .treeview li, .treeview *{
-  background-color: #C9F1E9;
+  background-color: #7BEADA;
 }
 
 ul#toc-tree, ul#toc-tree li, ul#toc-tree li a{
