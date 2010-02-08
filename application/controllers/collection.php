@@ -78,8 +78,14 @@ class Collection_Controller extends Emeraldview_Template_Controller
     }
 
     try {
-      // FIXME: config hits per page
-      $hits_page  = new HitsPage( $search_handler, $page_number );
+      $per_page = $collection->getConfig('search_hits_per_page');
+
+      if ( $per_page && is_int( $per_page ) ) {
+        $hits_page = new HitsPage( $search_handler, $page_number, $per_page );
+      }
+      else {
+        $hits_page = new HitsPage( $search_handler, $page_number );
+      }
     }
     catch (InvalidArgumentException $e) {
       url::redirect( $collection->getUrl() );

@@ -163,6 +163,11 @@ ul#search-form-chooser li{
   background: yellow;
 }
 
+a .highlight{
+  background: inherit;
+  font-weight: bold;
+}
+
 ul#browse-tree{
   font-size: 0.8em;
   direction: ltr;

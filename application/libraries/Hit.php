@@ -26,7 +26,6 @@ class Hit
 
     $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
 
-    /*
     $title_fields = $node->getCollection()->getConfig('search_hit_title_metadata_elements');
 
     if ( $title_fields ) {
@@ -34,22 +33,29 @@ class Hit
         $title_fields = array( $title_fields );
       }
 
-      $this->title = $node->getFirstFieldFound( $title_fields );
-
-      if ( ! $this->title ) {
-        $this->title = $node->getField( 'Title' );
+      if ( ! in_array( 'Title', $title_fields ) ) {
+        array_push( $title_fields, 'Title' );
       }
-     *
-     *if ( ! $this->title ) {
-     *  $this->title = $node->getId();
-     *}
+
+      $title = $node->getFirstFieldFound( $title_fields );
+
+      if ( ! $title ) {
+        $title = $node->getId();
+      }
     }
     else {
-      $this->title = $node->getField( 'Title' );
-    }
-    */
+      $title = $node->getField( 'Title' );
 
-    $this->title = $node->getField( 'Title' );
+      if ( ! $title ) {
+        $title = $node->getId();
+      }
+    }
+    
+
+    $highlighter = new Highlighter_Text();
+    $highlighter->setDocument( $title );
+    $highlighter->setTerms( $terms );
+    $this->title = $highlighter->execute();
 
     $this->link = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
 
