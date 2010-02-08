@@ -73,7 +73,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $this->collection = Collection::factory( $collection_name );
     
     if (!$this->collection) {
-      url::redirect( url::base() );
+      return false;
     }
     
     // override global defaults if collection config values set

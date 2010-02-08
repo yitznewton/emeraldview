@@ -16,6 +16,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
   {
 		$collection = $this->loadCollection( $collection_name );
 
+    if ( ! $collection ) {
+      return $this->show404();
+    }
+
     $this->view = new View( $this->theme . '/about' );
     
     $this->template->set_global( 'collection',      $collection );
@@ -32,7 +36,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $classifier = NodePage_Classifier::retrieveBySlug( $collection, $classifier_slug );
 
     if ( ! $classifier ) {
-      url::redirect( $collection->getUrl() );
+      return $this->show404();
     }
 
     $root_node = $classifier->getNode();
@@ -119,13 +123,13 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $document_id = $collection->getSlugLookup()->retrieveId( $slug );
 
     if (!$document_id) {
-      url::redirect( $collection->getUrl() );
+      return $this->show404();
     }
 
     $node = Node_Document::factory( $collection, $document_id . $subnode_id );
     
     if (!$node) {
-      url::redirect( $collection->getUrl() );
+      return $this->show404();
     }
 
     if ($node->isPaged()) {
@@ -149,7 +153,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
         $node = Node_Document::factory( $collection, "$document_id.1" );
 
         if (!$node) {
-          url::redirect( $collection->getUrl() );
+          return $this->show404();
         }
       }
     }
@@ -183,5 +187,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );
     $this->template->set_global( 'search_terms',    $this->input->get('search') );
     $this->template->set_global( 'text',            $text );
+  }
+
+  public function show404()
+  {
+    $this->view = new View( 'default/show404' );
+    $this->template->set_global( 'page_title', 'Page not found' );
   }
 }

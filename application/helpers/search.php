@@ -14,7 +14,6 @@ class search_Core
     if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Simple ) {
       // this page is the result of a simple search, so fill in the form
       $params = $search_handler->getParams();
-      // FIXME the params should be sanitized earlier, on SearchHandler construct
       $text_attributes['value'] = $params['q'];
     }
 

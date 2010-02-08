@@ -63,11 +63,11 @@ class Hit
 
     $text_field = $lucene_document->getField('TX');
     if ( $text_field ) {
-      $this->snippet = $this->snippet( $text_field->value );
+      $this->snippet = $this->snippetize( $text_field->value );
     }
   }
 
-  protected function snippet( $text )
+  protected function snippetize( $text )
   {
     if ( ! $text ) {
       return false;
