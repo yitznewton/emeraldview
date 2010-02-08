@@ -29,15 +29,23 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function browse( $collection_name, $classifier_name )
   {
     $collection = $this->loadCollection( $collection_name );
+    $classifiers = $collection->getClassifiers();
 
-    $root_node = Node_Classifier::factory( $collection, $classifier_name );
-    
-    if (!$root_node) {
+    $classifier = null;
+
+    foreach ( $classifiers as $test_classifier ) {
+      if ( $classifier_name == $test_classifier->getSlug() ) {
+        $classifier = $test_classifier;
+        break;
+      }
+    }
+
+    if ( ! $classifier ) {
       url::redirect( $collection->getUrl() );
     }
 
-    $classifier = $root_node->getPage();
-    $tree = $classifier->getTree();
+    $root_node = $classifier->getNode();
+    $tree      = $classifier->getTree();
 
     $this->view = new View( $this->theme . '/browse' );
     

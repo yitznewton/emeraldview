@@ -28,8 +28,6 @@ abstract class QueryBuilder
       // query is instance of e.g. Zend_Search_Lucene_Search_Query_MultiTerm -
       // leverage Zend_Search_Lucene API for this
 
-      // TODO: this will cause the highlighters to rehighlight repeated
-      // term words; may want to rewrite
       $all_terms = $this->getQuery()->getTerms();
       $signs = $this->getQuery()->getSigns();
 

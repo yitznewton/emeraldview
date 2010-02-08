@@ -15,12 +15,18 @@ class NodePage_Classifier extends NodePage
 
   public function getUrl()
   {
-    // TODO: implement slugs
-    return $this->getCollection()->getUrl() . '/browse/' . $this->getId();
+    return $this->getCollection()->getUrl() . '/browse/' . $this->getSlug();
   }
   
   public function getTitle()
   {
     return $this->getNode()->getField('Title');
+  }
+
+  public function getSlug()
+  {
+    $slug_generator = new SlugGenerator( $this->getCollection() );
+
+    return $slug_generator->toSlug( $this->getTitle() );
   }
 }

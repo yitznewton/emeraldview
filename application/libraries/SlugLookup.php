@@ -164,7 +164,6 @@ EOF;
         $slug = $slug_base;
 
         // check for existing identical slugs and suffix them
-        // TODO: untested
         $count = 2;
         while ( in_array( $slug, $existing_slugs ) ) {
           $slug = "$slug_base-$count";
@@ -291,8 +290,6 @@ EOF;
 
   protected function stripStopwords( $string )
   {
-    // TODO: perhaps make Collection-specific, overridden in collections.yml
-    // to allow for l10n
     $stopwords = $this->collection->getConfig( 'slug_stopwords' );
 
     if ( is_string( $stopwords ) ) {
