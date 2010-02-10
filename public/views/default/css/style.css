@@ -159,7 +159,7 @@ ul#search-form-chooser li{
 }
 
 .highlight{
-  background: yellow;
+  background: #FDEB81;
 }
 
 a .highlight{
@@ -329,7 +329,11 @@ ol#search-history li{
   margin: 0 1.25em 0.75em 0;
   padding: 0.5em;
   border: 1px solid #777;
-  background: #7BEADA;
+  background: #A3FAED;
+}
+
+#toc .treeview, #toc .treeview li, #toc .treeview *{
+  background-color: #A3FAED;
 }
 
 #toc-header{

@@ -41,8 +41,8 @@ src="/js/default.js"></script>
 <div id="header">
   <?php if (isset($collection)): ?>
     <span id="header-logo">
-      <a href="<?php echo url::base() ?>">
-        <img src="<?php echo url::base() ?>images/emeraldview2.png"
+      <a href="/">
+        <img src="/images/emeraldview2.png"
         alt="EmeraldView logo" />
       </a>
     </span>
@@ -54,7 +54,7 @@ src="/js/default.js"></script>
     <div class="clear"></div>
   <?php else: ?>
     <span id="header-logo">
-      <img src="<?php echo url::base() ?>images/emeraldview2.png"
+      <img src="/images/emeraldview2.png"
       alt="EmeraldView logo" />
     </span>
     <div id="header-emeraldview-title">
@@ -89,14 +89,17 @@ src="/js/default.js"></script>
   ?>
 
   </div>
+
   <div>Powered by
     <a href="http://www.greenstone.org/">Greenstone</a> and
     <a href="http://bitbucket.org/yitznewton/emeraldview">EmeraldView</a>
   </div>
   
+  <?php if ( ! IN_PRODUCTION ): ?>
   <div>
     Rendered in {execution_time} seconds, using {memory_usage} of memory
   </div>
+  <?php endif; ?>
 </div>
 
 </body>

@@ -50,7 +50,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
     if (
       $this->input->get('language')
-      && in_array( $this->input->get('language'), $this->languages )
+      && in_array( $this->input->get('language'), $this->availableLanguages )
     ) {
       $this->session->set('language', $this->input->get('language'));
     }

@@ -48,7 +48,7 @@ class myhtml_Core {
 
   public static function language_select( array $languages, $default = null )
   {
-    if (count($languages) < 2) {
+    if ( count( $languages ) < 2 ) {
       return '';
     }
 
@@ -60,7 +60,7 @@ class myhtml_Core {
 
     $select_attr = array(
       'name' => 'language',
-      'onchange' => 'return changeLanguage(this);',
+      'id'   => 'language-select-select',
     );
 
     $select_element = myhtml::select_element(

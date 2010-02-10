@@ -36,11 +36,11 @@
 <?php if ($page->getTree() && !$paged_urls): ?>
   <div id="toc">
     <div id="toc-header"><?php echo L10n::_('Table of contents') ?>
-      <span class="toc-toggle" id="toc-toggle-hide">
-        [<a href="#" id="toc-toggle-link" onclick="return toggleTOC()"><?php echo L10n::_('hide') ?></a>]
+      <span class="toc-toggle" id="toc-hide" style="display:none">
+        [<a href="#" onclick="return toggleTOC()"><?php echo L10n::_('hide') ?></a>]
       </span>
-      <span class="toc-toggle" id="toc-toggle-show" style="display:none">
-        [<a href="#" id="toc-toggle-link" onclick="return toggleTOC()"><?php echo L10n::_('show') ?></a>]
+      <span class="toc-toggle" id="toc-show" style="display:none">
+        [<a href="#" onclick="return toggleTOC()"><?php echo L10n::_('show') ?></a>]
       </span>
     </div>
 
