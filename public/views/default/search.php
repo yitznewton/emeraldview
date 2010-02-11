@@ -40,7 +40,6 @@ else {
 </ul>
 
 <div id="about-search-container">
-
   <h2><?php echo L10n::_('Search') ?></h2>
 
   <?php echo search::form_simple(  $collection, $search_handler ) ?>
@@ -61,8 +60,14 @@ else {
       <?php echo L10n::_('Boolean') ?></a>
     </li>
   </ul>
-
 </div>
+
+<?php if ( ! empty( $search_history ) ): ?>
+  <div id="search-history-container">
+    <h3><?php echo L10n::_('Recent searches') ?></h3>
+    <?php echo search::history( $collection, $search_history ) ?>
+  </div>
+<?php endif; ?>
 
 <div id="search-results-container">
   <?php if ($hits_page->hits): ?>
@@ -81,7 +86,6 @@ else {
       <li>
         <div>
           <a href="<?php echo $hit->link ?>">
-            <?php //echo search::highlight( $hit->title, $search_handler->getQueryBuilder()->getRawTerms() ) ?>
             <?php echo $hit->title ?>
           </a>
         </div>

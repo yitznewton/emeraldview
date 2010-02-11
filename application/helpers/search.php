@@ -310,6 +310,23 @@ class search_Core
       return false;
     }
   }
+
+  public static function history( Collection $collection, array $search_history )
+  {
+    $items = '';
+    $search_history = array_reverse( $search_history );
+
+    foreach ( $search_history as $params ) {
+      $query_builder = QueryBuilder::factory( $params, $collection );
+      $url = $collection->getUrl() . '/search?' . http_build_query( $params );
+      $display_query = $query_builder->getDisplayQuery();
+
+      $link = myhtml::element( 'a', $display_query, array( 'href' => $url ) );
+      $items .= myhtml::element( 'li', $link );
+    }
+
+    return myhtml::element( 'ol', $items );
+  }
   
   protected static function snippet_truncate( $text )
   {

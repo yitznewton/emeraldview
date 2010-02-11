@@ -57,8 +57,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
   public function search( $collection_name )
   {
-    // TODO: implement search history
-
     if ( ! $this->input->get() ) {
       url::redirect( $collection_name );
     }
@@ -109,6 +107,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'search_handler',  $search_handler );
+    $this->template->set_global( 'search_history',  $history );
     $this->template->set_global( 'hits_page',       $hits_page );
   }
   
