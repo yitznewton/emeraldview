@@ -1,3 +1,28 @@
+<?php
+if ( isset( $search_handler ) ) {
+  switch ( get_class( $search_handler->getQueryBuilder() ) ) {
+    case 'QueryBuilder_Simple':
+      $form_id = 'search-form-simple';
+      break;
+    case 'QueryBuilder_Fielded':
+      $form_id = 'search-form-fielded';
+      break;
+    case 'QueryBuilder_Boolean':
+      $form_id = 'search-form-boolean';
+      break;
+  }
+}
+else {
+  $form_id = 'search-form-simple';
+}
+?>
+
+<script type="text/javascript">
+  $(document).ready( function() {
+    chooseSearchForm( "<?php echo $form_id ?>" );
+  });
+</script>
+
 <div id="main-content">
 
 <?php echo $language_select ?>

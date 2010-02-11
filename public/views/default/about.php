@@ -1,3 +1,9 @@
+<script type="text/javascript">
+  $(document).ready( function() {
+    chooseSearchForm( 'search-form-simple' );
+  });
+</script>
+
 <div id="main-content">
 
 <?php echo $language_select ?>

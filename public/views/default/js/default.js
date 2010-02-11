@@ -47,6 +47,33 @@ function chooseForm(e)
 }
 
 */
+
+function chooseSearchForm( id, slide )
+{
+  if ( slide == undefined ) {
+    slide = false;
+  }
+
+  $('form.search-form').each( function() {
+    if ( this.id == id ) {
+      if (slide) {
+        $(this).slideDown();
+      }
+      else {
+        $(this).show();
+      }
+    }
+    else {
+      if (slide) {
+        $(this).slideUp();
+      }
+      else {
+        $(this).hide();
+      }
+    }
+  });
+}
+
 function changeLanguage( language_select )
 {
   langcode = language_select.value;
@@ -107,5 +134,17 @@ $(document).ready( function() {
     $('#toc-hide').show();
     $('#toc-show').hide();
     $('#toc-container').slideDown();
+  });
+
+  $('#search-form-link-simple').click( function() {
+    chooseSearchForm( 'search-form-simple', true );
+  });
+
+  $('#search-form-link-fielded').click( function() {
+    chooseSearchForm( 'search-form-fielded', true );
+  });
+
+  $('#search-form-link-boolean').click( function() {
+    chooseSearchForm( 'search-form-boolean', true );
   });
 });

@@ -32,7 +32,7 @@ src="/libraries/jquery.js"></script>
 src="/libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
-src="/js/default.js"></script>
+src="/views/<?php echo $theme ?>/js/default.js"></script>
 
 </head>
 
