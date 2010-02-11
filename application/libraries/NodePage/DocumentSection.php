@@ -11,12 +11,14 @@ class NodePage_DocumentSection extends NodePage
   
   public function getCoverUrl()
   {
-    if ( ! $this->getNode()->getField('hascover') ) {
+    $root_node = $this->getNode()->getRootNode();
+    
+    if ( ! $root_node->getField('hascover') ) {
       return false;
     }
 
     return $this->getNode()->getCollection()->getGreenstoneUrl() . '/archives/'
-           . $this->getNode()->getField('assocfilepath') . '/cover.jpg';
+           . $root_node->getField('assocfilepath') . '/cover.jpg';
   }
 
   public function getHTML()
@@ -173,16 +175,15 @@ class NodePage_DocumentSection extends NodePage
   {
     if ($this->getNode()->getField('thumbicon')) {
       $node = $this->getNode();
-      $url = $this->getNode()->getField('thumbicon');
     }
     elseif ($this->getNode()->getRootNode()->getField('thumbicon')) {
       $node = $this->getNode()->getRootNode();
-      $url = $this->getNode()->getRootNode()->getField('thumbicon');
     }
     else {
       return false;
     }
 
+    $url = $node->getField('thumbicon');
     // strip end quote and attributes
     $url = preg_replace('/"[^"]+$/', '', $url);
 

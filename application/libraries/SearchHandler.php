@@ -13,9 +13,8 @@ class SearchHandler
     $this->params = $params;
     $this->collection = $collection;
     $this->queryBuilder = QueryBuilder::factory( $params, $collection );
-    $this->indexLevel = SearchHandler::getIndexLevel( $params, $collection );
 
-    $level_prefix = substr( $this->indexLevel, 0, 1 );
+    $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
     $index_dir = $collection->getGreenstoneDirectory()
                . "/index/$level_prefix" . 'idx';
 
@@ -67,20 +66,27 @@ class SearchHandler
     return $this->queryBuilder;
   }
   
-  protected static function getIndexLevel( array $params, Collection $collection )
+  protected function getIndexLevel()
   {
+    if ( isset( $this->indexLevel ) ) {
+      return $this->indexLevel;
+    }
+
+    $params = $this->getParams();
+    $collection = $this->getCollection();
+
     if (
       isset($params['l'])
       && in_array($params['l'], $collection->getIndexLevels())
     ) {
-      return $params['l'];
+      return $this->indexLevel = $params['l'];
     }
     elseif ($collection->getDefaultIndexLevel()) {
-      return $collection->getDefaultIndexLevel();
+      return $this->indexLevel = $collection->getDefaultIndexLevel();
     }
     else {
       $search_levels = $collection->getIndexLevels();
-      return $search_levels[0];
+      return $this->indexLevel = $search_levels[0];
     }
   }
 }

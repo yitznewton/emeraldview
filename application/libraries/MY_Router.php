@@ -126,11 +126,13 @@ class Router extends Router_Core
 		// Last chance to set routing before a 404 is triggered
 		Event::run('system.post_routing');
 
-		if (Router::$controller === NULL)
+		// EmeraldView: code to handle custom 404 method
+    if (Router::$controller === NULL)
 		{
 			// No controller was found, so no regular page can be rendered
 
       $paths = Kohana::include_paths();
+      $c     = null;
 
       foreach ($paths as $dir)
       {
@@ -142,9 +144,11 @@ class Router extends Router_Core
           // The controller must be a file that exists with the search path
           if ($c = str_replace('\\', '/', realpath($dir.'collection'.EXT))
               AND is_file($c) AND strpos($c, $dir) === 0) {
+            break;
           }
         }
       }
+
       Router::$controller      = 'collection';
       Router::$controller_path = $c;
       Router::$method          = 'show404';
@@ -152,7 +156,11 @@ class Router extends Router_Core
 
 		if (Router::$controller === NULL)
 		{
-			// this point should never be reached
+			// EmeraldView: this point should never be reached
+      if ( ! IN_PRODUCTION ) {
+        echo 'ERROR: No show404 method found in the collection controller';
+      }
+
       exit;
 		}
 	}

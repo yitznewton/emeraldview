@@ -36,11 +36,10 @@ class NodeFormatter_String extends NodeFormatter
 
     if (
       stripos($text, '[thumbicon]') !== false
-      && $node->getField('thumbicon')
+      && $node_page->getThumbnailUrl()
     )
     {
       // parse thumbicon URL and compose <img> tag
-      // TODO: what if this is a section node, and thumb is doc-level?
       $thumb_url = $node_page->getThumbnailUrl();
       $thumb_img = "<img src=\"$thumb_url\">";
       $text = str_ireplace('[thumbicon]', $thumb_img, $text);

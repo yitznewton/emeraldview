@@ -30,6 +30,7 @@ collections:
     search_hit_title_metadata_elements:
       - dls.Title
       - Title
+    search_history_length: 5
     classifiers:
       CL1:
         format:

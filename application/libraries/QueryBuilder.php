@@ -38,7 +38,7 @@ abstract class QueryBuilder
         }
       }
     }
-    elseif ( isset( $this->params['q'] ) ) {
+    elseif ( ! empty( $this->params['q'] ) ) {
       $pattern = '/ " \b (.+?) \b " | \S+ /ux';
       preg_match_all( $pattern, $this->params['q'], $term_matches );
 

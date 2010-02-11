@@ -95,6 +95,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
+    $session = Session::instance();
+    $history = $session->getSearchHistory( $collection );
+    $session->recordSearch( $search_handler );
+
     $this->view                 = new View( $this->theme . '/search' );
     $this->template->set_global( 'page_title',      'Search | '
                                  . $this->collection->getDisplayName( $this->language )

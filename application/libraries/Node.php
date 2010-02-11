@@ -98,7 +98,6 @@ abstract class Node
 
   public function getCousin( $id )
   {
-    // TODO: find a better name for this method - use getCousin
     if (strpos($id, $this->getRootId()) === false) {
       // client did not specify the root ID (really this is the more sensible
       // way to call, but we are accomodating certain methods that favor

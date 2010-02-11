@@ -140,7 +140,6 @@ class Hit
       $snippet = '... ' . $snippet;
     }
 
-    // TODO: fine-tune highlight for refined regex-based $terms [note: what the heck does this mean?]
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $snippet );
     $highlighter->setTerms( $terms );

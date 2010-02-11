@@ -122,18 +122,17 @@ $(document).ready( function() {
   $('#language-select-submit').hide();
 
   $('#toc-hide').show();
-  
+
   $('#toc-hide a').click( function() {
     $('#toc-hide').hide();
     $('#toc-show').show();
-    $('#toc-container').slideUp();
+    $('#toc-container').hide();
   });
 
-  // FIXME: the slideDown is not graceful
   $('#toc-show a').click( function() {
     $('#toc-hide').show();
     $('#toc-show').hide();
-    $('#toc-container').slideDown();
+    $('#toc-container').show();
   });
 
   $('#search-form-link-simple').click( function() {

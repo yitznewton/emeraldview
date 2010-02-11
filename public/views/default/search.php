@@ -10,6 +10,8 @@ if ( isset( $search_handler ) ) {
     case 'QueryBuilder_Boolean':
       $form_id = 'search-form-boolean';
       break;
+    default:
+      $form_id = 'search-form-simple';
   }
 }
 else {

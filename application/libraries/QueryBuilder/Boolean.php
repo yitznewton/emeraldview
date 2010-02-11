@@ -12,11 +12,11 @@ class QueryBuilder_Boolean extends QueryBuilder
 
     $this->addTerm( 1 );
 
-    if ( isset( $this->params['q2'] ) && isset( $this->params['i2'] ) ) {
+    if ( ! empty( $this->params['q2'] ) && ! empty( $this->params['i2'] ) ) {
       $this->addTerm( 2 );
     }
 
-    if ( isset( $this->params['q3'] ) && isset( $this->params['i3'] ) ) {
+    if ( ! empty( $this->params['q3'] ) && ! empty( $this->params['i3'] ) ) {
       $this->addTerm( 3 );
     }
 
@@ -68,7 +68,7 @@ class QueryBuilder_Boolean extends QueryBuilder
       throw new InvalidArgumentException( 'No values present for specified index' );
     }
 
-    if ( isset( $this->params["q$index"] ) && isset( $this->params["i$index"] ) ) {
+    if ( ! empty( $this->params["q$index"] ) && ! empty( $this->params["i$index"] ) ) {
       if ( $index == 1 ) {
         $sign = true;
       }

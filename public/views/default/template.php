@@ -70,7 +70,7 @@ src="/views/<?php echo $theme ?>/js/default.js"></script>
 <div id="footer">
   <div id="footer-url">URL: <?php echo url::site( url::current( true ) ) ?></div>
 
-  <div>Copyright &copy; 2009
+  <div>Copyright &copy; <?php echo date('Y') ?>
 
   <?php
   if (
