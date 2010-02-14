@@ -43,5 +43,8 @@ collections:
   paged:
     active: true
 
+  pioneers:
+    active: true
+
   that:
     active: false

@@ -89,8 +89,20 @@ class Hit
 
     foreach ( $terms as $term ) {
       // account for special search characters
+      $bb = L10n::getWbBefore();
+      $ba = L10n::getWbAfter();
       $term_pattern = preg_quote( $term );
-      $term_pattern = str_replace( array('\\*', '\\?'), array('.*\\b', '.'), $term_pattern );
+      $term_pattern = str_replace( array('\\*', '\\?'), array(".*$ba", '.'), $term_pattern );
+
+      // set word boundaries front and back
+      if ( substr( $term_pattern, 0, strlen($bb) ) != $bb ) {
+        $term_pattern = $bb . $term_pattern;
+      }
+
+      if ( substr( $term_pattern, 0 - strlen($ba) ) != $ba ) {
+        $term_pattern = $term_pattern . $ba;
+      }
+
       $term_pattern = '/' . $term_pattern . '/iu';
 
       if ( preg_match( $term_pattern, $text, $matches ) ) {
@@ -128,7 +140,14 @@ class Hit
 
     $snippet = substr( $text, $snippet_start );
 
-    preg_match("/^ .{0,$max_length} .*? \b /iux", $snippet, $matches);
+    $ba      = L10n::getWbAfter();
+    $pattern = "/^ .{0,$max_length} .*? $ba /ux";
+    preg_match( $pattern, $snippet, $matches );
+
+    if ( ! $matches ) {
+      var_dump($matches);
+      throw new Exception( 'Regex fail in Hit::snippetize' );
+    }
 
     if ($matches[0] != $snippet) {
       // we needed to truncate at the end
@@ -136,7 +155,7 @@ class Hit
     }
 
     if ($snippet_start > 0) {
-      // we truncated from the beginning
+      // we needed to truncate from the beginning
       $snippet = '... ' . $snippet;
     }
 

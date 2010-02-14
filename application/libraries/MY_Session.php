@@ -29,9 +29,6 @@ class Session extends Session_Core
     $params     = $search_handler->getParams();
     $history    = $this->getSearchHistory( $collection );
     
-    // TODO: this misses searches of different QueryBuilder classes, which
-    // have identical outcomes and display queries - e.g. searching for
-    // 'education' with Simple, and in the text index with Fielded
     $already_there = array_search( $params, $history );
     
     if ( $already_there !== false ) {

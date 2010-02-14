@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Node_Document class definition
+ * @package libraries
+ */
+/**
+ * Node_Document class definition
+ * @package libraries
+ */
 class Node_Document extends Node
 {
   protected $subnode_id;
@@ -81,9 +88,13 @@ class Node_Document extends Node
     }
   }
 
+  /**
+   * Returns a specified subnode of $this
+   * @param string $node_id The complete node ID of the desired subnode
+   * @return Node_Document
+   */
   protected function getChild( $node_id )
   {
-    // TODO refactor this to take subnode/section id rather than full node id
     return Node_Document::factory( $this->collection, $node_id );
   }
 

@@ -60,7 +60,7 @@
 <div id="image-pager">
 
 <h2>
-  Page <?php echo $node->getField( 'title' ) ?>
+  Page <?php echo $node->getField( 'Title' ) ?>
 </h2>
 
 <form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>"

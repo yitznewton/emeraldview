@@ -125,8 +125,13 @@ class CollectCfg_G2 extends CollectCfg
     if (isset( $this->metadata[ $element_name ][ $language ] )) {
       return $this->metadata[ $element_name ][ $language ];
     }
-    else {
-      return false;
+
+    foreach ( EmeraldviewConfig::get( 'languages' ) as $code => $name ) {
+      if (isset( $this->metadata[ $element_name ][ $code ] )) {
+        return $this->metadata[ $element_name ][ $code ];
+      }
     }
+
+    return false;
   }
 }

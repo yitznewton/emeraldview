@@ -22,6 +22,6 @@ class QueryBuilder_Fielded extends QueryBuilder
   
   public function getDisplayQuery()
   {
-    return $this->params['q'];
+    return $this->params['i'] . ':' . $this->params['q'];
   }
 }

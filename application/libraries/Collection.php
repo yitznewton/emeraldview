@@ -90,13 +90,13 @@ class Collection
     return $this->getCollectCfg()->getDefaultLevel();
   }
   
-  public function getDisplayName( $language_code = null )
+  public function getDisplayName( $language_code )
   {
     return $this->getCollectCfg()
            ->getMetadata( 'collectionname', $language_code );
   }
   
-  public function getDescription( $language_code = null )
+  public function getDescription( $language_code )
   {
     return $this->getCollectCfg()
            ->getMetadata( 'collectionextra', $language_code );
