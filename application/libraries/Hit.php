@@ -82,37 +82,20 @@ class Hit
       $max_length = 200;
     }
 
+    // find the first instance of any one of the terms
+
     $text = preg_replace('/\s{2,}/u', ' ', $text);
     $terms = $this->search_handler->getQueryBuilder()->getRawTerms();
+    array_walk( $terms, 'preg_quote' );
 
-    $first_hit_position = strlen( $text ) - 1;
+    $bb = L10n::getWbBefore();
+    $ba = L10n::getWbAfter();
+    $pattern = '/' . $bb . '(' . implode( '|', $terms ) . ')' . $ba . '/iu';
+    preg_match( $pattern, $text, $matches );
+    
+    $first_hit_position = strpos( $text, $matches[1] );
 
-    foreach ( $terms as $term ) {
-      // account for special search characters
-      $bb = L10n::getWbBefore();
-      $ba = L10n::getWbAfter();
-      $term_pattern = preg_quote( $term );
-      $term_pattern = str_replace( array('\\*', '\\?'), array(".*$ba", '.'), $term_pattern );
-
-      // set word boundaries front and back
-      if ( substr( $term_pattern, 0, strlen($bb) ) != $bb ) {
-        $term_pattern = $bb . $term_pattern;
-      }
-
-      if ( substr( $term_pattern, 0 - strlen($ba) ) != $ba ) {
-        $term_pattern = $term_pattern . $ba;
-      }
-
-      $term_pattern = '/' . $term_pattern . '/iu';
-
-      if ( preg_match( $term_pattern, $text, $matches ) ) {
-        $hit_position = strpos( $text, $matches[0] );
-
-        if ( $hit_position < $first_hit_position ) {
-          $first_hit_position = $hit_position;
-        }
-      }
-    }
+    // take snippet, padding around the term match
 
     // TODO: I18n-ify this (LTR...)?
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;

@@ -8,7 +8,8 @@ class Highlighter_Text extends Highlighter
   {
     $bb = L10n::getWbBefore();
     $ba = L10n::getWbAfter();
-    $search  = '/' . $bb . implode( $ba . '|' . $bb, $this->terms ) . $ba . '/iu';
+    // FIXME is the case-insensitive flag going to work here?
+    $search  = '/' . $bb . '(' . implode( '|', $this->terms ) . ')' . $ba . '/iu';
     $replace = "<span class=\"highlight\">\\0</span>";
 
     return preg_replace( $search, $replace, $this->document );

@@ -29,12 +29,12 @@ class L10n
    * Regular expression zero-width word boundary substitute for lookbehind
    * @var string
    */
-  protected static $wbBefore = '(?<=[^_\pL\pN]|^)'; //'\\b';
+  protected static $wbBefore = '(?:[^_\pL\pN]|^)'; //'\\b';
   /**
    * Regular expression zero-width word boundary substitute for lookahead
    * @var string
    */
-  protected static $wbAfter = '(?=[^_\pL\pN]|^)'; //'\\b';
+  protected static $wbAfter = '(?:[^_\pL\pN]|$)'; //'\\b';
 
   public static function _( $message )
   {
