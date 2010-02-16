@@ -75,6 +75,19 @@ class Node_Document extends Node
     return $this->getCousin( $id );
   }
 
+  public function getAncestors()
+  {
+    $id = $this->getId();
+    $ancestors = array();
+
+    while ( strpos( $id, '.' ) !== false ) {
+      $id = substr( $id, 0, strrpos( $id, '.' ) );
+      $ancestors[] = $this->getCousin( $id );
+    }
+
+    return array_reverse( $ancestors );
+  }
+
   public function isPaged()
   {
     if (

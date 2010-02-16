@@ -34,6 +34,10 @@ collections:
     classifiers:
       CL1:
         format:
+          branch: "[Title]"
+          leaf:   "[Title]"
+      CL2:
+        format:
           branch: "[Title] ([numleafdocs])"
           leaf:   "[Title]"
     display_metadata:

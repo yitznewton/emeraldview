@@ -108,14 +108,4 @@ class L10n
 
     return L10n::$alternateDomainGettexts[ $domain_name ]->_( $message );
   }
-
-  // TODO: document these
-  public static function setRegexWordBoundary( $pattern )
-  {
-    if ( ! is_string( $pattern ) ) {
-      throw new InvalidArgumentException( 'Argument must be a string' );
-    }
-
-    return L10n::$regexWordBoundary = $pattern;
-  }
 }

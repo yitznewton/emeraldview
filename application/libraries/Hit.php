@@ -2,9 +2,8 @@
 
 class Hit
 {
-  // FIXME hack to centralize this value before we actually factor the
+  // FIXME: hack to centralize this value before we actually factor the
   // snippet generation and highlighting in a sensible way
-  // FIXME is the case-insensitive flag going to work here?
   const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';
   // const HIT_PATTERN = '/\\b(%s)\\b/i';
 
@@ -57,7 +56,6 @@ class Hit
       }
     }
     
-
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $title );
     $highlighter->setTerms( $terms );
@@ -102,7 +100,7 @@ class Hit
 
     // take snippet, padding around the term match
 
-    // TODO: I18n-ify this (LTR...)?
+    // TODO: is this I18n-ified (LTR...)?
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;
     $prev_sentence_end = strripos( $text, '. ', $first_hit_reverse_position );
 
@@ -116,8 +114,7 @@ class Hit
       $first_hit_cutoff;
     }
 
-    // TODO: double-check this logic
-    if ($first_hit_position > 150) {
+    if ( $first_hit_position > 150 ) {
       // only start a bit before first hit
       $snippet_start = strpos( $text, ' ', $first_hit_position - 50 );
     }

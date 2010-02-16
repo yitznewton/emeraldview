@@ -10,7 +10,7 @@ class NodeFormatter_String extends NodeFormatter
     if (is_array( $format_config )) {
       // separate formats for branches and leaves specified
 
-      if ( !isset($format_config['branch']) || !isset($format_config['leaf'] )) {
+      if ( ! isset($format_config['branch']) || ! isset($format_config['leaf'] )) {
         throw new Exception( 'Invalid format config setting' );
       }
 
@@ -63,6 +63,18 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_ireplace('[numleafdocs]', count( $node->getChildren() ), $text);
     }
 
+    /*
+    if ( $node instanceof Node_Document ) {
+      $parent_all_pattern = "/ \[ parent \( All '([^']+)' \) : ([^\]]+) \] /x";
+      if ( preg_match_all( $parent_all_pattern, $text, $parent_all_matches ) ) {
+        for ( $i = 0; $i < count( $parent_all_matches[0] ); $i++ ) {
+          $field_glob = $this->getAncestorFieldGlob( $node, $parent_all_matches[1][$i], $parent_all_matches[2][$i] );
+          str_replace( $parent_all_matches[0][$i], $field_glob, $text );
+        }
+      }
+    }
+     */
+
     // parse for remaining, generic metadata tokens
     $text = $this->expandTokens( $text, $index );
 
@@ -81,8 +93,21 @@ class NodeFormatter_String extends NodeFormatter
     }
   }
 
+  protected function getAncestorFieldGlob( Node_Document $node, $fieldname, $separator )
+  {
+    $fields = array();
+
+    foreach ( $node->getAncestors() as $ancestor ) {
+      if ( $ancestor->getField( $fieldname ) ) {
+        $fields[] = $ancestor->getField( $fieldname );
+      }
+    }
+
+    return implode( $separator, $fields );
+  }
+
   protected function expandTokens( $text, $index )
   {
-
+    // FIXME: implement
   }
 }

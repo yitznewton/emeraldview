@@ -40,7 +40,9 @@ class NodeTreeFormatter
 
     $output .= $node_output;
 
-    if ($children = $node->getChildren()) {
+    $children = $node->getChildren();
+    
+    if ( $children ) {
       $output .= "<ul>\n";
       
       foreach ($children as $child) {
