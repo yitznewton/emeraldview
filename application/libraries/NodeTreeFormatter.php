@@ -2,7 +2,7 @@
 
 class NodeTreeFormatter
 {
-  public static function format( Node $node, NodeFormatter $node_formatter )
+  public static function format( Node $node )
   {
     if (! $children = $node->getChildren()) {
       return false;
@@ -16,7 +16,7 @@ class NodeTreeFormatter
     $output = '<ul class="browse-tree">' . "\n";
     
     foreach ($children as $child) {
-      $output .= self::renderNode( $child, $node_formatter );
+      $output .= self::renderNode( $child );
     }
     
     $output .= "</ul>\n";
@@ -24,11 +24,11 @@ class NodeTreeFormatter
     return $output;
   }
   
-  protected static function renderNode( Node $node, NodeFormatter $node_formatter )
+  protected static function renderNode( Node $node )
   {
     $output = "<li>\n";
     
-    $node_output = $node_formatter->format( $node );
+    $node_output = $node->getFormatter( NodeFormatter::METHOD_TREE )->format( $node );
 
     if (
       $node instanceof Node_Document
@@ -46,7 +46,7 @@ class NodeTreeFormatter
       $output .= "<ul>\n";
       
       foreach ($children as $child) {
-        $output .= self::renderNode( $child, $node_formatter );
+        $output .= self::renderNode( $child );
       }
       
       $output .= "</ul>\n";

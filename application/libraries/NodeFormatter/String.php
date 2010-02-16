@@ -5,9 +5,11 @@ class NodeFormatter_String extends NodeFormatter
   protected $branchFormat;
   protected $leafFormat;
   
-  public function __construct( $format_config )
+  public function __construct( Node $node, $format_config )
   {
-    if (is_array( $format_config )) {
+    parent::__construct( $node );
+    
+    if ( is_array( $format_config ) ) {
       // separate formats for branches and leaves specified
 
       if ( ! isset($format_config['branch']) || ! isset($format_config['leaf'] )) {
@@ -23,16 +25,16 @@ class NodeFormatter_String extends NodeFormatter
     }
   }
 
-  public function format( Node $node, $index = null )
+  public function format( $index = null )
   {
-    if ( $node->getChildren() ) {
+    if ( $this->node->getChildren() ) {
       $text = $this->branchFormat;
     }
     else {
       $text = $this->leafFormat;
     }
 
-    $node_page = NodePage::factory( $node );
+    $node_page = NodePage::factory( $this->node );
 
     if (
       stripos($text, '[thumbicon]') !== false
@@ -59,8 +61,8 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_replace( array('[a]', '[/a]'), '', $text );
     }
 
-    if ($node->getChildren()) {
-      $text = str_ireplace('[numleafdocs]', count( $node->getChildren() ), $text);
+    if ($this->node->getChildren()) {
+      $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
     }
 
     /*
@@ -89,15 +91,15 @@ class NodeFormatter_String extends NodeFormatter
     }
     else {
       // fall back to last-resort metadata fields
-      return parent::format( $node );
+      return parent::format();
     }
   }
 
-  protected function getAncestorFieldGlob( Node_Document $node, $fieldname, $separator )
+  protected function getAncestorFieldGlob( $fieldname, $separator )
   {
     $fields = array();
 
-    foreach ( $node->getAncestors() as $ancestor ) {
+    foreach ( $this->node->getAncestors() as $ancestor ) {
       if ( $ancestor->getField( $fieldname ) ) {
         $fields[] = $ancestor->getField( $fieldname );
       }
@@ -106,8 +108,88 @@ class NodeFormatter_String extends NodeFormatter
     return implode( $separator, $fields );
   }
 
-  protected function expandTokens( $text, $index )
+  protected function expandTokens( $text, $index= null )
   {
-    // FIXME: implement
+    preg_match_all('/ \[ ([^\]]+) \] /x', $text, $token_matches);
+
+    foreach ($token_matches[1] as $key => $field) {
+      $metadata_value = $this->getMetadataForToken( $field );
+
+      if (is_array($metadata_value)) {
+        // TODO: old Trac #25
+
+        // $metadata_index = $this->getMdOffset( $index );
+        // $metadata_value = $metadata_value[ $metadata_index ];
+
+        // a short-circuit in the meantime:
+        $metadata_value = $metadata_value[0];
+      }
+
+      if ($metadata_value) {
+        $text =
+          str_replace( $token_matches[0][$key], $metadata_value, $text );
+      }
+      else {
+        $text = str_replace($token_matches[0][$key], '', $text);
+      }
+    }
+
+    return $text;
+  }
+
+  protected function getMetadataForToken( $token )
+  {
+    $replacement_text = null;
+
+    if (strpos( $token, '|' ) !== false) {
+      $fields_to_try = split('\|', $token);
+    }
+    else {
+      $fields_to_try = array( $token );
+    }
+
+
+
+    foreach ($fields_to_try as $current_field) {
+      // this loop handles each individual field within the token
+      if ( $this->node->getField( $current_field ) ) {
+        return $this->node->getField( $current_field );
+      }
+
+      if (
+        preg_match('/^ format: ( \S+ ) $/x', $current_field, $format_matches)
+      ) {
+        // date formatting
+
+        $field_name = $format_matches[1];
+
+        if ($date = $this->node->getField( $field_name )) {
+          $length = strlen( $date );
+
+          $date_formatted = '';
+
+          if ($length == 8) {
+            $date_formatted .= ltrim( substr($date, 6, 2), '0' );
+          }
+
+          if ($length >= 6) {
+            $month_name = date(
+              "F", mktime(0, 0, 0, (int) substr($date, 4, 2), 10));
+            $date_formatted .= ' ' . $month_name;
+          }
+
+          if ($length >= 4) {
+            $date_formatted .= ' ' . substr($date, 0, 4);
+          }
+
+          $date_formatted = trim( $date_formatted );
+
+          $replacement_text = $date_formatted;
+          break;
+        }
+      }
+    }
+
+    return $replacement_text;
   }
 }

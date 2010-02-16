@@ -10,6 +10,11 @@ abstract class Node
   
   abstract protected function recurse();
   abstract protected function getChild( $node_id );
+  
+  protected function getFormatter()
+  {
+    return new NodeFormatter( $this );
+  }
 
   protected function __construct(
     Collection $collection, $node_id = null, $root_only = false
@@ -35,13 +40,26 @@ abstract class Node
   public function format()
   {
     $node_formatter = NodeFormatter::factory( $this );
-    $text = $node_formatter->format( $this );
+    $text = $node_formatter->format();
 
     if ( strpos( $text, '<a' ) === false ) {
       $text = html::anchor( $this->getPage()->getUrl(), $text );
     }
 
     return $text;
+  }
+
+  public function getAncestors()
+  {
+    $id = $this->getId();
+    $ancestors = array();
+
+    while ( strpos( $id, '.' ) !== false ) {
+      $id = substr( $id, 0, strrpos( $id, '.' ) );
+      $ancestors[] = $this->getCousin( $id );
+    }
+
+    return array_reverse( $ancestors );
   }
 
   public function getId()

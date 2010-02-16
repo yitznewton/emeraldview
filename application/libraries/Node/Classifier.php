@@ -42,6 +42,25 @@ class Node_Classifier extends Node
     }
   }
 
+  public function getFormatter()
+  {
+    $id = $this->getId();
+
+    if ($this->getCollection()->getConfig( "classifiers.$id.format" )) {
+      return new NodeFormatter_String(
+        $this, $this->getCollection()->getConfig( "classifiers.$id.format" )
+      );
+    }
+    elseif ($this->getCollection()->getConfig( "classifiers.$id.format_function" )) {
+      return new NodeFormatter_Function(
+        $this, $node->getConfig( "classifiers.$id.format_function" )
+      );
+    }
+    else {
+      return new NodeFormatter( $this );
+    }
+  }
+
   protected function staticFactory(
     Collection $collection, $node_id, $root_only = false
   )

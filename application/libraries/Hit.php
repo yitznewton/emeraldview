@@ -30,31 +30,7 @@ class Hit
     $term_string = implode( '&search[]=', $terms );
 
     $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
-
-    $title_fields = $node->getCollection()->getConfig('search_hit_title_metadata_elements');
-
-    if ( $title_fields ) {
-      if ( ! is_array( $title_fields ) ) {
-        $title_fields = array( $title_fields );
-      }
-
-      if ( ! in_array( 'Title', $title_fields ) ) {
-        array_push( $title_fields, 'Title' );
-      }
-
-      $title = $node->getFirstFieldFound( $title_fields );
-
-      if ( ! $title ) {
-        $title = $node->getId();
-      }
-    }
-    else {
-      $title = $node->getField( 'Title' );
-
-      if ( ! $title ) {
-        $title = $node->getId();
-      }
-    }
+    $title = $node->getFormatter( NodeFormatter::METHOD_SEARCH_RESULTS )->format();
     
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $title );
