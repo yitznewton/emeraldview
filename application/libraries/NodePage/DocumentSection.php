@@ -147,10 +147,9 @@ class NodePage_DocumentSection extends NodePage
 
   public function getDisplayMetadata()
   {
-    $fields_to_display
-      = $this->getCollection()->getConfig( 'display_metadata' );
+    $fields_to_display = $this->getCollection()->getConfig( 'display_metadata' );
 
-    if (!$fields_to_display) {
+    if ( ! $fields_to_display ) {
       return array();
     }
 

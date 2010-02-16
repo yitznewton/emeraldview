@@ -78,13 +78,13 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     
     // override global defaults if collection config values set
     if (
-      !$this->session->get('language')
+      ! $this->session->get('language')
       && $this->collection->getConfig('default_language')
     ) {
       $this->language = $this->collection->getConfig('default_language');
     }
     
-    if ($this->collection->getConfig('theme')) {
+    if ( $this->collection->getConfig('theme') ) {
       $this->theme = $this->collection->getConfig('theme');
     }
     

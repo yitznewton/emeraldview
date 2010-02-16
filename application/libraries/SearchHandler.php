@@ -2,17 +2,24 @@
 
 class SearchHandler
 {
+  // each of these regex patterns must match the search term in the 
+  // first backreference
+  const BOUNDARIES_PATTERN_ASCII   = '\\b(%s)\\b';
+  const BOUNDARIES_PATTERN_UNICODE = '(?:[^_\pL\pN]|^)(%s)(?:[^_\pL\pN]|$)';
+
   protected $params;
   protected $collection;
   protected $queryBuilder;
   protected $indexLevel;
   protected $luceneObject;
+  protected $boundariesPattern;
 
   public function __construct( array $params, Collection $collection )
   {
     $this->params = $params;
     $this->collection = $collection;
     $this->queryBuilder = QueryBuilder::factory( $params, $collection );
+    $this->boundariesPattern = $collection->getConfig( 'boundaries_pattern', SearchHandler::BOUNDARIES_PATTERN_ASCII );
 
     $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
     $index_dir = $collection->getGreenstoneDirectory()

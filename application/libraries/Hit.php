@@ -2,6 +2,12 @@
 
 class Hit
 {
+  // FIXME hack to centralize this value before we actually factor the
+  // snippet generation and highlighting in a sensible way
+  // FIXME is the case-insensitive flag going to work here?
+  const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';
+  // const HIT_PATTERN = '/\\b(%s)\\b/i';
+
   public $title;
   public $link;
   public $snippet;
@@ -88,9 +94,8 @@ class Hit
     $terms = $this->search_handler->getQueryBuilder()->getRawTerms();
     array_walk( $terms, 'preg_quote' );
 
-    $bb = L10n::getWbBefore();
-    $ba = L10n::getWbAfter();
-    $pattern = '/' . $bb . '(' . implode( '|', $terms ) . ')' . $ba . '/iu';
+    $term_pattern  = implode( '|', $terms );
+    $pattern = sprintf( Hit::HIT_PATTERN, $term_pattern );
     preg_match( $pattern, $text, $matches );
     
     $first_hit_position = strpos( $text, $matches[1] );
@@ -123,8 +128,7 @@ class Hit
 
     $snippet = substr( $text, $snippet_start );
 
-    $ba      = L10n::getWbAfter();
-    $pattern = "/^ .{0,$max_length} .*? $ba /ux";
+    $pattern = "/^ .{0,$max_length} .*? [^_\pL\pN] | $ /ux";
     preg_match( $pattern, $snippet, $matches );
 
     if ( ! $matches ) {

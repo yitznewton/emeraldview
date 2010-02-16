@@ -41,13 +41,9 @@ class Session extends Session_Core
       return $this->setSearchHistory( $collection, $history );
     }
 
-    $max_searches = $collection->getConfig('search_history_length');
-
     array_push( $history, $params );
 
-    if ( ! $max_searches ) {
-      $max_searches = 5;
-    }
+    $max_searches = $collection->getConfig( 'search_history_length', 5 );
 
     while ( count( $history ) > $max_searches ) {
       array_shift( $history );

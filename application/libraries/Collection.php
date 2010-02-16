@@ -39,15 +39,21 @@ class Collection
     // $this->archive    = GreenstoneArchive::factory( $this );
   }
   
-  public function getConfig( $subnode = null )
+  public function getConfig( $subnode = null, $default = null )
   {
     $node = 'collections.' . $this->name;
     
     if ($subnode) {
       $node .= '.' . $subnode;
     }
+
+    $value = EmeraldviewConfig::get( $node );
+
+    if ( $value === null ) {
+      $value = $default;
+    }
     
-    return EmeraldviewConfig::get( $node );
+    return $value;
   }
   
   public function getIndexes()
@@ -104,6 +110,7 @@ class Collection
   
   protected function getGreenstoneName()
   {
+    // TODO: customizable collection name
     /*
     if ($this->getConfig('gsdl_collect_dir')) {
       return $this->getConfig('gsdl_collect_dir');
@@ -158,9 +165,7 @@ class Collection
     $classifiers = array();
     
     foreach ( $this->getClassifierIds() as $id ) {
-      if (
-        $this->getConfig( "classifiers.$id.active" ) === false
-      ) {
+      if ( $this->getConfig( "classifiers.$id.active" ) === false ) {
         // this Classifier is not active
         continue;
       }

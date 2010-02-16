@@ -6,11 +6,9 @@ class Highlighter_Text extends Highlighter
 
   public function execute()
   {
-    $bb = L10n::getWbBefore();
-    $ba = L10n::getWbAfter();
-    // FIXME is the case-insensitive flag going to work here?
-    $search  = '/' . $bb . '(' . implode( '|', $this->terms ) . ')' . $ba . '/iu';
-    $replace = "<span class=\"highlight\">\\0</span>";
+    $term_pattern  = implode( '|', $this->terms );
+    $search = sprintf( Hit::HIT_PATTERN, $term_pattern );
+    $replace = "<span class=\"highlight\">\\1</span>";
 
     return preg_replace( $search, $replace, $this->document );
   }
