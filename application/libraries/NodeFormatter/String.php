@@ -61,7 +61,6 @@ class NodeFormatter_String extends NodeFormatter
       }
     }
 
-    exit('sdf');
     if ( strpos( $text, '[a]' ) === false ) {
       $text = '[a]' . $text . '[/a]';
     }
