@@ -118,7 +118,6 @@ class Hit
     preg_match( $pattern, $snippet, $matches );
 
     if ( ! $matches ) {
-      var_dump($matches);
       throw new Exception( 'Regex fail in Hit::snippetize' );
     }
 

@@ -4,9 +4,9 @@ class NodeFormatter_Function extends NodeFormatter
 {
   protected $function;
 
-  public function __construct( Node $node, $function_definition )
+  public function __construct( Node $node, $context, $function_definition )
   {
-    parent::__construct( $node );
+    parent::__construct( $node, $context );
 
     $this->function = create_function( '$node', $function_definition );
   }

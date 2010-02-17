@@ -315,11 +315,12 @@ public class GS2LuceneIndexer {
 		pushOnStack(); // start new doc
 		current_node_ = qName;
 		
-		String node_id = atts.getValue("gs2:id");
-		print(" " + qName + ": " + node_id + " (" + mode_ + ")" );
-		current_doc_.add(new Field("nodeID", node_id, Field.Store.YES, Field.Index.UN_TOKENIZED));
+		//String node_id = atts.getValue("gs2:id");
+		//print(" " + qName + ": " + node_id + " (" + mode_ + ")" );
+		//current_doc_.add(new Field("nodeID", node_id, Field.Store.YES, Field.Index.UN_TOKENIZED));
 		
 		current_doc_oid_ = atts.getValue("gs2:docOID");
+		print(" " + qName + ": " + current_doc_oid_ + " (" + mode_ + ")" );
 		current_doc_.add(new Field("docOID", current_doc_oid_, Field.Store.YES, Field.Index.UN_TOKENIZED));
 	    }
 	    
@@ -357,19 +358,18 @@ public class GS2LuceneIndexer {
 	    else if (mode_.equals("add") || mode_.equals("update")) {
 		if (qName.equals(indexable_current_node_))
 		    {
-        if (qName.equals("TX")) {
-			current_doc_.add(new Field(qName, current_contents_, Field.Store.YES, Field.Index.TOKENIZED, Field.TermVector.YES));
-        }
-        else {
 			current_doc_.add(new Field(qName, current_contents_, Field.Store.NO, Field.Index.TOKENIZED, Field.TermVector.YES));
-        }
-        
 			// The byXX fields are used for sorting search results
 			// We don't want to do that for Text or AllFields fields
 			// They need to be untokenised for sorting
 			if (!qName.equals("TX") && !qName.equals("ZZ"))
 			    {
 				current_doc_.add(new Field("by" + qName, current_contents_, Field.Store.NO, Field.Index.UN_TOKENIZED, Field.TermVector.NO));
+			    }
+			
+			if (qName.equals("TX"))
+			    {
+				current_doc_.add(new Field("TX", current_contents_, Field.Store.YES, Field.Index.UN_TOKENIZED, Field.TermVector.NO));
 			    }
 			
 			current_contents_ = "";
@@ -404,11 +404,13 @@ public class GS2LuceneIndexer {
 
 	    path = path + "/"+qName;
 	    if (atts.getLength()>0) {
-		String id = atts.getValue("gs2:id");
+	      // was gs2:id, changed to gs2:docOID --kjdon
+		String id = atts.getValue("gs2:docOID");
 		if (id != null) {
-		    path +=  "[@gs2:id='"+id+"']";
+		    path +=  "[@gs2:docOID='"+id+"']";
 		}
 		else {
+		  // is this ever used? not in perl currently
 		    id = atts.getValue("gs3:id");
 		    if (id != null) {
 			path +=  "[@gs3:id='"+id+"']";

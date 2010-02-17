@@ -8,8 +8,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     
     $this->view = new View( $this->theme . '/index' );
     $this->view->collections = Collection::getAllAvailable();
+
+    $this->template->set_global( 'method',          'index' );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'language', $this->language );
+    $this->template->set_global( 'language',        $this->language );
   }
   
   public function about( $collection_name )
@@ -22,6 +24,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->view = new View( $this->theme . '/about' );
     
+    $this->template->set_global( 'method',          'about' );
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $collection->getDisplayName( $this->language )
@@ -49,6 +52,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->view = new View( $this->theme . '/browse' );
     
+    $this->template->set_global( 'method',          'browse' );
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $classifier->getTitle()
@@ -111,6 +115,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
                                  . $this->collection->getDisplayName( $this->language )
                                  . " | $this->emeraldviewName"
                                );
+    $this->template->set_global( 'method',          'search' );
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
@@ -189,6 +194,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->view = new View( $this->theme . '/view' );
 
+    $this->template->set_global( 'method',          'view' );
     $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $node->getField('Title')
@@ -208,6 +214,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function show404()
   {
     $this->view = new View( 'default/show404' );
+    $this->template->set_global( 'method',          'show404' );
     $this->template->set_global( 'page_title', 'Page not found' );
   }
 }

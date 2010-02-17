@@ -39,30 +39,29 @@ src="/views/<?php echo $theme ?>/js/default.js"></script>
 <body dir="<?php echo L10n::_('ltr') ?>">
 
 <div id="header">
-  <?php if (isset($collection)): ?>
-    <span id="header-logo">
-      <a href="/">
-        <img src="/images/emeraldview2.png"
-        alt="EmeraldView logo" />
-      </a>
-    </span>
-    <div id="header-collection-title">
-      <div>
-        <?php echo $collection_display_name ?>
-      </div>
-    </div>
-    <div class="clear"></div>
-  <?php else: ?>
+  <?php if ( $method == 'index' ): ?>
     <span id="header-logo">
       <img src="/images/emeraldview2.png"
       alt="EmeraldView logo" />
     </span>
+  <?php else: ?>
+    <span id="header-logo">
+      <a href="<?php echo url::base() ?>">
+        <img src="/images/emeraldview2.png"
+        alt="EmeraldView logo" />
+      </a>
+    </span>
+  <?php endif; ?>
+
+  <?php if ( isset($collection) ): ?>
+    <div id="header-collection-title">
+      <div><?php echo $collection_display_name ?></div>
+    </div>
+  <?php else: ?>
     <div id="header-emeraldview-title">
       <div>EmeraldView</div>
     </div>
   <?php endif; ?>
-
-  <div class="clear"></div>
 </div>
 
 <?php echo $content ?>
