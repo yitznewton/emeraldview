@@ -23,7 +23,8 @@ abstract class NodePage
 
   public function getTree()
   {
-    return NodeTreeFormatter::format( $this->getNode()->getRootNode() );
+    $formatter = new NodeTreeFormatter( $this->getNode()->getRootNode() );
+    return $formatter->format();
   }
 
   public function getCollection()
