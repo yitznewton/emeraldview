@@ -51,8 +51,7 @@ class NodeFormatter
       return new NodeFormatter_String( $node, $format_string );
     }
 
-    $function_definition = $context->getCollection->getConfig( $prefix . 'format_function' );
-    // FIXME: this constructor needs refactoring
+    $function_definition = $context->getCollection()->getConfig( $prefix . 'format_function' );
     if ( $function_definition ) {
       return new NodeFormatter_Function( $node, $function_definition );
     }

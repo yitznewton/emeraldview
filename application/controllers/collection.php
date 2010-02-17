@@ -138,17 +138,17 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $document_id = $collection->getSlugLookup()->retrieveId( $slug );
 
-    if (!$document_id) {
+    if ( ! $document_id ) {
       return $this->show404();
     }
 
     $node = Node_Document::factory( $collection, $document_id . $subnode_id );
     
-    if (!$node) {
+    if ( ! $node ) {
       return $this->show404();
     }
 
-    if ($node->isPaged()) {
+    if ( $node->isPaged() ) {
       if ( $this->input->get('page') ) {
         // user submitted the 'go to page' form
         $page_number = (int) $this->input->get('page');

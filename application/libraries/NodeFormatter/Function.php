@@ -2,13 +2,23 @@
 
 class NodeFormatter_Function extends NodeFormatter
 {
-  public function __construct( $format_function )
-  {
+  protected $function;
 
+  public function __construct( Node $node, $function_definition )
+  {
+    parent::__construct( $node );
+
+    $this->function = create_function( '$node', $function_definition );
   }
 
-  public function format( Node $node )
+  public function format()
   {
-    
+    $text = $this->function( $this->node );
+
+    if ( ! is_string( $text ) ) {
+      return false;
+    }
+
+    return $text;
   }
 }
