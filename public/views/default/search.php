@@ -84,11 +84,7 @@ else {
   <ol id="search-hits" start="<?php echo $hits_page->firstHit ?>">
     <?php foreach ($hits_page->hits as $hit): ?>
       <li>
-        <div>
-          <a href="<?php echo $hit->link ?>">
-            <?php echo $hit->title ?>
-          </a>
-        </div>
+        <div><?php echo $hit->link ?></div>
 
         <?php if ($hit->snippet): ?>
           <div class="search-snippet"><?php echo $hit->snippet ?></div>

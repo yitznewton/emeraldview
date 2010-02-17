@@ -44,7 +44,7 @@ class Node_Classifier extends Node
 
   public function getFormatter()
   {
-    $id = $this->getId();
+    $id = $this->getRootId();
 
     if ($this->getCollection()->getConfig( "classifiers.$id.format" )) {
       return new NodeFormatter_String(

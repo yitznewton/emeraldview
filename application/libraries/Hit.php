@@ -30,20 +30,31 @@ class Hit
     $term_string = implode( '&search[]=', $terms );
 
     $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
+
+    // FIXME: collision betw/url and highlight
     $title = $node->getFormatter( NodeFormatter::METHOD_SEARCH_RESULTS )->format();
-    
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $title );
     $highlighter->setTerms( $terms );
-    $this->title = $highlighter->execute();
+    $title = $highlighter->execute();
 
-    $this->link = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
+    if ( strpos( $title, '[a]' ) === false ) {
+      $title = '[a]' . $title . '[/a]';
+    }
+
+    $url = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
+    $search = array( '[a]', '[/a]' );
+    $replace = array( '<a href="' . $url . '">', '</a>' );
+    $this->link = str_replace( $search, $replace, $title );
 
     $lucene_document = $this->lucene_hit->getDocument();
 
-    $text_field = $lucene_document->getField('TX');
-    if ( $text_field ) {
+    try {
+      $text_field = $lucene_document->getField('TX');
       $this->snippet = $this->snippetize( $text_field->value );
+    }
+    catch ( Zend_Search_Lucene_Exception $e ) {
+      $this->snippet = null;
     }
   }
 

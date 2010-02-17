@@ -47,35 +47,24 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_ireplace('[thumbicon]', $thumb_img, $text);
     }
 
-    $url = $node_page->getUrl();
-
-    if ($url) {
-      $text = str_replace(
-        // compose explicitly-specified <a> tags
-        array('[a]', '[/a]'),
-        array("<a href=\"$url\">", '</a>'),
-        $text
-      );
-    }
-    else {
-      $text = str_replace( array('[a]', '[/a]'), '', $text );
-    }
-
     if ($this->node->getChildren()) {
       $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
     }
 
-    /*
-    if ( $node instanceof Node_Document ) {
+    if ( $this->node instanceof Node_Document ) {
       $parent_all_pattern = "/ \[ parent \( All '([^']+)' \) : ([^\]]+) \] /x";
       if ( preg_match_all( $parent_all_pattern, $text, $parent_all_matches ) ) {
         for ( $i = 0; $i < count( $parent_all_matches[0] ); $i++ ) {
-          $field_glob = $this->getAncestorFieldGlob( $node, $parent_all_matches[1][$i], $parent_all_matches[2][$i] );
-          str_replace( $parent_all_matches[0][$i], $field_glob, $text );
+          $field_glob = $this->getAncestorFieldGlob( $parent_all_matches[2][$i], $parent_all_matches[1][$i] );
+          $text = str_replace( $parent_all_matches[0][$i], $field_glob, $text );
         }
       }
     }
-     */
+
+    exit('sdf');
+    if ( strpos( $text, '[a]' ) === false ) {
+      $text = '[a]' . $text . '[/a]';
+    }
 
     // parse for remaining, generic metadata tokens
     $text = $this->expandTokens( $text, $index );
@@ -105,6 +94,9 @@ class NodeFormatter_String extends NodeFormatter
       }
     }
 
+    // FIXME: a bit hardcoded, no?
+    $fields[ count($fields)-1 ] = '[a]' . $fields[ count($fields)-1 ] . '[/a]';
+
     return implode( $separator, $fields );
   }
 
@@ -113,6 +105,11 @@ class NodeFormatter_String extends NodeFormatter
     preg_match_all('/ \[ ([^\]]+) \] /x', $text, $token_matches);
 
     foreach ($token_matches[1] as $key => $field) {
+      if ( $field == 'a' ||  $field == '/a' ) {
+        // leave link tokens
+        continue;
+      }
+
       $metadata_value = $this->getMetadataForToken( $field );
 
       if (is_array($metadata_value)) {
