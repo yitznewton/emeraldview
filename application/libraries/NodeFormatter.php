@@ -26,7 +26,8 @@ class NodeFormatter
       $text = $this->node->getId();
     }
 
-    return $text;
+    // FIXME: is this the best way to deal with links?  see also child classes
+    return '[a]' . $text . '[/a]';
   }
 
   public static function factory( Node $node, $context )

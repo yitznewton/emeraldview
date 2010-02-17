@@ -97,17 +97,19 @@ onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
 
 <?php endif; // end PagedImage section ?>
 
-<?php if ( $page->getSourceDocumentUrl() && $page->getScreenIconUrl() ): ?>
+<?php $source_url = $page->getSourceDocumentUrl() ?>
+
+<?php if ( $source_url && $page->getScreenIconUrl() ): ?>
 <div id="main-image">
-  <a href="<?php echo $page->getSourceDocumentUrl() ?>">
+  <a href="<?php echo $source_url ?>">
     <img src="<?php echo $page->getScreenIconUrl() ?>"
     alt="page image" />
   </a>
 </div>
 
-<?php elseif ($page->getSourceDocumentUrl()): ?>
+<?php elseif ($source_url): ?>
 <div id="source-link">
-  <a href="<?php echo $page->getSourceLink() ?>">
+  <a href="<?php echo $source_url ?>">
     Download original document
   </a>
 </div>
