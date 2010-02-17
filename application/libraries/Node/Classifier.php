@@ -2,6 +2,26 @@
 
 class Node_Classifier extends Node
 {
+  protected $mdoffset;
+  
+  protected function __construct(
+    Collection $collection, $node_id = null, $root_only = false
+  )
+  {
+    parent::__construct( $collection, $node_id, $root_only );
+    
+    if ( isset( $this->data['mdoffset'] ) && $this->data['mdoffset'] !== '') {
+      $this->mdoffset = $this->data['mdoffset'];
+    }
+
+    unset( $this->data['mdoffset'] );
+  }
+
+  public function getMdOffset()
+  {
+    return $this->mdoffset;
+  }
+
   protected function recurse()
   {
     if (

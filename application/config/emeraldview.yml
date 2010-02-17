@@ -42,12 +42,10 @@ collections:
         format:
           branch: "[Title] ([numleafdocs])"
           leaf:   "[Title]"
-      CL4:
-        format: "[dls.Keyword]"
     display_metadata:
       Title: Title
       Author: Author
-    
+
   paged:
     active: true
 

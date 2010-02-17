@@ -25,6 +25,7 @@ class NodePage_Classifier extends NodePage
 
   public function getSlug()
   {
+    // FIXME: what if two classifiers have the same title?
     $slug_generator = new SlugGenerator( $this->getCollection() );
 
     return $slug_generator->toSlug( $this->getTitle() );

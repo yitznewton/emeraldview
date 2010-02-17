@@ -3,10 +3,12 @@
 class NodeFormatter
 {
   protected $node;
+  protected $context;
 
-  protected function __construct( Node $node )
+  protected function __construct( Node $node, $context )
   {
     $this->node = $node;
+    $this->context = $context;
   }
 
   public function format()
@@ -48,15 +50,15 @@ class NodeFormatter
 
     $format_string = $context->getCollection()->getConfig( $prefix . 'format' );
     if ( $format_string ) {
-      return new NodeFormatter_String( $node, $format_string );
+      return new NodeFormatter_String( $node, $context, $format_string );
     }
 
     $function_definition = $context->getCollection()->getConfig( $prefix . 'format_function' );
     if ( $function_definition ) {
-      return new NodeFormatter_Function( $node, $function_definition );
+      return new NodeFormatter_Function( $node, $context, $function_definition );
     }
 
     // no supplied formatter configuration
-    return new NodeFormatter( $node );
+    return new NodeFormatter( $node, $context );
   }
 }

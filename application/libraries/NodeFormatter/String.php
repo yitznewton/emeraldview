@@ -5,9 +5,9 @@ class NodeFormatter_String extends NodeFormatter
   protected $branchFormat;
   protected $leafFormat;
   
-  public function __construct( Node $node, $format_config )
+  public function __construct( Node $node, $context, $format_config )
   {
-    parent::__construct( $node );
+    parent::__construct( $node, $context );
     
     if ( is_array( $format_config ) ) {
       // separate formats for branches and leaves specified
@@ -126,16 +126,6 @@ class NodeFormatter_String extends NodeFormatter
 
       $metadata_value = $this->getMetadataForToken( $field );
 
-      if (is_array($metadata_value)) {
-        // TODO: old Trac #25
-
-        // $metadata_index = $this->getMdOffset( $index );
-        // $metadata_value = $metadata_value[ $metadata_index ];
-
-        // a short-circuit in the meantime:
-        $metadata_value = $metadata_value[0];
-      }
-
       if ($metadata_value) {
         $text =
           str_replace( $token_matches[0][$key], $metadata_value, $text );
@@ -161,8 +151,14 @@ class NodeFormatter_String extends NodeFormatter
 
     foreach ( $fields_to_try as $current_field ) {
       // this loop handles each individual field within the token
-      if ( $this->node->getField( $current_field ) ) {
-        return $this->node->getField( $current_field );
+      $value = $this->node->getField( $current_field );
+      if ( $value ) {
+        // TODO: implement mdoffset for Classifiers
+        if ( is_array( $value ) ) {
+          return $value[0];
+        }
+
+        return $value;
       }
 
       if (
@@ -198,7 +194,5 @@ class NodeFormatter_String extends NodeFormatter
         }
       }
     }
-
-    return $replacement_text;
   }
 }
