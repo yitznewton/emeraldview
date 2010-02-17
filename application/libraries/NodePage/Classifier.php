@@ -2,6 +2,8 @@
 
 class NodePage_Classifier extends NodePage
 {
+  protected static $slugs;
+
   public function getConfig( $subnode = null )
   {
     $node = 'classifiers.' . $this->getId();
@@ -25,10 +27,32 @@ class NodePage_Classifier extends NodePage
 
   public function getSlug()
   {
-    // FIXME: what if two classifiers have the same title?
-    $slug_generator = new SlugGenerator( $this->getCollection() );
+    if ( NodePage_Classifier::$slugs === null ) {
+      NodePage_Classifier::generateSlugs( $this->getCollection() );
+    }
 
-    return $slug_generator->toSlug( $this->getTitle() );
+    return NodePage_Classifier::$slugs[ $this->getId() ];
+  }
+
+  protected static function generateSlugs( Collection $collection )
+  {
+    $all_slugs      = array();
+    $slug_generator = new SlugGenerator( $collection );
+
+    foreach ( $collection->getClassifiers() as $classifier ) {
+      $slug = $slug_generator->toSlug( $classifier->getTitle() );
+
+      // check for existing identical slugs and suffix them
+      $count = 2;
+      while ( in_array( $slug, $all_slugs ) ) {
+        $slug = "$slug_base-$count";
+        $count++;
+      }
+
+      $all_slugs[ $classifier->getId() ] = $slug;
+    }
+
+    NodePage_Classifier::$slugs = $all_slugs;
   }
 
   public static function retrieveBySlug( Collection $collection, $slug )
@@ -37,16 +61,15 @@ class NodePage_Classifier extends NodePage
       throw new InvalidArgumentException( 'Second argument must be a string' );
     }
 
-    $all_classifiers = $collection->getClassifiers();
-    $classifier = false;
-
-    foreach ( $all_classifiers as $test_classifier ) {
-      if ( $slug == $test_classifier->getSlug() ) {
-        $classifier = $test_classifier;
-        break;
-      }
+    if (NodePage_Classifier::$slugs === null) {
+      NodePage_Classifier::generateSlugs( $collection );
     }
 
-    return $classifier;
+    foreach ( NodePage_Classifier::$slugs as $id => $test_slug ) {
+      if ( $slug == $test_slug ) {
+        $node = Node_Classifier::factory( $collection, $id );
+        return $node->getPage();
+      }
+    }
   }
 }

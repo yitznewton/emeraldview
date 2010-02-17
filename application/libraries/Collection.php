@@ -138,18 +138,6 @@ class Collection
     return url::base() . 'files/' . $this->getGreenstoneName();
   }
   
-  public function getClassifier( $classifier_name )
-  {
-    $classifier_ids = $this->getClassifierIds();
-    
-    if (in_array( $classifier_name, $classifier_ids )) {
-      return new Classifier( $this, $classifier_name );
-    }
-    else {
-      return false;
-    }
-  }
-  
   protected function getClassifierIds()
   {
     return $this->infodb->getClassifierIds();
