@@ -153,13 +153,13 @@ class NodeFormatter_String extends NodeFormatter
     $replacement_text = null;
 
     if (strpos( $token, '|' ) !== false) {
-      $fields_to_try = split('\|', $token);
+      $fields_to_try = explode( '\|', $token );
     }
     else {
       $fields_to_try = array( $token );
     }
 
-    foreach ($fields_to_try as $current_field) {
+    foreach ( $fields_to_try as $current_field ) {
       // this loop handles each individual field within the token
       if ( $this->node->getField( $current_field ) ) {
         return $this->node->getField( $current_field );

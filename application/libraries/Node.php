@@ -11,11 +11,6 @@ abstract class Node
   abstract protected function recurse();
   abstract protected function getChild( $node_id );
   
-  protected function getFormatter()
-  {
-    return new NodeFormatter( $this );
-  }
-
   protected function __construct(
     Collection $collection, $node_id = null, $root_only = false
   )

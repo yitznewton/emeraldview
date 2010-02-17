@@ -75,44 +75,6 @@ class Node_Document extends Node
     return $this->getCousin( $id );
   }
 
-  public function getFormatter( $method )
-  {
-    switch ( $method ) {
-      case NodeFormatter::METHOD_SEARCH_RESULTS:
-        if ( $this->getCollection()->getConfig( 'search_results_format' ) ) {
-          return new NodeFormatter_String(
-            $this, $this->getCollection()->getConfig( 'search_results_format' )
-          );
-        }
-        elseif ( $this->getCollection()->getConfig( 'search_results_format_function' ) ) {
-          return new NodeFormatter_Function(
-            $this, $this->getCollection()->getConfig( 'search_results_format_function' )
-          );
-        }
-        else {
-          return new NodeFormatter( $this );
-        }
-
-      case NodeFormatter::METHOD_TREE:
-        if ( $this->getCollection()->getConfig( 'document_tree_format' ) ) {
-          return new NodeFormatter_String(
-            $this, $this->getCollection()->getConfig( 'document_tree_format' )
-          );
-        }
-        elseif ( $this->getCollection()->getConfig( 'document_tree_format_function' ) ) {
-          return new NodeFormatter_Function(
-            $this, $this->getCollection()->getConfig( 'document_tree_format_function' )
-          );
-        }
-        else {
-          return new NodeFormatter( $this );
-        }
-
-      default:
-        throw new InvalidArgumentException( 'Invalid method' );
-    }
-  }
-
   public function isPaged()
   {
     if (

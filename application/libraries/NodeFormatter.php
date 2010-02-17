@@ -2,12 +2,9 @@
 
 class NodeFormatter
 {
-  const METHOD_SEARCH_RESULTS = 0;
-  const METHOD_TREE = 1;
-
   protected $node;
 
-  public function __construct( Node $node )
+  protected function __construct( Node $node )
   {
     $this->node = $node;
   }
@@ -28,5 +25,39 @@ class NodeFormatter
     }
 
     return $text;
+  }
+
+  public static function factory( Node $node, $context )
+  {
+    switch ( get_class( $context ) ) {
+      case 'NodePage_Classifier':
+        $prefix = 'classifiers.' . $context->getId() . '.';
+        break;
+        
+      case 'NodePage_DocumentSection':
+        $prefix = 'document_tree_';
+        break;
+      
+      case 'SearchHandler':
+        $prefix = 'search_results_';
+        break;
+      
+      default:
+        throw new InvalidArgumentException( 'Invalid $caller' );
+    }
+
+    $format_string = $context->getCollection()->getConfig( $prefix . 'format' );
+    if ( $format_string ) {
+      return new NodeFormatter_String( $node, $format_string );
+    }
+
+    $function_definition = $context->getCollection->getConfig( $prefix . 'format_function' );
+    // FIXME: this constructor needs refactoring
+    if ( $function_definition ) {
+      return new NodeFormatter_Function( $node, $function_definition );
+    }
+
+    // no supplied formatter configuration
+    return new NodeFormatter( $node );
   }
 }

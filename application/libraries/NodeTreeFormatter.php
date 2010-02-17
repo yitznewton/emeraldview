@@ -3,10 +3,12 @@
 class NodeTreeFormatter
 {
   protected $rootNode;
+  protected $context;
   
-  public function __construct( Node $node )
+  public function __construct( Node $node, $context )
   {
     $this->rootNode = $node;
+    $this->context = $context;
   }
 
   public function format()
@@ -37,13 +39,13 @@ class NodeTreeFormatter
   {
     $output = "<li>\n";
     
-    $node_output = $node->getFormatter( NodeFormatter::METHOD_TREE )->format();
+    $formatter = NodeFormatter::factory( $node, $this->context );
+    $node_output = $formatter->format();
 
     if (
       ( $this->rootNode instanceof Node_Classifier && $node instanceof Node_Document )
-      || ( $this->rootNode instanceof Node_Document && ! $node->getChildren() )
+      || ( $this->rootNode instanceof Node_Document )
     ) {
-      // leaf node
       $url = NodePage::factory( $node )->getUrl();
       $replace = array( '<a href="' . $url . '">', '</a>' );
     }

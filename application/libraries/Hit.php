@@ -30,7 +30,8 @@ class Hit
     $term_string = implode( '&search[]=', $terms );
 
     $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
-    $title = $node->getFormatter( NodeFormatter::METHOD_SEARCH_RESULTS )->format();
+    $formatter = NodeFormatter::factory( $node, $this->search_handler );
+    $title = $formatter->format();
 
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $title );
