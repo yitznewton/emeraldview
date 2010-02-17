@@ -27,7 +27,9 @@ collections:
       - and
     document_tree_format: "[Title]"
     search_hits_per_page: 20
-    search_results_format: "[parent(All' > '):Title]"
+    #search_results_format: "[parent(All' > '):Title]"
+    #search_results_format: "[parent(Top):Title]"
+    search_results_format: "[Title]"
     search_history_length: 5
     classifiers:
       CL1:

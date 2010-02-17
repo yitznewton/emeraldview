@@ -59,6 +59,21 @@ class NodeFormatter_String extends NodeFormatter
           $text = str_replace( $parent_all_matches[0][$i], $field_glob, $text );
         }
       }
+
+      $root_pattern = '/ \[ parent \(Top\) : ([^\]]+) \] /x';
+      if ( preg_match_all( $root_pattern, $text, $root_matches ) ) {
+        $root_node = $this->node->getRootNode();
+
+        for ( $i = 0; $i < count( $root_matches[0] ); $i++ ) {
+          $field = $root_node->getField( $root_matches[1][$i] );
+
+          if ( ! $field ) {
+            $field = '';
+          }
+
+          $text = str_replace( $root_matches[0][$i], $field, $text );
+        }
+      }
     }
 
     if ( strpos( $text, '[a]' ) === false ) {
@@ -143,8 +158,6 @@ class NodeFormatter_String extends NodeFormatter
     else {
       $fields_to_try = array( $token );
     }
-
-
 
     foreach ($fields_to_try as $current_field) {
       // this loop handles each individual field within the token
