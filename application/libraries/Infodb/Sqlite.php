@@ -5,6 +5,22 @@ class Infodb_Sqlite extends Infodb
   protected $pdo;
   protected $allNodes;
   
+  protected function __construct( Collection $collection )
+  {
+    $infodb_file = $collection->getGreenstoneDirectory() . '/index/text/'
+                 . $collection->getGreenstoneName() . '.db'
+                 ;
+
+    if (!is_readable( $infodb_file )) {
+      throw new Exception("Could not open infodb $infodb_file for "
+                          . 'collection ' . $collection->getGreenstoneName());
+    }
+
+    $this->pdo = new PDO('sqlite:' . $infodb_file);
+
+    parent::__construct( $collection );
+  }
+
   public function getDocumentMetadata( $id )
   {
     // fetch all nodes for this Document
@@ -29,22 +45,6 @@ class Infodb_Sqlite extends Infodb
   
   public function getClassifierMetadata() {}
   public function getCollectionMetadata() {}
-  
-  protected function __construct( Collection $collection )
-  {
-    $infodb_file = $collection->getGreenstoneDirectory() . '/index/text/'
-                 . $collection->getName() . '.db'
-                 ;
-                 
-    if (!is_readable( $infodb_file )) {
-      throw new Exception("Could not open infodb $infodb_file for "
-                          . 'collection ' . $collection->getName());
-    }
-    
-    $this->pdo = new PDO('sqlite:' . $infodb_file);
-
-    parent::__construct( $collection );
-  }
   
   public function getClassifierIds()
   {

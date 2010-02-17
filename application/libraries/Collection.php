@@ -3,7 +3,7 @@
 class Collection
 {
   protected $name;
-  protected $greenstoneName;
+  protected $greenstoneDirName;
   protected $classifiers;
   protected $collectCfg;
   protected $infodb;
@@ -22,6 +22,13 @@ class Collection
     }
     
     $this->name = $name;
+
+    if ( isset( $collection_config[ 'greenstone_dir' ] ) ) {
+      $this->greenstoneDirName = $collection_config[ 'greenstone_dir' ];
+    }
+    else {
+      $this->greenstoneDirName = $name;
+    }
     
     if (
       !is_readable( $this->getGreenstoneDirectory() )
@@ -108,17 +115,9 @@ class Collection
            ->getMetadata( 'collectionextra', $language_code );
   }
   
-  protected function getGreenstoneName()
+  public function getGreenstoneName()
   {
-    // TODO: customizable collection name
-    /*
-    if ($this->getConfig('gsdl_collect_dir')) {
-      return $this->getConfig('gsdl_collect_dir');
-    }
-    else {
-    */
-      return $this->name;
-    //}
+    return $this->greenstoneDirName;
   }
   
   public function getGreenstoneDirectory()
@@ -136,7 +135,7 @@ class Collection
 
   public function getGreenstoneUrl()
   {
-    return url::base() . 'files/' . $this->getName();
+    return url::base() . 'files/' . $this->getGreenstoneName();
   }
   
   public function getClassifier( $classifier_name )

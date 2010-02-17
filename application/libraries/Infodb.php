@@ -25,7 +25,7 @@ abstract class Infodb
       return new Infodb_Sqlite( $collection );
     }
     
-    throw new Exception('Unsupported infodbtype for collection '
-                        . $collection->getName());
+    throw new Exception( 'Unsupported infodbtype for collection '
+                         . $collection->getGreenstoneName() );
   }
 }

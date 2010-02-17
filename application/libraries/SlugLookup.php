@@ -12,10 +12,10 @@ class SlugLookup
     $this->collection = $collection;
 
     $this->filepath = APPPATH . 'data/';
-    $this->lockFilename = $this->filepath . $this->collection->getName()
+    $this->lockFilename = $this->filepath . $this->collection->getGreenstoneName()
                         . '_slugs.lck';
 
-    $db_filename = $this->filepath . $collection->getName()
+    $db_filename = $this->filepath . $collection->getGreenstoneName()
                 . '_slugs.db';
 
     $is_new_db = file_exists( $db_filename ) ? false : true;

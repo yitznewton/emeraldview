@@ -20,7 +20,7 @@ abstract class CollectCfg
       return new CollectCfg_G2( $collection );
     }
     
-    throw new Exception('Unsupported CollectCfg for collection '
-                        . $collection->getName);
+    throw new Exception( 'Unsupported CollectCfg for collection '
+                         . $collection->getGreenstoneName() );
   }
 }

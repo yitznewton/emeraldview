@@ -17,7 +17,7 @@ class CollectCfg_G2 extends CollectCfg
     
     if (!$fh) {
       throw new Exception( "Couldn't open collect.cfg for "
-                           . $collection->getName() );
+                           . $collection->getGreenstoneName() );
     }
     
     while (!feof($fh)) {

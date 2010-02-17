@@ -30,13 +30,14 @@ class Hit
     $term_string = implode( '&search[]=', $terms );
 
     $node = Node_Document::factory( $collection, $this->lucene_hit->docOID );
-
-    // FIXME: collision betw/url and highlight
     $title = $node->getFormatter( NodeFormatter::METHOD_SEARCH_RESULTS )->format();
+
     $highlighter = new Highlighter_Text();
     $highlighter->setDocument( $title );
     $highlighter->setTerms( $terms );
     $title = $highlighter->execute();
+
+    // add link
 
     if ( strpos( $title, '[a]' ) === false ) {
       $title = '[a]' . $title . '[/a]';

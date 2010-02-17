@@ -15,7 +15,7 @@ abstract class BuildCfg
       return new BuildCfg_G2( $collection );
     }
     
-    throw new Exception('Unsupported BuildCfg for collection '
-                        . $collection->getName);
+    throw new Exception( 'Unsupported BuildCfg for collection '
+                         . $collection->getGreenstoneName() );
   }
 }

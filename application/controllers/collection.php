@@ -33,6 +33,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
   public function browse( $collection_name, $classifier_slug )
   {
     $collection = $this->loadCollection( $collection_name );
+
+    if ( ! $collection ) {
+      return $this->show404();
+    }
+
     $classifier = NodePage_Classifier::retrieveBySlug( $collection, $classifier_slug );
 
     if ( ! $classifier ) {
@@ -62,6 +67,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     }
 
     $collection = $this->loadCollection( $collection_name );
+
+    if ( ! $collection ) {
+      return $this->show404();
+    }
 
     if ( (int) $this->input->get( 'p' ) ) {
       $page_number = (int) $this->input->get( 'p' );
@@ -122,6 +131,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     }
 
     $collection = $this->loadCollection( $collection_name );
+
+    if ( ! $collection ) {
+      return $this->show404();
+    }
 
     $document_id = $collection->getSlugLookup()->retrieveId( $slug );
 

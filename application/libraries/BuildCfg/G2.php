@@ -12,7 +12,7 @@ class BuildCfg_G2 extends BuildCfg
     
     if (!$fh) {
       throw new Exception( "Couldn't open build.cfg for "
-                           . $collection->getName() );
+                           . $collection->getGreenstoneName() );
     }
     
     while (!feof($fh)) {
@@ -44,7 +44,7 @@ class BuildCfg_G2 extends BuildCfg
         $this->buildDate = $matches[0];
       }
       else {
-        $msg = 'Invalid build date for ' . $collection->getName();
+        $msg = 'Invalid build date for ' . $collection->getGreenstoneName();
         throw new Exception( $msg );
       }
     }

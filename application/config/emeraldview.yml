@@ -12,8 +12,10 @@ languages:
   he: עברית
 
 collections:
-  demo:
+#  demo:
+  sample:
     active: true
+    greenstone_dir: demo
     slug_max_length: 30
     slug_spacer: "-"
     slug_metadata_elements:
