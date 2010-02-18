@@ -2,6 +2,8 @@
 
 abstract class Infodb
 {
+  const TYPE_SQLITE = 0;
+
   protected $collection;
   
   abstract public function getDocumentMetadata( $id );
@@ -21,7 +23,9 @@ abstract class Infodb
 
   public static function factory( Collection $collection )
   {
-    if ($collection->getCollectCfg()->getInfodbtype() == 'sqlite') {
+    $type = $collection->getCollectCfg()->getInfodbtype();
+    
+    if ($type == Infodb::TYPE_SQLITE) {
       return new Infodb_Sqlite( $collection );
     }
     

@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
  *
- * @package EmeraldView
  * @version 0.2.0b1
- * @subpackage libraries
+ * @package libraries
  */
 /**
  * BuildCfg_G2 is a reader interface for Greenstone's build configuration
  * file(s) as implemented in Greenstone2 as build.cfg
  *
- * @package EmeraldView
- * @subpackage libraries
+ * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
@@ -39,7 +37,7 @@ final class BuildCfg_G2 extends BuildCfg
   /**
    * @param Collection $collection 
    */
-  private function __construct( Collection $collection )
+  protected function __construct( Collection $collection )
   {
     $filename = $collection->getGreenstoneDirectory() . '/index/build.cfg';
     $fh = fopen( $filename, 'rb' );

@@ -11,9 +11,9 @@
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
- * 
- * @package EmeraldView
- * @subpackage libraries
+ *
+ * @version 0.2.0b1
+ * @package libraries
  */
 /**
  * BuildCfg is a reader interface for Greenstone's build configuration

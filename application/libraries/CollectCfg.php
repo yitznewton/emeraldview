@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
  *
- * @package EmeraldView
  * @version 0.2.0b1
- * @subpackage libraries
+ * @package libraries
  */
 /**
  * CollectCfg is a reader interface for Greenstone's collection configuration
  * file(s)
  *
- * @package EmeraldView
- * @subpackage libraries
+ * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */

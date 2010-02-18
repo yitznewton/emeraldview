@@ -12,16 +12,14 @@
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
  *
- * @package EmeraldView
  * @version 0.2.0b1
- * @subpackage libraries
+ * @package libraries
  */
 /**
  * CollectCfg_G2 is a reader interface for Greenstone's collection configuration
  * file(s) as implemented in Greenstone2 as collect.cfg
  *
- * @package EmeraldView
- * @subpackage libraries
+ * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
@@ -38,7 +36,7 @@ final class CollectCfg_G2 extends CollectCfg
   /**
    * @param Collection $collection
    */
-  private function __construct( Collection $collection )
+  protected function __construct( Collection $collection )
   {
     $filename = $collection->getGreenstoneDirectory() . '/etc/collect.cfg';
     $fh = fopen( $filename, 'rb' );
@@ -79,11 +77,13 @@ final class CollectCfg_G2 extends CollectCfg
         
       case 'buildtype':
         $this->buildtype = $line_matches[2];
-        return true;
+          return true;
         
       case 'infodbtype':
-        $this->infodbtype = $line_matches[2];
-        return true;
+        if ($line_matches[2] == 'sqlite') {
+          $this->infodbtype = Infodb::TYPE_SQLITE;
+          return true;
+        }
     }
     
     if (substr($line, 0, 6) == 'levels') {
