@@ -1,16 +1,44 @@
 <?php
-
-class CollectCfg_G2 extends CollectCfg
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @package EmeraldView
+ * @version 0.2.0b1
+ * @subpackage libraries
+ */
+/**
+ * CollectCfg_G2 is a reader interface for Greenstone's collection configuration
+ * file(s) as implemented in Greenstone2 as collect.cfg
+ *
+ * @package EmeraldView
+ * @subpackage libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
+final class CollectCfg_G2 extends CollectCfg
 {
-  protected $isPublic;
-  protected $buildtype;
-  protected $infodbtype;
-  protected $indexes;
-  protected $levels;
-  protected $defaultLevel;
-  protected $metadata;
+  private $isPublic;
+  private $buildtype;
+  private $infodbtype;
+  private $indexes;
+  private $levels;
+  private $defaultLevel;
+  private $metadata;
   
-  protected function __construct( Collection $collection )
+  /**
+   * @param Collection $collection
+   */
+  private function __construct( Collection $collection )
   {
     $filename = $collection->getGreenstoneDirectory() . '/etc/collect.cfg';
     $fh = fopen( $filename, 'rb' );
@@ -26,7 +54,11 @@ class CollectCfg_G2 extends CollectCfg
     }
   }
   
-  protected function parse( $line )
+  /**
+   * @param string $line
+   * @return boolean
+   */
+  private function parse( $line )
   {
     preg_match('/^ (\S+) \s+ (\S+) /x', $line, $line_matches);
     
@@ -89,37 +121,58 @@ class CollectCfg_G2 extends CollectCfg
       }
     }
   }
-  
+
+  /**
+   * @return boolean
+   */
   public function isPublic()
   {
     return $this->isPublic;
   }
   
+  /**
+   * @return string
+   */
   public function getBuildtype()
   {
     return $this->buildtype;
   }
   
+  /**
+   * @return string
+   */
   public function getInfodbtype()
   {
     return $this->infodbtype;
   }
   
+  /**
+   * @return array
+   */
   public function getIndexes()
   {
     return $this->indexes;
   }
   
+  /**
+   * @return array
+   */
   public function getLevels()
   {
     return $this->levels;
   }
   
+  /**
+   * @return string
+   */
   public function getDefaultLevel()
   {
     return $this->defaultLevel;
   }
   
+  /**
+   * @return string
+   */
   public function getMetadata( $element_name, $language )
   {
     if (isset( $this->metadata[ $element_name ][ $language ] )) {
