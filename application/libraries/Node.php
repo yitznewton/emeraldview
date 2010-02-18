@@ -44,6 +44,17 @@ abstract class Node
     return $text;
   }
 
+  public function getParent()
+  {
+    if ( $this->id == $this->getRootId() ) {
+      return false;
+    }
+
+    $parent_id = substr( $this->id, 0, strrpos( $this->id, '.' ) );
+    
+    return $this->getCousin( $parent_id );
+  }
+
   public function getAncestors()
   {
     $id = $this->getId();
@@ -52,6 +63,7 @@ abstract class Node
     while ( strpos( $id, '.' ) !== false ) {
       $id = substr( $id, 0, strrpos( $id, '.' ) );
       $ancestors[] = $this->getCousin( $id );
+      var_dump($id);
     }
 
     return array_reverse( $ancestors );

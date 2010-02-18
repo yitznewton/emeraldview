@@ -1,10 +1,44 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * Infodb_Sqlite is an interface to the Sqlite metadata store as implemented
+ * in Greenstone2
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class Infodb_Sqlite extends Infodb
 {
+  /**
+   * @var PDO
+   */
   protected $pdo;
+  /**
+   * An array of all metadata nodes
+   *
+   * @var array
+   */
   protected $allNodes;
-  
+
+  /**
+   * @param Collection $collection
+   */
   protected function __construct( Collection $collection )
   {
     $infodb_file = $collection->getGreenstoneDirectory() . '/index/text/'
@@ -21,6 +55,10 @@ class Infodb_Sqlite extends Infodb
     parent::__construct( $collection );
   }
 
+  /**
+   * @param string $id
+   * @return array
+   */
   public function getDocumentMetadata( $id )
   {
     // fetch all nodes for this Document
@@ -43,9 +81,9 @@ class Infodb_Sqlite extends Infodb
     return $data;
   }
   
-  public function getClassifierMetadata() {}
-  public function getCollectionMetadata() {}
-  
+  /**
+   * @return array
+   */
   public function getClassifierIds()
   {
     $q = 'SELECT key FROM data WHERE key LIKE "CL%" AND key NOT LIKE "%.%"';
@@ -60,16 +98,23 @@ class Infodb_Sqlite extends Infodb
     return $ids;
   }
   
-  public function getNode( $key )
+  /**
+   * @param string $id
+   * @return array
+   */
+  public function getNode( $id )
   {
     $q = 'SELECT value FROM data WHERE key=?';
     $stmt = $this->pdo->prepare( $q );
-    $stmt->execute( array( $key ) );
+    $stmt->execute( array( $id ) );
     $data = $stmt->fetchColumn();
     
     return Infodb_Sqlite::parseFields( $data );
   }
   
+  /**
+   * @return array
+   */
   public function getAllNodes()
   {
     if ($this->allNodes) {
@@ -99,6 +144,11 @@ class Infodb_Sqlite extends Infodb
     return $all_nodes;
   }
   
+  /**
+   * @param Node_Document $node
+   * @param String $docnum
+   * @return string
+   */
   public function getCousinIdByDocnum( Node_Document $node, $docnum)
   {
     if (!is_int( $docnum )) {
@@ -133,6 +183,12 @@ class Infodb_Sqlite extends Infodb
     return false;
   }
 
+  /**
+   *
+   * @param Node_Document $node
+   * @param string $title
+   * @return string
+   */
   public function getCousinIdByTitle( Node_Document $node, $title )
   {
     if (!$title) {
@@ -155,7 +211,13 @@ class Infodb_Sqlite extends Infodb
     return $stmt->fetchColumn();
   }
 
-  public static function parseFields( $blob )
+  /**
+   * Parses the text-blob field format of Greenstone2 into fields
+   *
+   * @param string $blob
+   * @return array
+   */
+  protected static function parseFields( $blob )
   {
     $metadata_pattern = '/ \< ([^\>]+) \> (.*) /x';
     preg_match_all( $metadata_pattern, $blob, $matches );

@@ -36,6 +36,15 @@ class NodeFormatter_String extends NodeFormatter
 
     $node_page = NodePage::factory( $this->node );
 
+    $text = str_ireplace( '[href]', $node_page->getUrl(), $text );
+    $text = str_ireplace( '[DocOID]', $this->node->getId(), $text );
+    $text = str_ireplace( '[DocTopOID]', $this->node->getRootId(), $text );
+    $text = str_ireplace( '[DocImage]', $node_page->getCoverUrl(), $text );
+
+    $srclink_search  = array( '[srclink]', '[/srclink]' );
+    $srclink_replace = array( '<a href="' . $node_page->getSourceDocumentUrl() . '">', '</a>' );
+    $text = str_ireplace( $srclink_search, $srclink_replace, $text );
+
     if (
       stripos($text, '[thumbicon]') !== false
       && $node_page->getThumbnailUrl()
@@ -76,7 +85,27 @@ class NodeFormatter_String extends NodeFormatter
           $text = str_replace( $root_matches[0][$i], $field, $text );
         }
       }
+
+      // implement Greenstone parent format
+      $parent_pattern = '/ \[ parent : ([^\]]+) \] /x';
+      if ( preg_match_all( $parent_pattern, $text, $parent_matches ) ) {
+        $parent_node = $this->node->getParent();
+
+        for ( $i = 0; $i < count( $parent_matches[0] ); $i++ ) {
+          $field = $parent_node->getField( $parent_matches[1][$i] );
+
+          if ( ! $field ) {
+            $field = '';
+          }
+
+          $text = str_replace( $parent_matches[0][$i], $field, $text );
+        }
+      }
     }
+
+    $link_search  = array( '[link]', '[/link]' );
+    $link_replace = array( '[a]', '[/a]' );
+    $text = str_replace( $link_search, $link_replace, $text );
 
     if ( strpos( $text, '[a]' ) === false ) {
       $text = '[a]' . $text . '[/a]';
@@ -169,8 +198,9 @@ class NodeFormatter_String extends NodeFormatter
         // date formatting
 
         $field_name = $format_matches[1];
+        $date       = $this->node->getField( $field_name );
 
-        if ($date = $this->node->getField( $field_name )) {
+        if ($date) {
           $length = strlen( $date );
 
           $date_formatted = '';
