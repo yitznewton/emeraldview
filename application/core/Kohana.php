@@ -955,9 +955,8 @@ final class Kohana {
 					$trace = self::backtrace($trace);
 				}
 
-        // FIXME: make a 500-error handler
 				// Load the error
-				require self::find_file('views', empty($template) ? 'kohana_error_page' : $template);
+        require self::find_file('views', empty($template) ? 'kohana_error_page' : $template);
 			}
 			else
 			{
