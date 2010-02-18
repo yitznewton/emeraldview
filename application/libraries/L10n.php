@@ -34,6 +34,17 @@ class L10n
     
     return L10n::$gettext->_( $message );
   }
+
+  public static function sprintf( $format, array $args, $translate_args = false )
+  {
+    $format = L10n::_( $format );
+
+    if ( $translate_args ) {
+      array_walk( $args, array( 'L10n', '_' ) );
+    }
+
+    return vsprintf( $format, $args );
+  }
   
   /**
    * @param string $mofile
@@ -101,9 +112,8 @@ class L10n
    */
   public static function dcgettext( $domain_name, $message )
   {
-    if (!isset( L10n::$alternateDomainGettexts[ $domain_name ] )) {
-      // domain not loaded
-      return false;
+    if ( ! isset( L10n::$alternateDomainGettexts[ $domain_name ] ) ) {
+      throw new InvalidArgumentException( 'Domain not loaded' );
     }
 
     return L10n::$alternateDomainGettexts[ $domain_name ]->_( $message );

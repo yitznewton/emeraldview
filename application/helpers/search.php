@@ -78,20 +78,15 @@ class search_Core
     $submit_input = myhtml::element( 'input', null, $submit_attr );
 
     if ($level_select) {
-      $form_contents = sprintf(
-        'Search %1$s at the %2$s level for %3$s',
-        $index_select,
-        $level_select,
-        $text_input
-      ) . $submit_input;
+      $format = 'Search %1$s at the %2$s level for %3$s';
+      $args = array( $index_select, $level_select, $text_input );
     }
     else {
-      $form_contents = sprintf(
-        'Search %1$s for %2$s',
-        $index_select,
-        $text_input
-      ) . $submit_input;
+      $format = 'Search %1$s for %2$s';
+      $args = array( $index_select, $text_input );
     }
+
+    $form_contents = L10n::sprintf( $format, $args, true ). $submit_input;
 
     $form_attributes = array(
       'name'   => 'search',
@@ -175,8 +170,7 @@ class search_Core
     $level_select = search::level_select( $collection, $params );
 
     if ( $level_select ) {
-      $first_line
-        = sprintf( L10n::_('Search at the %s level for'), $level_select );
+      $first_line = L10n::sprintf( 'Search at the %s level for', array( $level_select ) );
     }
     else {
       $first_line = L10n::_('Search for');
@@ -227,13 +221,15 @@ class search_Core
   
   public static function result_summary( HitsPage $hits_page, SearchHandler $search_handler )
   {
-    $summary = sprintf(
-      L10n::_( 'Results <strong>%d</strong> - <strong>%d</strong> of '
-               . '<strong>%d</strong> for <strong>%s</strong>'
-             ),
+    $format = 'Results <strong>%d</strong> - <strong>%d</strong> of '
+              . '<strong>%d</strong> for <strong>%s</strong>';
+    
+    $args = array(
       $hits_page->firstHit, $hits_page->lastHit,
-      $hits_page->totalHitCount, $search_handler->getQueryBuilder()->getDisplayQuery()
+      $hits_page->totalHitCount, $search_handler->getQueryBuilder()->getDisplayQuery(),
     );
+    
+    $summary = L10n::sprintf( $format, $args );
     
     return $summary;
   }

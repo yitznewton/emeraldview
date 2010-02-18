@@ -52,14 +52,16 @@ class NodeFormatter_String extends NodeFormatter
     }
 
     if ( $this->node instanceof Node_Document ) {
-      $parent_all_pattern = "/ \[ parent \( All '([^']+)' \) : ([^\]]+) \] /x";
+      // implement Greenstone parent(All) format
+      $parent_all_pattern = "/ \[ parent \( All ('([^']+)')? \) : ([^\]]+) \] /x";
       if ( preg_match_all( $parent_all_pattern, $text, $parent_all_matches ) ) {
         for ( $i = 0; $i < count( $parent_all_matches[0] ); $i++ ) {
-          $field_glob = $this->getAncestorFieldGlob( $parent_all_matches[2][$i], $parent_all_matches[1][$i] );
+          $field_glob = $this->getAncestorFieldGlob( $parent_all_matches[3][$i], $parent_all_matches[2][$i] );
           $text = str_replace( $parent_all_matches[0][$i], $field_glob, $text );
         }
       }
 
+      // implement Greenstone parent(Top) format
       $root_pattern = '/ \[ parent \(Top\) : ([^\]]+) \] /x';
       if ( preg_match_all( $root_pattern, $text, $root_matches ) ) {
         $root_node = $this->node->getRootNode();

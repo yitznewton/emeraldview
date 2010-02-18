@@ -1,6 +1,6 @@
 # Turn on URL rewriting
 RewriteEngine On
-Options +FollowSymLinks
+# Options +FollowSymLinks
 
 # Installation directory
 # RewriteBase /foo/
