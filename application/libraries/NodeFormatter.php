@@ -1,16 +1,59 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * NodeFormatter formulates a string representation of a Node's metadata,
+ * based on a given specification
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class NodeFormatter
 {
+  /**
+   * The Node
+   *
+   * @var Node
+   */
   protected $node;
+  /**
+   * An object representing the situation where the string is needed; used
+   * for determining which format specification to use
+   *
+   * @var mixed
+   */
   protected $context;
 
+  /**
+   * @param Node $node
+   * @param mixed $context 
+   */
   protected function __construct( Node $node, $context )
   {
     $this->node = $node;
     $this->context = $context;
   }
 
+  /**
+   * Returns the string representation of the Node
+   *
+   * @return string
+   */
   public function format()
   {
     $field_names = array( 'dc.Title', 'Title' );
@@ -30,6 +73,11 @@ class NodeFormatter
     return '[a]' . $text . '[/a]';
   }
 
+  /**
+   * @param Node $node
+   * @param mixed $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @return NodeFormatter
+   */
   public static function factory( Node $node, $context )
   {
     switch ( get_class( $context ) ) {

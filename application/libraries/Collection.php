@@ -107,8 +107,8 @@ final class Collection
   }
   
   /**
-   * Returns a node from the Collection's config settings as specified in
-   * config/emeraldview.yml
+   * Returns one or all nodes from the Collection's config settings as
+   * specified in config/emeraldview.yml
    * 
    * @param string $subnode
    * @param mixed $default

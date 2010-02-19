@@ -1,14 +1,35 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * NodePage_DocumentSection is a wrapper for Node_Document which extends
+ * webpage functionalities such as URLs and node tree generation
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class NodePage_DocumentSection extends NodePage
 {
-  protected $node;
-  
-  protected function __construct( Node $node )
-  {
-    $this->node = $node;
-}
-  
+  /**
+   * Returns the URL for the document's cover image
+   *
+   * @return string
+   */
   public function getCoverUrl()
   {
     $root_node = $this->getNode()->getRootNode();
@@ -21,6 +42,11 @@ class NodePage_DocumentSection extends NodePage
            . $root_node->getField('assocfilepath') . '/cover.jpg';
   }
 
+  /**
+   * Returns the HTML text of the Node_Document as extracted by Greenstone
+   *
+   * @return string
+   */
   public function getHTML()
   {
     $xml_file = $this->getCollection()->getGreenstoneDirectory()
@@ -70,6 +96,9 @@ class NodePage_DocumentSection extends NodePage
     return $html;
   }
   
+  /**
+   * @return string
+   */
   public function getUrl()
   {
     $subnode_id = $this->getNode()->getSubnodeId();
@@ -91,16 +120,34 @@ class NodePage_DocumentSection extends NodePage
     return $this->getCollection()->getUrl() . "/view/$slug$section_url";
   }
 
+  /**
+   * Returns the URL for the source document
+   *
+   * @return string
+   */
   public function getSourceDocumentUrl()
   {
     return $this->getMetadataUrl( 'srclink' );
   }
 
+  /**
+   * Returns the URL for an icon representaton of the source document;
+   * e.g. smaller version of the source image
+   *
+   * @return string
+   */
   public function getScreenIconUrl()
   {
     return $this->getMetadataUrl( 'screenicon' );
   }
 
+  /**
+   * A low-level method for generating URLs pointing to the Greenstone
+   * collection's filesystem
+   *
+   * @param string $element_name
+   * @return string
+   */
   protected function getMetadataUrl( $element_name )
   {
     $element = $this->getNode()->getField( $element_name );
@@ -145,6 +192,12 @@ class NodePage_DocumentSection extends NodePage
     return $url;
   }
 
+  /**
+   * Returns an array of metadata elements to display for the NodePage,
+   * based on config settings
+   *
+   * @return array
+   */
   public function getDisplayMetadata()
   {
     $fields_to_display = $this->getCollection()->getConfig( 'display_metadata' );
@@ -170,6 +223,11 @@ class NodePage_DocumentSection extends NodePage
     return $display_metadata;
   }
   
+  /**
+   * Returns a URL pointing to a thumbnail of the source document
+   *
+   * @return string
+   */
   public function getThumbnailUrl()
   {
     if ($this->getNode()->getField('thumbicon')) {
@@ -204,6 +262,12 @@ class NodePage_DocumentSection extends NodePage
     return $url;
   }
 
+  /**
+   * Returns an array of URLs of the previous and next nodes in the document;
+   * for use with collections build with PagedImagePlugin
+   *
+   * @return array
+   */
   public function getPagedUrls()
   {
     $prev_url = '';
