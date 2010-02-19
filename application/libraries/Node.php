@@ -254,6 +254,7 @@ abstract class Node
   /**
    * Returns an array of all child Nodes
    *
+   * @todo implement a boolean $recurse switch
    * @return array
    */
   public function getChildren()

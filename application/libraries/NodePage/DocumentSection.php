@@ -266,39 +266,35 @@ class NodePage_DocumentSection extends NodePage
    * Returns an array of URLs of the previous and next nodes in the document;
    * for use with collections build with PagedImagePlugin
    *
+   * @todo refactor this to combine with code in NodeTreePager
    * @return array
    */
   public function getPagedUrls()
   {
-    $prev_url = '';
-    $next_url = '';
-    if (!$this->getNode()->isPaged() ) {
+    // this method assumes that there is only one level of child Nodes for
+    // the root Node, which is the case with PagedImagePlugin documents
+
+    if ( ! $this->getNode()->isPaged() ) {
       return false;
     }
 
-    $page_count = $this->getNode()->getRootNode()->getField( 'NumPages' );
-    $subnode_id = $this->getNode()->getSubnodeId();
+    $prev_node = $this->getNode()->getPreviousNode();
+    $next_node = $this->getNode()->getNextNode();
 
-    if ( $subnode_id && $subnode_id !== '1' ) {
-      // current node is not the first page
-      // in paged documents, there SHOULD only be one level of section nodes,
-      // hence casting subnode id as integer SHOULD give us good results
-      $prev_section_id = ((string) ((int) $subnode_id) - 1);
-      $prev_url = $this->getNode()->getCousin( $prev_section_id )
-                  ->getPage()->getUrl();
+    if ( $prev_node != $this->getNode()->getRootNode() ) {
+      // previous node exists and is not the root, but rather another child
+      // Node
+      $prev_url = NodePage::factory( $prev_node )->getUrl();
     }
     else {
-      // current node is the first page or root node
       $prev_url = '';
     }
 
-    if ( (int) $subnode_id >= (int) $page_count ) {
-      $next_url = '';
+    if ( $next_node ) {
+      $next_url = NodePage::factory( $next_node )->getUrl();
     }
     else {
-      $next_section_id = ((string) ((int) $subnode_id) + 1);
-      $next_url = $this->getNode()->getCousin( $next_section_id )
-                  ->getPage()->getUrl();
+      $next_url = '';
     }
 
     return array(

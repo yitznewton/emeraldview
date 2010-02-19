@@ -41,7 +41,7 @@ class NodeFormatter
 
   /**
    * @param Node $node
-   * @param mixed $context 
+   * @param mixed $context An object representing the situation where the string is needed; used for determining which format specification to use
    */
   protected function __construct( Node $node, $context )
   {
