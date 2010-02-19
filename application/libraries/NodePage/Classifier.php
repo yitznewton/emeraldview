@@ -79,7 +79,7 @@ class NodePage_Classifier extends NodePage
       NodePage_Classifier::buildSlugs( $this->getCollection() );
     }
 
-    return NodePage_Classifier::$slugs[ $this->getId() ];
+    return NodePage_Classifier::$slugs[ $this->getNode()->getRootNode()->getId() ];
   }
 
   /**

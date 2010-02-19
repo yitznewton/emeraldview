@@ -1,13 +1,51 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * NodeFormatter_String formulates a string representation of a Node's metadata,
+ * based on a given tokenized specification string
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class NodeFormatter_String extends NodeFormatter
 {
+  /**
+   * The format string to use for branch Nodes
+   *
+   * @var string
+   */
   protected $branchFormat;
+  /**
+   * The format string to use for leaf Nodes
+   *
+   * @var string
+   */
   protected $leafFormat;
   
-  public function __construct( Node $node, $context, $format_config )
+  /**
+   *
+   * @param Node $node
+   * @param array|string $format_config 
+   */
+  public function __construct( Node $node, $format_config )
   {
-    parent::__construct( $node, $context );
+    parent::__construct( $node );
     
     if ( is_array( $format_config ) ) {
       // separate formats for branches and leaves specified
@@ -25,7 +63,11 @@ class NodeFormatter_String extends NodeFormatter
     }
   }
 
-  public function format( $index = null )
+  /**
+   * @return string
+   */
+  //public function format( $index = null )
+  public function format()
   {
     if ( $this->node->getChildren() ) {
       $text = $this->branchFormat;
@@ -37,30 +79,33 @@ class NodeFormatter_String extends NodeFormatter
     $node_page = NodePage::factory( $this->node );
 
     $text = str_ireplace( '[href]', $node_page->getUrl(), $text );
-    $text = str_ireplace( '[DocOID]', $this->node->getId(), $text );
-    $text = str_ireplace( '[DocTopOID]', $this->node->getRootId(), $text );
-    $text = str_ireplace( '[DocImage]', $node_page->getCoverUrl(), $text );
 
-    $srclink_search  = array( '[srclink]', '[/srclink]' );
-    $srclink_replace = array( '<a href="' . $node_page->getSourceDocumentUrl() . '">', '</a>' );
-    $text = str_ireplace( $srclink_search, $srclink_replace, $text );
-
-    if (
-      stripos($text, '[thumbicon]') !== false
-      && $node_page->getThumbnailUrl()
-    )
-    {
-      // parse thumbicon URL and compose <img> tag
-      $thumb_url = $node_page->getThumbnailUrl();
-      $thumb_img = "<img src=\"$thumb_url\">";
-      $text = str_ireplace('[thumbicon]', $thumb_img, $text);
-    }
 
     if ($this->node->getChildren()) {
       $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
     }
 
     if ( $this->node instanceof Node_Document ) {
+      // TODO: move a bunch of these specific things into getMetadataForToken()
+      $text = str_ireplace( '[DocOID]', $this->node->getId(), $text );
+      $text = str_ireplace( '[DocTopOID]', $this->node->getRootId(), $text );
+      $text = str_ireplace( '[DocImage]', $node_page->getCoverUrl(), $text );
+
+      $srclink_search  = array( '[srclink]', '[/srclink]' );
+      $srclink_replace = array( '<a href="' . $node_page->getSourceDocumentUrl() . '">', '</a>' );
+      $text = str_ireplace( $srclink_search, $srclink_replace, $text );
+
+      if (
+        stripos($text, '[thumbicon]') !== false
+        && $node_page->getThumbnailUrl()
+      )
+      {
+        // parse thumbicon URL and compose <img> tag
+        $thumb_url = $node_page->getThumbnailUrl();
+        $thumb_img = "<img src=\"$thumb_url\">";
+        $text = str_ireplace('[thumbicon]', $thumb_img, $text);
+      }
+
       // implement Greenstone parent(All) format
       $parent_all_pattern = "/ \[ parent \( All ('([^']+)')? \) : ([^\]]+) \] /x";
       if ( preg_match_all( $parent_all_pattern, $text, $parent_all_matches ) ) {
@@ -112,7 +157,7 @@ class NodeFormatter_String extends NodeFormatter
     }
 
     // parse for remaining, generic metadata tokens
-    $text = $this->expandTokens( $text, $index );
+    $text = $this->expandTokens( $text );
 
     // clean up
     $empties = array('()', '[]', '<>', '{}');
@@ -129,6 +174,14 @@ class NodeFormatter_String extends NodeFormatter
     }
   }
 
+  /**
+   * Returns a string of the metadata values of a given field, from each of
+   * the current Node's ancestor nodes, separated by a given string
+   *
+   * @param string $fieldname
+   * @param string $separator
+   * @return string
+   */
   protected function getAncestorFieldGlob( $fieldname, $separator )
   {
     $fields = array();
@@ -145,7 +198,15 @@ class NodeFormatter_String extends NodeFormatter
     return implode( $separator, $fields );
   }
 
-  protected function expandTokens( $text, $index= null )
+  /**
+   * Returns the input string, with bracketed Greenstone format tokens replaced
+   * with the appropriate content
+   *
+   * @param string $text
+   * @return string
+   */
+  //protected function expandTokens( $text, $index = null )
+  protected function expandTokens( $text )
   {
     preg_match_all('/ \[ ([^\]]+) \] /x', $text, $token_matches);
 
@@ -169,6 +230,13 @@ class NodeFormatter_String extends NodeFormatter
     return $text;
   }
 
+  /**
+   * Returns a string corresponding to the appropriate metadata value(s) for
+   * the current Node, based on the given token
+   *
+   * @param string $token
+   * @return string
+   */
   protected function getMetadataForToken( $token )
   {
     $replacement_text = null;
@@ -192,13 +260,9 @@ class NodeFormatter_String extends NodeFormatter
         return $value;
       }
 
-      if (
-        preg_match('/^ format: ( \S+ ) $/x', $current_field, $format_matches)
-      ) {
-        // date formatting
-
-        $field_name = $format_matches[1];
-        $date       = $this->node->getField( $field_name );
+      // date formatting
+      if ( $current_field == 'format:Date' ) {
+        $date = $this->node->getField( 'Date' );
 
         if ($date) {
           $length = strlen( $date );
@@ -219,12 +283,11 @@ class NodeFormatter_String extends NodeFormatter
             $date_formatted .= ' ' . substr($date, 0, 4);
           }
 
-          $date_formatted = trim( $date_formatted );
-
-          $replacement_text = $date_formatted;
-          break;
+          return trim( $date_formatted );
         }
       }
     }
+
+    return false;
   }
 }

@@ -1,14 +1,51 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * SlugGenerator transforms strings into URL slugs based on Collection config
+ * settings
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class SlugGenerator
 {
+  /**
+   * The Collection to use for configuration
+   *
+   * @var Collection
+   */
   protected $collection;
 
+  /**
+   * @param Collection $collection The Collection to use for configuration
+   */
   public function __construct( Collection $collection )
   {
     $this->collection = $collection;
   }
 
+  /**
+   * Returns a slug-transformed version of the input string
+   *
+   * @param string $string
+   * @return string
+   */
   public function toSlug( $string )
   {
     $max_length = $this->collection->getConfig( 'slug_max_length' );
@@ -49,6 +86,13 @@ class SlugGenerator
     return $slug;
   }
 
+  /**
+   * Returns the input string with stopwords removed, based on Collection
+   * config settings
+   * 
+   * @param string $string
+   * @return string
+   */
   protected function stripStopwords( $string )
   {
     $stopwords = $this->collection->getConfig( 'slug_stopwords' );

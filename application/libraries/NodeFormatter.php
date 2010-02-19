@@ -31,22 +31,13 @@ class NodeFormatter
    * @var Node
    */
   protected $node;
-  /**
-   * An object representing the situation where the string is needed; used
-   * for determining which format specification to use
-   *
-   * @var mixed
-   */
-  protected $context;
 
   /**
    * @param Node $node
-   * @param mixed $context An object representing the situation where the string is needed; used for determining which format specification to use
    */
-  protected function __construct( Node $node, $context )
+  protected function __construct( Node $node )
   {
     $this->node = $node;
-    $this->context = $context;
   }
 
   /**
@@ -99,15 +90,15 @@ class NodeFormatter
 
     $format_string = $context->getCollection()->getConfig( $prefix . 'format' );
     if ( $format_string ) {
-      return new NodeFormatter_String( $node, $context, $format_string );
+      return new NodeFormatter_String( $node, $format_string );
     }
 
     $function_definition = $context->getCollection()->getConfig( $prefix . 'format_function' );
     if ( $function_definition ) {
-      return new NodeFormatter_Function( $node, $context, $function_definition );
+      return new NodeFormatter_Function( $node, $function_definition );
     }
 
     // no supplied formatter configuration
-    return new NodeFormatter( $node, $context );
+    return new NodeFormatter( $node );
   }
 }

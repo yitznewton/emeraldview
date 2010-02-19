@@ -31,26 +31,44 @@ collections:
     search_hits_per_page: 20
     #search_results_format: "[parent(All' > '):Title]"
     #search_results_format: "[parent(Top):Title]"
+    #search_results_format: "[parent:Title]"
     search_results_format: "[Title]"
     search_history_length: 5
     classifiers:
-      CL1:
-        format:
-          branch: "[Title]"
-          leaf:   "[Title]"
       CL2:
         format:
           branch: "[Title] ([numleafdocs])"
           leaf:   "[Title]"
+      CL4:
+        format: "[dls.Keyword]"
     display_metadata:
       Title: Title
       Author: Author
 
   paged:
     active: true
+    classifiers:
+      CL1:
+        format:
+          branch: "[Title]"
+          leaf:   "[Title] - [format:Date]"
+      CL2:
+        format: "[format:Date] - [Title]"
 
   pioneers:
     active: true
+
+  images:
+    active: true
+    greenstone_dir: simpleim
+
+  small-html:
+    active: true
+    greenstone_dir: smallhtm
+
+  word-pdf:
+    active: true
+    greenstone_dir: wordandp
 
   that:
     active: false
