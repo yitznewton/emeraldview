@@ -40,6 +40,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $this->template = new View( $this->theme . '/template' );
     $this->template->theme = $this->theme;
     $this->template->addCss( "views/$this->theme/css/style" );
+    $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
     $this->template->set_global( 'languages', $this->getAvailableLanguages() );
     
     Event::add_before(

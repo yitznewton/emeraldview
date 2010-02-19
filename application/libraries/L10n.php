@@ -1,12 +1,28 @@
 <?php
-require('Streams.php');
-
 /**
- * A quasi-Singleton container class for a single main Gettext instance and
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+require('Streams.php');
+/**
+ * L10n is a static container class for a single main Gettext instance and
  * optional child Gettext instances for alternate gettext domains
  *
  * @package libraries
- * @author yitzchas
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
 class L10n
 {
@@ -26,6 +42,12 @@ class L10n
    */
   protected static $language;
 
+  /**
+   * Returns the translation of the specified string using the default Gettext
+   *
+   * @param string $message
+   * @return string 
+   */
   public static function _( $message )
   {
     if (!L10n::$gettext) {
@@ -35,6 +57,15 @@ class L10n
     return L10n::$gettext->_( $message );
   }
 
+  /**
+   * Translates a format, and applies it to arguments using vsprintf
+   *
+   * @todo rename vsprintf
+   * @param string $format
+   * @param array $args
+   * @param boolean $translate_args
+   * @return string
+   */
   public static function sprintf( $format, array $args, $translate_args = false )
   {
     $format = L10n::_( $format );
@@ -47,6 +78,8 @@ class L10n
   }
   
   /**
+   * Loads the default Gettext
+   *
    * @param string $mofile
    * @return L10n
    */
@@ -68,7 +101,9 @@ class L10n
   }
 
   /**
-   * @return void
+   * Returns the default language
+   *
+   * @return string
    */
   public static function getLanguage()
   {
@@ -76,6 +111,8 @@ class L10n
   }
 
   /**
+   * Sets the default language
+   *
    * @param string $language
    * @return boolean
    */
@@ -94,7 +131,8 @@ class L10n
 
   /**
    * Load an additional Gettext and assign an arbitrary pseudo-domain
-   * @param string $domain_name The arbitrary assigned domain name
+   *
+   * @param string $domain_name
    * @param string $mo_file
    * @return boolean
    */
@@ -105,10 +143,12 @@ class L10n
   }
 
   /**
-   * A virtual implementation of gettext's dcgettext()
-   * @param string $domain_name The desired pseudo-domain
+   * A virtual implementation of gettext's dcgettext(): returns translated
+   * string from the specified pseudo-domain
+   *
+   * @param string $domain_name
    * @param string $message
-   * @return string Translated string from the specified pseudo-domain
+   * @return string
    */
   public static function dcgettext( $domain_name, $message )
   {

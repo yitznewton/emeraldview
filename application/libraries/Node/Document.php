@@ -1,29 +1,30 @@
 <?php
 /**
- * Node_Document class definition
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
  * @package libraries
  */
 /**
- * Node_Document class definition
+ * Node_Document represents a document or section thereof, and provides
+ * basic functionality centered around the node's metadata
+ *
  * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
 class Node_Document extends Node
 {
-  protected $subnode_id;
-
-  protected function __construct(
-    Collection $collection, $node_id = null, $root_only = false
-  )
-  {
-    $pos = strpos( $node_id, '.');
-
-    if ( $pos ) {
-      $this->subnode_id = substr( $node_id, $pos + 1 );
-    }
-
-    parent::__construct( $collection, $node_id, $root_only );
-  }
-
   protected function recurse()
   {
     if (
@@ -40,17 +41,34 @@ class Node_Document extends Node
       }
     }
   }
-  
+
+  /**
+   * Returns the previous Node in the document's sequence
+   *
+   * @return Node_Document
+   */
   public function getPreviousNode()
   {
     return $this->getNodeFromInterval( -1 );
   }
 
+  /**
+   * Returns the next Node in the document's sequence
+   *
+   * @return Node_Document
+   */
   public function getNextNode()
   {
     return $this->getNodeFromInterval( 1 );
   }
 
+  /**
+   * Returns a Node in the document which is $interval Nodes after the current
+   * Node in the document's sequence
+   *
+   * @param integer $interval
+   * @return Node_Document
+   */
   protected function getNodeFromInterval( $interval )
   {
     if (!is_int( $interval )) {
@@ -67,6 +85,13 @@ class Node_Document extends Node
     return $this->getCousin( $new_id );
   }
 
+  /**
+   * Returns a Node in the document which has the specified Title.  Used in
+   * collections built with Greenstone's PagedImagePlugin
+   *
+   * @param string $title
+   * @return Node_Document
+   */
   public function getCousinByTitle( $title )
   {
     $id = $this->getCollection()->getInfodb()
@@ -75,6 +100,12 @@ class Node_Document extends Node
     return $this->getCousin( $id );
   }
 
+  /**
+   * Returns whether the document was built with the PagedImagePlugin or
+   * another paged plugin
+   *
+   * @return boolean
+   */
   public function isPaged()
   {
     if (
@@ -89,8 +120,7 @@ class Node_Document extends Node
   }
 
   /**
-   * Returns a specified subnode of $this
-   * @param string $node_id The complete node ID of the desired subnode
+   * @param string $node_id
    * @return Node_Document
    */
   protected function getChild( $node_id )
@@ -98,6 +128,11 @@ class Node_Document extends Node
     return Node_Document::factory( $this->collection, $node_id );
   }
 
+  /**
+   * Whether the current Node has child Nodes
+   *
+   * @return boolean
+   */
   protected function hasChildren()
   {
     if ($this->children) {
@@ -108,6 +143,13 @@ class Node_Document extends Node
     }
   }
 
+  /**
+   * Returns an array of all root Node_Document instances for the given
+   * Collection
+   *
+   * @param Collection $collection
+   * @return array
+   */
   public static function getAllRootNodes( Collection $collection )
   {
     $nodes = array();
@@ -127,22 +169,35 @@ class Node_Document extends Node
     return $nodes;
   }
 
+  /**
+   * @param Collection $collection
+   * @param string $node_id
+   * @param boolean $recurse
+   * @return Node_Document
+   */
   public static function factory(
-    Collection $collection, $node_id, $root_only = false
+    Collection $collection, $node_id, $recurse = true
   )
   {
     try {
-      return new Node_Document( $collection, $node_id, $root_only );
+      return new Node_Document( $collection, $node_id, $recurse );
     }
     catch (InvalidArgumentException $e) {
       return false;
     }
   }
 
+  /**
+   *
+   * @param Collection $collection
+   * @param string $node_id
+   * @param boolean $recurse
+   * @return Node_Document
+   */
   protected function staticFactory(
-    Collection $collection, $node_id, $root_only = false
+    Collection $collection, $node_id, $recurse = true
   )
   {
-    return Node_Document::factory( $collection, $node_id, $root_only );
+    return Node_Document::factory( $collection, $node_id, $recurse );
   }
 }

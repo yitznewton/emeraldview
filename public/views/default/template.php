@@ -14,11 +14,7 @@ href="/views/<?php echo $theme ?>/css/reset.css">
 <link rel="stylesheet" type="text/css" media="screen"
 href="/libraries/treeview/jquery.treeview.css">
 
-<link rel="stylesheet" type="text/css"
-href="/views/<?php echo $theme ?>/css/style.css">
-
-<link rel="stylesheet" type="text/css" media="print"
-href="/views/<?php echo $theme ?>/css/style-print.css">
+<?php echo $css_includes ?>
 
 <?php if (L10n::_('ltr') == 'rtl'): ?>
   <link rel="stylesheet" type="text/css"
@@ -33,6 +29,8 @@ src="/libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
 src="/views/<?php echo $theme ?>/js/default.js"></script>
+
+<?php echo $js_includes ?>
 
 </head>
 

@@ -1,7 +1,35 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * Session extends the default Kohana session with search history support
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class Session extends Session_Core
 {
+  /**
+   * Returns an array of previous search parameter sets
+   *
+   * @param Collection $collection
+   * @return array
+   */
   public function getSearchHistory( Collection $collection )
   {
     $global_history = $this->get( 'search_history' );
@@ -14,15 +42,25 @@ class Session extends Session_Core
     }
   }
 
+  /**
+   * Sets the Collection's search history
+   *
+   * @param Collection $collection
+   * @param array $history
+   */
   protected function setSearchHistory( Collection $collection, array $history )
   {
     $global_history = $this->get( 'search_history' );
     $global_history[ $collection->getName() ] = $history;
     $this->set( 'search_history', $global_history );
-
-    return $history;
   }
 
+  /**
+   * Records a new search, and returns an array of the new history
+   *
+   * @param SearchHandler $search_handler
+   * @return array
+   */
   public function recordSearch( SearchHandler $search_handler )
   {
     $collection = $search_handler->getCollection();
@@ -49,6 +87,8 @@ class Session extends Session_Core
       array_shift( $history );
     }
 
-    return $this->setSearchHistory( $collection, $history );
+    $this->setSearchHistory( $collection, $history );
+
+    return $history;
   }
 }
