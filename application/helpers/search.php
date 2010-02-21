@@ -298,7 +298,7 @@ class search_Core
   }
 
   /**
-   * Returns an HTML <ul> element corresponding to the search hits pages in the
+   * Returns an HTML <<ul>> element corresponding to the search hits pages in the
    * current search
    *
    * @param HitsPage $hits_page
@@ -377,7 +377,7 @@ class search_Core
   }
 
   /**
-   * Returns an HTML <ul> element corresponding to the user's search history
+   * Returns an HTML <<ul>> element corresponding to the user's search history
    *
    * @param Collection $collection
    * @param array $search_history

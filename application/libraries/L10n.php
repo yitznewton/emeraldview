@@ -15,6 +15,9 @@
  * @version 0.2.0b1
  * @package libraries
  */
+/**
+ * load PHP-gettext reader library
+ */
 require('Streams.php');
 /**
  * L10n is a static container class for a single main Gettext instance and

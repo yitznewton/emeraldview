@@ -28,7 +28,7 @@ class myhtml_Core {
    * specified aattributes
    *
    * @param string $tag
-   * @param string $contents The HTML contained within this element
+   * @param string $contents The HTML to be contained within this element
    * @param array $attributes An associative array of attribute keys and values
    * @return string
    */

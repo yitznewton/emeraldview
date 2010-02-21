@@ -16,7 +16,7 @@
  * @package libraries
  */
 /**
- * NodeTreeFormatter creates an HTML <ul> tree representing the hierarchy of
+ * NodeTreeFormatter creates an HTML <<ul>> tree representing the hierarchy of
  * a given Node
  *
  * @package libraries
@@ -50,7 +50,7 @@ class NodeTreeFormatter
   }
 
   /**
-   * Returns the HTML <ul> tree
+   * Returns the HTML <<ul>> tree
    *
    * @return string
    */

@@ -15,6 +15,9 @@
  * @version 0.2.0b1
  * @package libraries
  */
+/**
+ * load sfYaml library
+ */
 require_once( Kohana::find_file('vendors', 'sfYaml/sfYaml') );
 /**
  * EmeraldviewConfig is a static wrapper class for sfYaml

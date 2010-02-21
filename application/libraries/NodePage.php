@@ -68,7 +68,7 @@ abstract class NodePage
   }
 
   /**
-   * Returns an HTML <ul> element containing the hierarchical tree for this
+   * Returns an HTML <<ul>> element containing the hierarchical tree for this
    * entire classifier or document
    *
    * @return string
