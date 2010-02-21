@@ -1,12 +1,54 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package libraries
+ */
+/**
+ * SlugLookup connects to, builds, and retrieves NodePage_DocumentSection
+ * slug data from a SQLite file
+ *
+ * @package libraries
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class SlugLookup
 {
+  /**
+   * The path to the directory where the slug data files are located
+   *
+   * @var string
+   */
   protected $filepath;
+  /**
+   * The name of the lock file
+   *
+   * @var string
+   */
   protected $lockFilename;
+  /**
+   * @var PDO
+   */
   protected $pdo;
+  /**
+   * @var Collection
+   */
   protected $collection;
 
+  /**
+   * @param Collection $collection
+   */
   function __construct( Collection $collection )
   {
     $this->collection = $collection;
@@ -28,7 +70,8 @@ class SlugLookup
     $this->pdo->setAttribute( PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION );
 
     if ($is_new_db) {
-      return $this->buildFull();
+      $this->buildFull();
+      return;
     }
     
     $elements = $collection
@@ -44,13 +87,15 @@ class SlugLookup
     catch (PDOException $e) {
       // database corrupt or absent; full build
       copy( $db_filename, $db_filename . '.bak' );
-      return $this->buildFull();
+      $this->buildFull();
+      return;
     }
 
     if (! $stmt || $stmt->fetchColumn() != $elements_string) {
       // changed metadata settings since last build; backup and rebuild
       copy( $db_filename, $db_filename . '.bak' );
-      return $this->buildFull();
+      $this->buildFull();
+      return;
     }
 
     $query  = 'SELECT value FROM metadata WHERE key="build_date"';
@@ -60,23 +105,32 @@ class SlugLookup
     }
     catch (PDOException $e) {
       // database corrupt or absent; full build
-      return $this->buildFull();
+      $this->buildFull();
+      return;
     }
 
     if (! $stmt) {
       copy( $db_filename, $db_filename . '.bak' );
-      return $this->buildFull();
+      $this->buildFull();
+      return;
     }
     
     $build_date = $stmt->fetchColumn();
 
     if ($collection->getBuildCfg()->getBuildDate() > $build_date) {
       // collection was built since last slug build; do incremental build
-      return $this->buildIncremental();
+      $this->buildIncremental();
+      return;
     }
     $this->buildIncremental();
   }
 
+  /**
+   * Returns the slug corresponding to the specified node id
+   *
+   * @param string $id
+   * @return string
+   */
   public function retrieveSlug( $id )
   {
     $query = 'SELECT slug FROM slugs WHERE key=?';
@@ -86,6 +140,12 @@ class SlugLookup
     return $stmt->fetchColumn();
   }
 
+  /**
+   * Returns the node id corresponding to the specified slug
+   *
+   * @param string $slug_string
+   * @return string
+   */
   public function retrieveId( $slug_string )
   {
     $query = 'SELECT key FROM slugs WHERE slug=?';
@@ -95,10 +155,13 @@ class SlugLookup
     return $stmt->fetchColumn();
   }
 
+  /**
+   * Builds the slug database from scratch
+   */
   protected function buildFull()
   {
     if ( $this->otherBuildSucceeded() ) {
-      return false;
+      return;
     }
 
     $this->lock();
@@ -126,9 +189,12 @@ EOF;
     $stmt = $this->pdo->prepare( $query );
     $stmt->execute( array( $elements_string ) );
 
-    return $this->buildIncremental();
+    $this->buildIncremental();
   }
 
+  /**
+   * Builds slugs for nodes which aren't yet slugged
+   */
   protected function buildIncremental()
   {
     // go through all [nodes?] and formulate & store slugs for them
@@ -189,11 +255,16 @@ EOF;
     $this->unlock();
   }
 
+  /**
+   * Returns whether an earlier build finished successfully
+   *
+   * @return boolean
+   */
   protected function otherBuildSucceeded()
   {
     $lock_time = $this->getLockTime();
     
-    if (! $lock_time) {
+    if ( ! $lock_time ) {
       return false;
     }
 
@@ -201,7 +272,7 @@ EOF;
       // recent build in progress; wait and see if it succeeds
       sleep( 7 );
 
-      if (! $this->getLockTime() ) {
+      if ( ! $this->getLockTime() ) {
         // the other build succeeded
         return true;
       }
@@ -212,6 +283,11 @@ EOF;
     return false;
   }
 
+  /**
+   * Returns the time of the last call to lock()
+   *
+   * @return string
+   */
   protected function getLockTime()
   {
     if (! file_exists( $this->lockFilename ) ) {
@@ -225,6 +301,9 @@ EOF;
     return fgets( $fh );
   }
 
+  /**
+   * Records the present time in a lock file
+   */
   protected function lock()
   {
     if (
@@ -236,16 +315,15 @@ EOF;
 
     $fh = fopen( $this->lockFilename, 'wb' );
     fwrite( $fh, time() );
-
-    return true;
   }
 
+  /**
+   * Removes the lock file
+   */
   protected function unlock()
   {
     if ( file_exists( $this->lockFilename ) ) {
       unlink( $this->lockFilename );
     }
-
-    return true;
   }
 }

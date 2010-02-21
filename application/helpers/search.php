@@ -1,7 +1,37 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.net/emeraldview/index.php/License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@yitznewton.net so we can send you a copy immediately.
+ *
+ * @version 0.2.0b1
+ * @package helpers
+ */
+/**
+ * search_Core provides HTML composition functions for the search controller method
+ *
+ * @package helpers
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
+ * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ */
 class search_Core
 {
+  /**
+   * Returns the HTML of a simple search form corresponding to the specified
+   * Collection and SearchHandler
+   *
+   * @param Collection $collection
+   * @param SearchHandler $search_handler
+   * @return string
+   */
   public static function form_simple(
     Collection $collection, SearchHandler $search_handler = null
   )
@@ -39,6 +69,14 @@ class search_Core
     return myhtml::element('form', $form_contents, $form_attributes);
   }
   
+  /**
+   * Returns the HTML of a fielded search form corresponding to the specified
+   * Collection and SearchHandler
+   *
+   * @param Collection $collection
+   * @param SearchHandler $search_handler
+   * @return string
+   */
   public static function form_fielded(
     Collection $collection, SearchHandler $search_handler = null
   )
@@ -99,7 +137,17 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
   
-  public static function form_boolean( Collection $collection, SearchHandler $search_handler = null )
+  /**
+   * Returns the HTML of a boolean search form corresponding to the specified
+   * Collection and SearchHandler
+   *
+   * @param Collection $collection
+   * @param SearchHandler $search_handler
+   * @return string
+   */
+  public static function form_boolean(
+    Collection $collection, SearchHandler $search_handler = null
+  )
   {
     if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Boolean ) {
       $params = $search_handler->getParams();
@@ -197,6 +245,14 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
 
+  /**
+   * Returns an HTML <select> element corresponding to the available index
+   * levels for the specified Collection
+   *
+   * @param Collection $collection
+   * @param array $params The query params submitted by the user
+   * @return string
+   */
   public static function level_select( Collection $collection, array $params = null )
   {
     if ( count( $collection->getIndexLevels() ) == 1 ) {
@@ -218,7 +274,14 @@ class search_Core
 
     return myhtml::select_element( $level_options, array('name' => 'l'), $level_default );
   }
-  
+
+  /**
+   * Returns a string with information about the current search results
+   *
+   * @param HitsPage $hits_page
+   * @param SearchHandler $search_handler
+   * @return string
+   */
   public static function result_summary( HitsPage $hits_page, SearchHandler $search_handler )
   {
     $format = 'Results <strong>%d</strong> - <strong>%d</strong> of '
@@ -233,11 +296,17 @@ class search_Core
     
     return $summary;
   }
-  
+
+  /**
+   * Returns an HTML <ul> element corresponding to the search hits pages in the
+   * current search
+   *
+   * @param HitsPage $hits_page
+   * @param Collection $collection
+   * @return string
+   */
   public static function pager( HitsPage $hits_page, Collection $collection )
   {
-    // TODO: implement limiting of search pages, e.g. << < ... 3 4 5 6 7 ... > >>
-
     if ( ! $hits_page->links ) {
       return '';
     }
@@ -307,6 +376,13 @@ class search_Core
     }
   }
 
+  /**
+   * Returns an HTML <ul> element corresponding to the user's search history
+   *
+   * @param Collection $collection
+   * @param array $search_history
+   * @return string
+   */
   public static function history( Collection $collection, array $search_history )
   {
     $items = '';
@@ -322,11 +398,5 @@ class search_Core
     }
 
     return myhtml::element( 'ol', $items );
-  }
-  
-  protected static function snippet_truncate( $text )
-  {
-    
-    return $matches[0] . ' ...';
   }
 }

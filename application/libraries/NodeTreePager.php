@@ -13,13 +13,13 @@
  * to license@yitznewton.net so we can send you a copy immediately.
  *
  * @version 0.2.0b1
- * @package PACKAGE
+ * @package libraries
  */
 /**
  * NodeTreePager generates a string of HTML <a> elements linking the previous
  * and next 
  *
- * @package PACKAGE
+ * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
