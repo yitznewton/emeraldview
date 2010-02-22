@@ -18,7 +18,8 @@
 /**
  * load PHP-gettext reader library
  */
-require('Streams.php');
+require( Kohana::find_file('vendors', 'php-gettext/Gettext') );
+require( Kohana::find_file('vendors', 'php-gettext/Streams') );
 /**
  * L10n is a static container class for a single main Gettext instance and
  * optional child Gettext instances for alternate gettext domains
