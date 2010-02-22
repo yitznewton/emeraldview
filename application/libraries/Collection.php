@@ -326,7 +326,6 @@ final class Collection
       return new Collection( $name );
     }
     catch (Exception $e) {
-      throw $e;
       return false;
     }
   }
