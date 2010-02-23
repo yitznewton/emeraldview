@@ -22,7 +22,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
-final class Collection
+class Collection
 {
   /**
    * The slug name of the Collection, either as specified in

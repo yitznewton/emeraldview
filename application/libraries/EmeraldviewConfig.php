@@ -44,7 +44,7 @@ class EmeraldviewConfig
   public static function get( $param_name )
   {
     if (empty( self::$arrayFromYaml )) {
-      $yaml_filename = APPPATH . 'config/emeraldview.yml';
+      $yaml_filename = LOCALPATH . 'config/emeraldview.yml';
       
       if (!is_readable($yaml_filename)) {
         $msg = "Could not find EmeraldView config file ($yaml_filename)";

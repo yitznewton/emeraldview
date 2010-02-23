@@ -9,7 +9,7 @@
  * @copyright  (c) 2007-2008 Kohana Team
  * @license    http://kohanaphp.com/license.html
  */
-final class Kohana {
+class Kohana {
 
 	// The singleton instance of the controller
 	public static $instance;
@@ -91,7 +91,7 @@ final class Kohana {
 		// Define database error constant
 		define('E_DATABASE_ERROR', 44);
 
-		if (self::$cache_lifetime = self::config('core.internal_cache'))
+    if (self::$cache_lifetime = self::config('core.internal_cache'))
 		{
 			// Are we using encryption for caches?
 			self::$internal_cache_encrypt	= self::config('core.internal_cache_encrypt');
@@ -314,7 +314,7 @@ final class Kohana {
 			// Add APPPATH as the first path
       // this changed for EmeraldView
 			// self::$include_paths = array(APPPATH);
-			self::$include_paths = array(APPPATH, PUBLICPATH);
+			self::$include_paths = array(LOCALPATH, APPPATH, PUBLICPATH);
 
 			foreach (self::$configuration['core']['modules'] as $path)
 			{
@@ -432,8 +432,12 @@ final class Kohana {
 	{
 		if ($name === 'core')
 		{
-			// Load the application configuration file
+			// Load the local and application configuration files
 			require APPPATH.'config/config'.EXT;
+
+      if ( file_exists( LOCALPATH.'config/config'.EXT ) ) {
+        require LOCALPATH.'config/config'.EXT;
+      }
 
 			if ( ! isset($config['site_domain']))
 			{
@@ -1000,7 +1004,7 @@ final class Kohana {
 	 */
 	public static function auto_load($class)
 	{
-		if (class_exists($class, FALSE))
+    if (class_exists($class, FALSE))
 			return TRUE;
 
 		if (($suffix = strrpos($class, '_')) > 0)

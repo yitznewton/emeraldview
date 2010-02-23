@@ -62,8 +62,16 @@ class SlugLookup
 
     $is_new_db = file_exists( $db_filename ) ? false : true;
     
-    if ($is_new_db && ! is_writable( $this->filepath )) {
-      throw new Exception("Could not write to data path $this->filepath");
+    if ( ! is_writable( $this->filepath ) ) {
+      throw new Exception("Cannot write to data path $this->filepath");
+    }
+
+    if ( file_exists( $this->filepath && ! is_dir( $this->filepath ) ) ) {
+      throw new Exception('Data path exists and is not a directory');
+    }
+
+    if ( ! file_exists( $this->filepath ) ) {
+      mkdir( $this->filepath );
     }
 
     $this->pdo = new PDO( 'sqlite:' . $db_filename );
@@ -85,13 +93,13 @@ class SlugLookup
       $stmt = $this->pdo->query( $query );
     }
     catch (PDOException $e) {
-      // database corrupt or absent; full build
+      // database corrupt or absent; do full build
       copy( $db_filename, $db_filename . '.bak' );
       $this->buildFull();
       return;
     }
 
-    if (! $stmt || $stmt->fetchColumn() != $elements_string) {
+    if ( ! $stmt || $stmt->fetchColumn() != $elements_string ) {
       // changed metadata settings since last build; backup and rebuild
       copy( $db_filename, $db_filename . '.bak' );
       $this->buildFull();

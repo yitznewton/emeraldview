@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
-final class BuildCfg_G2 extends BuildCfg
+class BuildCfg_G2 extends BuildCfg
 {
   /**
    * @var array
