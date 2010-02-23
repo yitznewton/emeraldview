@@ -256,7 +256,7 @@ class NodePage_DocumentSection extends NodePage
     $metadata = $this->getNode()->getAllFields();
     $url = preg_replace('/ \[ (\w+) \] /ex', '$metadata["\\1"]', $url);
 
-    $url  = $this->getCollection()->getUrl()
+    $url  = $this->getCollection()->getGreenstoneUrl()
             . '/index/assoc/' . $url;
 
     return $url;

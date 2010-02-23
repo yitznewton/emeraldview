@@ -214,7 +214,8 @@ abstract class Node
 
   /**
    * Returns a NodePage built around the Node
-   * 
+   *
+   * @todo renamte getNodePage
    * @return NodePage
    */
   public function getPage()
@@ -254,7 +255,6 @@ abstract class Node
   /**
    * Returns an array of all child Nodes
    *
-   * @todo implement a boolean $recurse switch
    * @return array
    */
   public function getChildren()

@@ -31,13 +31,20 @@ class NodeFormatter
    * @var Node
    */
   protected $node;
+  /**
+   * The Node's NodePage
+   *
+   * @var NodePage
+   */
+  protected $nodePage;
 
   /**
    * @param Node $node
    */
   protected function __construct( Node $node )
   {
-    $this->node = $node;
+    $this->node     = $node;
+    $this->nodePage = $node->getPage();
   }
 
   /**

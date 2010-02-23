@@ -76,36 +76,13 @@ class NodeFormatter_String extends NodeFormatter
       $text = $this->leafFormat;
     }
 
-    $node_page = NodePage::factory( $this->node );
-
-    $text = str_ireplace( '[href]', $node_page->getUrl(), $text );
-
+    $text = str_ireplace( '[href]', $this->nodePage->getUrl(), $text );
 
     if ($this->node->getChildren()) {
       $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
     }
 
     if ( $this->node instanceof Node_Document ) {
-      // TODO: move a bunch of these specific things into getMetadataForToken()
-      $text = str_ireplace( '[DocOID]', $this->node->getId(), $text );
-      $text = str_ireplace( '[DocTopOID]', $this->node->getRootId(), $text );
-      $text = str_ireplace( '[DocImage]', $node_page->getCoverUrl(), $text );
-
-      $srclink_search  = array( '[srclink]', '[/srclink]' );
-      $srclink_replace = array( '<a href="' . $node_page->getSourceDocumentUrl() . '">', '</a>' );
-      $text = str_ireplace( $srclink_search, $srclink_replace, $text );
-
-      if (
-        stripos($text, '[thumbicon]') !== false
-        && $node_page->getThumbnailUrl()
-      )
-      {
-        // parse thumbicon URL and compose <img> tag
-        $thumb_url = $node_page->getThumbnailUrl();
-        $thumb_img = "<img src=\"$thumb_url\">";
-        $text = str_ireplace('[thumbicon]', $thumb_img, $text);
-      }
-
       // implement Greenstone parent(All) format
       $parent_all_pattern = "/ \[ parent \( All ('([^']+)')? \) : ([^\]]+) \] /x";
       if ( preg_match_all( $parent_all_pattern, $text, $parent_all_matches ) ) {
@@ -147,10 +124,6 @@ class NodeFormatter_String extends NodeFormatter
         }
       }
     }
-
-    $link_search  = array( '[link]', '[/link]' );
-    $link_replace = array( '[a]', '[/a]' );
-    $text = str_replace( $link_search, $link_replace, $text );
 
     if ( strpos( $text, '[a]' ) === false ) {
       $text = '[a]' . $text . '[/a]';
@@ -239,8 +212,30 @@ class NodeFormatter_String extends NodeFormatter
    */
   protected function getMetadataForToken( $token )
   {
-    $replacement_text = null;
+    // first, special-behavior document-metadata tokens
+    if ( $this->node instanceof Node_Document ) {
+      switch ( $token ) {
+        case 'DocOID':
+          return $this->node->getId();
+        case 'DocTopOID':
+          return $this->node->getRootId();
+        case 'DocImage':
+          return $this->nodePage->getCoverUrl();
+        case 'thumbicon':
+          $thumb_url = $this->nodePage->getThumbnailUrl();
+          return $thumb_url ? "<img src=\"$thumb_url\">" : false;
+        case 'srclink':
+          return '<a href="' . $this->nodePage->getSourceDocumentUrl() . '">';
+        case '/srclink':
+          return '</a>';
+        case 'link':
+          return '[a]';
+        case '/link':
+          return '[/a]';
+      }
+    }
 
+    // now, the standard metadata tokens
     if (strpos( $token, '|' ) !== false) {
       $fields_to_try = explode( '\|', $token );
     }
