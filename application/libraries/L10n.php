@@ -64,13 +64,12 @@ class L10n
   /**
    * Translates a format, and applies it to arguments using vsprintf
    *
-   * @todo rename vsprintf
    * @param string $format
    * @param array $args
    * @param boolean $translate_args
    * @return string
    */
-  public static function sprintf( $format, array $args, $translate_args = false )
+  public static function vsprintf( $format, array $args, $translate_args = false )
   {
     $format = L10n::_( $format );
 

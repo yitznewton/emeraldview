@@ -144,7 +144,6 @@ class Hit
 
     // take snippet, padding around the term match
 
-    // TODO: is this I18n-ified (LTR...)?
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;
     $prev_sentence_end = strripos( $text, '. ', $first_hit_reverse_position );
 

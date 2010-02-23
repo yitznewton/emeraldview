@@ -124,7 +124,7 @@ class search_Core
       $args = array( $index_select, $text_input );
     }
 
-    $form_contents = L10n::sprintf( $format, $args, true ). $submit_input;
+    $form_contents = L10n::vsprintf( $format, $args, true ). $submit_input;
 
     $form_attributes = array(
       'name'   => 'search',
@@ -218,7 +218,7 @@ class search_Core
     $level_select = search::level_select( $collection, $params );
 
     if ( $level_select ) {
-      $first_line = L10n::sprintf( 'Search at the %s level for', array( $level_select ) );
+      $first_line = L10n::vsprintf( 'Search at the %s level for', array( $level_select ) );
     }
     else {
       $first_line = L10n::_('Search for');
@@ -292,7 +292,7 @@ class search_Core
       $hits_page->totalHitCount, $search_handler->getQueryBuilder()->getDisplayQuery(),
     );
     
-    $summary = L10n::sprintf( $format, $args );
+    $summary = L10n::vsprintf( $format, $args );
     
     return $summary;
   }

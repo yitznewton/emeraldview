@@ -27,7 +27,7 @@
   foreach ( $collection->getClassifiers() as $classifier ) {
     $url = $classifier->getUrl();
     $raw_title = strtolower( L10n::_( $classifier->getTitle() ) );
-    $display_title = L10n::sprintf( ('By %s'), array( $raw_title ) );
+    $display_title = L10n::vsprintf( ('By %s'), array( $raw_title ) );
 
     $classifier_link = myhtml::element('a', $display_title, array('href' => $url));
 
