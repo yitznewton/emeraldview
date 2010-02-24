@@ -1,6 +1,4 @@
 syntax: glob
+local
 application/logs
 application/data
-modules
-api
-
