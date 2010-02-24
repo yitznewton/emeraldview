@@ -1,5 +1,5 @@
 # This is a sample file; it will be overridden by local/config/emeraldview.yml
-# See http://yitznewton/emeraldview/index.php/Customization for documentation
+# See http://yitznewton.org/emeraldview/index.php/Customization for documentation
 
 emeraldview_name:          Wassamatta Digital Collections
 institution_url:           http://wassamatta-u.example.com/library/
