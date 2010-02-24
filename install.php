@@ -4,17 +4,17 @@
   $config_error = null;
 
   if ( ! file_exists( MODPATH ) ) {
-    mkdir( MODPATH );
+    mkdir( MODPATH ) or die('Incomplete write permissions');
   }
 
   $local_config_dir = LOCALPATH.'config/';
 
   if ( ! file_exists( LOCALPATH ) ) {
-    mkdir( LOCALPATH );
+    mkdir( LOCALPATH ) or die('Incomplete write permissions');
   }
 
   if ( ! file_exists( $local_config_dir ) ) {
-    mkdir( $local_config_dir );
+    mkdir( $local_config_dir ) or die('Incomplete write permissions');
   }
 
   if (!empty($_POST['hostname'])) {
@@ -35,7 +35,7 @@
     }
     
     if ( ! file_exists( APPPATH.'logs' ) ) {
-      mkdir( APPPATH.'logs' );
+      mkdir( APPPATH.'logs' ) or die('Incomplete write permissions');
     }
     
     if ( ! isset( $config_error ) ) {
