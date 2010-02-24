@@ -4,7 +4,7 @@
  * then a full URL will be used, eg: http://localhost/kohana/. If it only includes
  * the path, and a site_protocol is specified, the domain will be auto-detected.
  */
-$config['site_domain'] = 'emeraldview/';
+$config['site_domain'] = 'localhost/';
 
 /**
  * Force a default protocol to be used by the site. If no site_protocol is
@@ -72,7 +72,7 @@ $config['global_xss_filtering'] = TRUE;
 /**
  * Enable or disable hooks.
  */
-$config['enable_hooks'] = FALSE;
+$config['enable_hooks'] = true;
 
 /**
  * Log thresholds:
@@ -122,4 +122,5 @@ $config['modules'] = array
 	// MODPATH.'archive',   // Archive utility
 	// MODPATH.'payment',   // Online payments
 	// MODPATH.'unit_test', // Unit testing
+  MODPATH.'phpunit',
 );

@@ -433,10 +433,10 @@ class Kohana {
 		if ($name === 'core')
 		{
 			// Load the local and application configuration files
-			require APPPATH.'config/config'.EXT;
+			require APPPATH.'config/kohana'.EXT;
 
-      if ( file_exists( LOCALPATH.'config/config'.EXT ) ) {
-        require LOCALPATH.'config/config'.EXT;
+      if ( file_exists( LOCALPATH.'config/kohana'.EXT ) ) {
+        require LOCALPATH.'config/kohana'.EXT;
       }
 
 			if ( ! isset($config['site_domain']))

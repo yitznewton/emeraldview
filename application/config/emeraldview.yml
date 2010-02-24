@@ -1,21 +1,21 @@
+# This is a sample file; it will be overridden by local/config/emeraldview.yml
+# See http://yitznewton/emeraldview/index.php/Customization for documentation
+
 emeraldview_name:          Wassamatta Digital Collections
 institution_url:           http://wassamatta-u.example.com/library/
 institution_name:          Wassamatta University Libraries
 
-greenstone_collection_dir: /www/websites/collect
+greenstone_collection_dir: collect
 
 default_theme: default
 default_language: en
 languages:
   en: English
   fr: French
-  he: עברית
 
 collections:
-#  demo:
-  sample:
+  demo:
     active: true
-    greenstone_dir: demo
     slug_max_length: 30
     slug_spacer: "-"
     slug_metadata_elements:
@@ -29,9 +29,6 @@ collections:
       - and
     document_tree_format: "[Title]"
     search_hits_per_page: 20
-    #search_results_format: "[parent(All' > '):Title]"
-    #search_results_format: "[parent(Top):Title]"
-    #search_results_format: "[parent:Title]"
     search_results_format: "[Title]"
     search_history_length: 5
     classifiers:
@@ -44,31 +41,3 @@ collections:
     display_metadata:
       Title: Title
       Author: Author
-
-  paged:
-    active: true
-    classifiers:
-      CL1:
-        format:
-          branch: "[Title]"
-          leaf:   "[Title] - [format:Date]"
-      CL2:
-        format: "[format:Date] - [Title]"
-
-  pioneers:
-    active: true
-
-  images:
-    active: true
-    greenstone_dir: simpleim
-
-  small-html:
-    active: true
-    greenstone_dir: smallhtm
-
-  word-pdf:
-    active: true
-    greenstone_dir: wordandp
-
-  that:
-    active: false
