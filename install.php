@@ -1,19 +1,25 @@
 <?php
+  defined('SYSPATH') OR die('No direct access allowed.');
+
   $config_error = null;
+
+  if ( ! file_exists( MODPATH ) ) {
+    mkdir( MODPATH );
+  }
+
+  $local_config_dir = LOCALPATH.'config/';
+
+  if ( ! file_exists( LOCALPATH ) ) {
+    mkdir( LOCALPATH );
+  }
+
+  if ( ! file_exists( $local_config_dir ) ) {
+    mkdir( $local_config_dir );
+  }
 
   if (!empty($_POST['hostname'])) {
     $config_error = null;
     
-    $local_config_dir = LOCALPATH.'config/';
-
-    if ( ! file_exists( LOCALPATH ) ) {
-      mkdir( LOCALPATH );
-    }
-
-    if ( ! file_exists( $local_config_dir ) ) {
-      mkdir( $local_config_dir );
-    }
-
     if (preg_match('/[^A-Za-z0-9\-\.]/', $_POST['hostname'])) {
       $config_error = 'Did you really mean to set hostname to '
                       . htmlentities($_POST['hostname']) . '? If so, please '
@@ -217,6 +223,7 @@ body { width: 42em; margin: 0 auto; font-family: sans-serif; font-size: 90%; }
 
 </div>
 
+<?php if (!$failed): ?>
 <h2>Now, to set up your installation:</h2>
 
 <?php if ($config_error): ?>
@@ -226,12 +233,13 @@ body { width: 42em; margin: 0 auto; font-family: sans-serif; font-size: 90%; }
 <form id="config-form" method="post">
   <div class="config-form-row">
     <label for="config-domain">Hostname for your installation (e.g. <code>emeraldview.example.org</code>)</label>
-    <input type="text" name="hostname" value="<?php echo isset($_POST['hostname']) ? $_POST['hostname'] : 'localhost' ?>" />
+    <input type="text" name="hostname" value="<?php echo isset($_POST['hostname']) ? $_POST['hostname'] : $_SERVER['SERVER_NAME'] ?>" />
   </div>
   <div class="config-form-row">
     <input type="submit" value="Submit" />
   </div>
 </form>
+<?php endif; ?>
 
 </body>
 </html>

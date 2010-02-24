@@ -12,40 +12,31 @@
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
  *
- * @version 0.2.0-b2
+ * @version 0.2.0b1
  * @package helpers
  */
 /**
- * myview_Core provides HTML composition functions for the view controller method
+ * html fixes html_Core::link() for HTML 4.01 Transitional validity
  *
  * @package helpers
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
  * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
  */
-class myview_Core
+class html extends html_Core
 {
   /**
-   * Returns an HTML <dl> element representing the specified metadata
-   *
-   * @param array $metadata An associative array of metadata names and values
-   * @return string
-   */
-  public static function metadata_list( array $metadata )
+	 * @param   string|array  filename
+	 * @param   string|array  relationship
+	 * @param   string|array  mimetype
+	 * @param   string        specifies suffix of the file
+	 * @param   string|array  specifies on what device the document will be displayed
+	 * @param   boolean       include the index_page in the link
+	 * @return  string
+	 */
+	public static function link($href, $rel, $type, $suffix = FALSE, $media = FALSE, $index = FALSE)
   {
-    $items_html = '';
+    $parent_link = parent::link($href, $rel, $type, $suffix, $media, $index);
 
-    foreach ( $metadata as $display_name => $data) {
-      $items_html .= myhtml::element( 'dt', L10n::_($display_name) );
-
-      $values = '';
-
-      foreach ($data as $value) {
-        $values .= myhtml::element( 'dd', $value );
-      }
-
-      $items_html .= $values;
-    }
-
-    return myhtml::element( 'dl', $items_html );
+    return substr( $parent_link, 0, -4 ) . ">\n";
   }
 }

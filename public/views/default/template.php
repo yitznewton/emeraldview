@@ -9,26 +9,26 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <link rel="stylesheet" type="text/css"
-href="/views/<?php echo $theme ?>/css/reset.css">
+href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/reset.css">
 
 <link rel="stylesheet" type="text/css" media="screen"
-href="/libraries/treeview/jquery.treeview.css">
+href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
 
 <?php echo $css_includes ?>
 
 <?php if (L10n::_('ltr') == 'rtl'): ?>
   <link rel="stylesheet" type="text/css"
-  href="/views/<?php echo $theme ?>/css/rtl.css">
+  href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/rtl.css">
 <?php endif; ?>
 
 <script type="text/javascript"
-src="/libraries/jquery.js"></script>
+src="<?php echo url::base() ?>libraries/jquery.js"></script>
 
 <script type="text/javascript"
-src="/libraries/treeview/jquery.treeview.js"></script>
+src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
-src="/views/<?php echo $theme ?>/js/default.js"></script>
+src="<?php echo url::base() ?>views/<?php echo $theme ?>/js/default.js"></script>
 
 <?php echo $js_includes ?>
 
@@ -39,14 +39,14 @@ src="/views/<?php echo $theme ?>/js/default.js"></script>
 <div id="header">
   <?php if ( $method == 'index' ): ?>
     <span id="header-logo">
-      <img src="/images/emeraldview2.png"
-      alt="EmeraldView logo" />
+      <img src="<?php echo url::base() ?>images/emeraldview2.png"
+      alt="EmeraldView logo">
     </span>
   <?php else: ?>
     <span id="header-logo">
       <a href="<?php echo url::base() ?>">
-        <img src="/images/emeraldview2.png"
-        alt="EmeraldView logo" />
+        <img src="<?php echo url::base() ?>images/emeraldview2.png"
+        alt="EmeraldView logo">
       </a>
     </span>
   <?php endif; ?>

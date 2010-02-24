@@ -9,25 +9,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <link rel="stylesheet" type="text/css"
-href="/views/default/css/reset.css">
+href="<?php echo url::base() ?>views/default/css/reset.css">
 
 <link rel="stylesheet" type="text/css" media="screen"
-href="/libraries/treeview/jquery.treeview.css">
+href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
 
 <link rel="stylesheet" type="text/css"
-href="/views/default/css/style.css">
+href="<?php echo url::base() ?>views/default/css/style.css">
 
 <link rel="stylesheet" type="text/css" media="print"
-href="/views/default/css/style-print.css">
+href="<?php echo url::base() ?>views/default/css/style-print.css">
 
 <script type="text/javascript"
-src="/libraries/jquery.js"></script>
+src="<?php echo url::base() ?>libraries/jquery.js"></script>
 
 <script type="text/javascript"
-src="/libraries/treeview/jquery.treeview.js"></script>
+src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
-src="/views/default/js/default.js"></script>
+src="<?php echo url::base() ?>views/default/js/default.js"></script>
 
 </head>
 
@@ -36,7 +36,7 @@ src="/views/default/js/default.js"></script>
 <div id="header">
     <span id="header-logo">
       <a href="<?php echo url::base() ?>">
-        <img src="/images/emeraldview2.png"
+        <img src="<?php echo url::base() ?>images/emeraldview2.png"
         alt="EmeraldView logo" />
       </a>
     </span>

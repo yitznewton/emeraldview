@@ -57,8 +57,8 @@ $kohana_public = file_exists($kohana_public) ? $kohana_public : DOCROOT.$kohana_
 
 // Define application and system paths
 define('LOCALPATH', $kohana_local . '/');
+define('MODPATH', $kohana_modules .'/');
 define('APPPATH', str_replace('\\', '/', realpath($kohana_application)).'/');
-define('MODPATH', str_replace('\\', '/', realpath($kohana_modules)).'/');
 define('SYSPATH', str_replace('\\', '/', realpath($kohana_system)).'/');
 define('PUBLICPATH', str_replace('\\', '/', realpath($kohana_public)).'/');
 

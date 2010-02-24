@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to license@yitznewton.net so we can send you a copy immediately.
  *
- * @version 0.2.0-b1
+ * @version 0.2.0-b2
  * @package libraries
  */
 /**
@@ -66,7 +66,7 @@ class NodePage_DocumentSection extends NodePage
     $html = trim( $dom_nodes->item(0)->nodeValue );
 
     // fix Greenstone macro'ed internal URLs
-    $path = '/files/' . $this->getCollection()->getGreenstoneName() . '/index/assoc/'
+    $path = url::base() . 'files/' . $this->getCollection()->getGreenstoneName() . '/index/assoc/'
             . $this->getNode()->getRootNode()->getField( 'archivedir' );
     $html = str_replace( '_httpdocimg_', $path, $html );
 
