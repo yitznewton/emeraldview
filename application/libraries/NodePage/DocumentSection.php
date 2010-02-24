@@ -266,7 +266,6 @@ class NodePage_DocumentSection extends NodePage
    * Returns an array of URLs of the previous and next nodes in the document;
    * for use with collections build with PagedImagePlugin
    *
-   * @todo refactor this to combine with code in NodeTreePager
    * @return array
    */
   public function getPagedUrls()

@@ -12,9 +12,10 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
   public function __construct()
   {
-    if (!EmeraldviewConfig::get('greenstone_collection_dir')) {
+    if ( ! EmeraldviewConfig::get('greenstone_collection_dir') ) {
       $msg = 'Greenstone collection directory not specified '
            . 'in config/emeraldview.yml';
+      // FIXME: this is not getting caught and redirected to 500
       throw new Exception( $msg );
     }
     
@@ -27,18 +28,12 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     
     $this->session = Session::instance();
     
-    $this->emeraldviewName = EmeraldviewConfig::get('emeraldview_name')
-                           ? EmeraldviewConfig::get('emeraldview_name')
-                           : 'EmeraldView'
-                           ;
+    $this->emeraldviewName = EmeraldviewConfig::get('emeraldview_name', 'EmeraldView');
                            
-    $this->theme = EmeraldviewConfig::get('default_theme')
-                 ? EmeraldviewConfig::get('default_theme')
-                 : 'default'
-                 ;
+    $this->theme = EmeraldviewConfig::get('default_theme', 'default');
                  
     $this->template = new View( $this->theme . '/template' );
-    $this->template->theme = $this->theme;
+    $this->template->set_global( 'theme', $this->theme );
     $this->template->addCss( "views/$this->theme/css/style" );
     $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
     $this->template->set_global( 'languages', $this->getAvailableLanguages() );
@@ -59,11 +54,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     if ($this->session->get('language')) {
       $this->language = $this->session->get('language');
     }
-    elseif (EmeraldviewConfig::get('default_language')) {
-      $this->language = EmeraldviewConfig::get('default_language');
-    }
     else {
-      $this->language = 'en';
+      $this->language = EmeraldviewConfig::get('default_language', 'en');
     }
     
     $this->loadGettextDomain( $this->language );
@@ -89,6 +81,9 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       $this->theme = $this->collection->getConfig('theme');
     }
     
+    $this->template->set_global( 'collection', $this->collection );
+    $this->template->set_global( 'collection_display_name',    $this->collection->getDisplayName( $this->language ) );
+
     return $this->collection;
   }
   

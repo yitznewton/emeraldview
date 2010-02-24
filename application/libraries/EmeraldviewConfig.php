@@ -41,10 +41,15 @@ class EmeraldviewConfig
    * @param string $param_name
    * @return mixed
    */
-  public static function get( $param_name )
+  public static function get( $param_name, $default = null )
   {
     if (empty( self::$arrayFromYaml )) {
-      $yaml_filename = LOCALPATH . 'config/emeraldview.yml';
+      if (file_exists(LOCALPATH . 'config/emeraldview.yml')) {
+        $yaml_filename = LOCALPATH . 'config/emeraldview.yml';
+      }
+      else {
+        $yaml_filename = APPPATH . 'config/emeraldview.yml';
+      }
       
       if (!is_readable($yaml_filename)) {
         $msg = "Could not find EmeraldView config file ($yaml_filename)";
@@ -53,7 +58,9 @@ class EmeraldviewConfig
       
       self::$arrayFromYaml = sfYaml::load( $yaml_filename );
     }
-    
-    return Kohana::key_string( self::$arrayFromYaml, $param_name );
+
+    $value = Kohana::key_string( self::$arrayFromYaml, $param_name );
+
+    return $value !== null ? $value : $default;
   }
 }

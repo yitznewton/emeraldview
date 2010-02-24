@@ -26,7 +26,7 @@
  */
 class Hit
 {
-  // FIXME: this being here is part of the hack to centralize this type of
+  // FIXME: this being here is part of the temporary centralization this type of
   // functionality before we actually factor the snippet generation and
   // highlighting in a sensible way
   const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';

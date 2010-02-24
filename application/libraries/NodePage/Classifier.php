@@ -129,7 +129,7 @@ class NodePage_Classifier extends NodePage
     foreach ( NodePage_Classifier::$slugs as $id => $test_slug ) {
       if ( $slug == $test_slug ) {
         $node = Node_Classifier::factory( $collection, $id );
-        return $node->getPage();
+        return $node->getNodePage();
       }
     }
   }

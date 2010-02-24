@@ -44,7 +44,7 @@ class NodeFormatter
   protected function __construct( Node $node )
   {
     $this->node     = $node;
-    $this->nodePage = $node->getPage();
+    $this->nodePage = $node->getNodePage();
   }
 
   /**

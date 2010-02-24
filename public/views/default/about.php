@@ -66,10 +66,10 @@
 
 </div>
 
-<?php if ($description): ?>
+<?php if ($collection_description): ?>
   <div id="about-description">
     <h2><?php echo L10n::_('About this collection') ?></h2>
-    <p><?php echo $description ?></p>
+    <p><?php echo $collection_description ?></p>
   </div>
 <?php endif; ?>
 

@@ -4,11 +4,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
 {
 	public function index()
   {
-		$this->template->page_title  = EmeraldviewConfig::get('emeraldview_name');
-    
     $this->view = new View( $this->theme . '/index' );
     $this->view->collections = Collection::getAllAvailable();
 
+		$this->template->set_global( 'page_title',      EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'method',          'index' );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'language',        $this->language );
@@ -25,12 +24,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->view = new View( $this->theme . '/about' );
     
     $this->template->set_global( 'method',          'about' );
-    $this->template->set_global( 'collection',      $collection );
-    $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
+    $this->template->set_global( 'collection_description',     $collection->getDescription( $this->language ) );
   }
   
   public function browse( $collection_name, $classifier_slug )
@@ -53,14 +50,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->view = new View( $this->theme . '/browse' );
     
     $this->template->set_global( 'method',          'browse' );
-    $this->template->set_global( 'collection',      $collection );
-    $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $classifier->getTitle()
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'page',            $classifier );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'tree',            $tree );
   }
 
@@ -116,10 +110,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
                                  . " | $this->emeraldviewName"
                                );
     $this->template->set_global( 'method',          'search' );
-    $this->template->set_global( 'collection',      $collection );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
-    $this->template->set_global( 'description',     $collection->getDescription( $this->language ) );
     $this->template->set_global( 'search_handler',  $search_handler );
     $this->template->set_global( 'search_history',  $history );
     $this->template->set_global( 'hits_page',       $hits_page );
@@ -165,7 +156,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
         }
         else {
           // no subnode has that page number; redirect to first page
-          url::redirect( $node->getPage()->getUrl() );
+          url::redirect( $node->getNodePage()->getUrl() );
         }
       }
       elseif ( ! $subnode_id ) {
@@ -179,7 +170,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       }
     }
 
-    $page = $node->getPage();
+    $page = $node->getNodePage();
     $search_terms = $this->input->get('search');
 
     if ( $search_terms ) {
@@ -195,15 +186,13 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->view = new View( $this->theme . '/view' );
 
     $this->template->set_global( 'method',          'view' );
-    $this->template->set_global( 'collection',      $collection );
-    $this->template->set_global( 'collection_display_name',    $collection->getDisplayName( $this->language ) );
     $this->template->set_global( 'page_title',      $node->getField('Title')
                                                     . ' | ' . $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->template->set_global( 'node',            $node );
     $this->template->set_global( 'page',            $page );
     $this->template->set_global( 'root_node',       $node->getRootNode() );
-    $this->template->set_global( 'root_page',       $node->getRootNode()->getPage() );
+    $this->template->set_global( 'root_page',       $node->getRootNode()->getNodePage() );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
     $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );

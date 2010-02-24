@@ -76,7 +76,8 @@ class Session extends Session_Core
         array_push( $history, $params );
       }
 
-      return $this->setSearchHistory( $collection, $history );
+      $this->setSearchHistory( $collection, $history );
+      return;
     }
 
     array_push( $history, $params );

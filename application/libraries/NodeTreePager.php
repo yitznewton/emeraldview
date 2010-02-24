@@ -25,6 +25,13 @@
  */
 class NodeTreePager
 {
+  /**
+   * Returns links or link placeholders corresponding to the previous and next
+   * Nodes in a hierarchical document
+   *
+   * @param Node_Document $node
+   * @return string
+   */
   public static function html( Node_Document $node )
   {
     $output = '';

@@ -33,7 +33,7 @@
 
 
 <?php // begin TOC section ?>
-<?php if ($page->getTree() && !$paged_urls): ?>
+<?php if ($page->getTree() && ! $paged_urls): ?>
   <div id="toc">
     <div id="toc-header"><?php echo L10n::_('Table of contents') ?>
       <span class="toc-toggle" id="toc-hide" style="display:none">

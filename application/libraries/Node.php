@@ -107,7 +107,7 @@ abstract class Node
     $text = $node_formatter->format();
 
     if ( strpos( $text, '<a' ) === false ) {
-      $text = html::anchor( $this->getPage()->getUrl(), $text );
+      $text = html::anchor( $this->getNodePage()->getUrl(), $text );
     }
 
     return $text;
@@ -215,10 +215,9 @@ abstract class Node
   /**
    * Returns a NodePage built around the Node
    *
-   * @todo renamte getNodePage
    * @return NodePage
    */
-  public function getPage()
+  public function getNodePage()
   {
     return NodePage::factory( $this );
   }
