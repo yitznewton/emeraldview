@@ -40,13 +40,13 @@ src="<?php echo url::base() ?>views/<?php echo $theme ?>/js/default.js"></script
   <?php if ( $method == 'index' ): ?>
     <span id="header-logo">
       <img src="<?php echo url::base() ?>images/emeraldview2.png"
-      alt="EmeraldView logo" />
+      alt="EmeraldView logo">
     </span>
   <?php else: ?>
     <span id="header-logo">
       <a href="<?php echo url::base() ?>">
         <img src="<?php echo url::base() ?>images/emeraldview2.png"
-        alt="EmeraldView logo" />
+        alt="EmeraldView logo">
       </a>
     </span>
   <?php endif; ?>
