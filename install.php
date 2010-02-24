@@ -27,11 +27,16 @@
       $fh = fopen( $local_config_dir . 'kohana.php', 'wb' );
       fwrite( $fh, $config_lines );
     }
-
+    
+    if ( ! file_exists( APPPATH.'logs' ) ) {
+      mkdir( APPPATH.'logs' );
+    }
+    
     if ( ! isset( $config_error ) ) {
       echo '<h1>Installation Complete</h1>';
       echo '<p>Congratulations!  EmeraldView installation appears successful. '
-           . 'Reload the page to see EmeraldView in action.  See '
+           . 'If your Greenstone demo collection is in place, you may now '
+           . 'reload the page to see EmeraldView in action.  See '
            . '<a href="http://yitznewton.org/emeraldview/index.php/Customization">Customization</a> '
            . 'for more options.</p>';
       exit;

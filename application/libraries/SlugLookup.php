@@ -54,6 +54,11 @@ class SlugLookup
     $this->collection = $collection;
 
     $this->filepath = APPPATH . 'data/';
+    
+    if ( ! file_exists( $this->filepath ) ) {
+      mkdir( $this->filepath );
+    }    
+
     $this->lockFilename = $this->filepath . $this->collection->getGreenstoneName()
                         . '_slugs.lck';
 
