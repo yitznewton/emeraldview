@@ -5,7 +5,7 @@ emeraldview_name:          Wassamatta Digital Collections
 institution_url:           http://wassamatta-u.example.com/library/
 institution_name:          Wassamatta University Libraries
 
-greenstone_collection_dir: collect
+greenstone_collection_dir: files
 
 default_theme: default
 default_language: en

@@ -56,7 +56,7 @@ $kohana_system = file_exists($kohana_system) ? $kohana_system : DOCROOT.$kohana_
 $kohana_public = file_exists($kohana_public) ? $kohana_public : DOCROOT.$kohana_public;
 
 // Define application and system paths
-define('LOCALPATH', str_replace('\\', '/', realpath($kohana_local)).'/');
+define('LOCALPATH', $kohana_local . '/');
 define('APPPATH', str_replace('\\', '/', realpath($kohana_application)).'/');
 define('MODPATH', str_replace('\\', '/', realpath($kohana_modules)).'/');
 define('SYSPATH', str_replace('\\', '/', realpath($kohana_system)).'/');
@@ -71,13 +71,11 @@ if ( is_dir( $vendor_dir_name ) ) {
 // Clean up
 unset($kohana_application, $kohana_modules, $kohana_system);
 
-if (file_exists(DOCROOT.'install'.EXT))
-{
+if ( ! file_exists( LOCALPATH . 'config/kohana.php' ) ) {
 	// Load the installation tests
-	include DOCROOT.'install'.EXT;
+	require DOCROOT.'install'.EXT;
 }
-else
-{
+else {
 	// Initialize Kohana
   require APPPATH.'core/Bootstrap'.EXT;
 }
