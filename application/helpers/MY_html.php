@@ -10,7 +10,7 @@
  * http://yitznewton.net/emeraldview/index.php/License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
- * to license@yitznewton.net so we can send you a copy immediately.
+ * to yitznewton@hotmail.com so we can send you a copy immediately.
  *
  * @version 0.2.0b1
  * @package helpers
