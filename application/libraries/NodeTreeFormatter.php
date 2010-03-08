@@ -38,6 +38,18 @@ class NodeTreeFormatter
    * @var mixed
    */
   protected $context;
+  /**
+   * Whether the current page uses a tree; for loading Javascript
+   *
+   * @var boolean
+   */
+  protected static $isUsingTree = false;
+  /**
+   * Whether the current page uses tabs; for loading Javascript
+   *
+   * @var boolean
+   */
+  protected static $isUsingTabs = false;
   
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
@@ -67,15 +79,7 @@ class NodeTreeFormatter
       throw new Exception( $msg );
     }
     
-    $output = '<ul class="browse-tree">' . "\n";
-    
-    foreach ( $children as $child ) {
-      $output .= $this->renderNode( $child );
-    }
-    
-    $output .= "</ul>\n";
-
-    return $this->renderChildren( $this->rootNode ); //$output;  //TODO scrub
+    return $this->renderChildren( $this->rootNode );
   }
 
   /**
@@ -91,28 +95,65 @@ class NodeTreeFormatter
       return false;
     }
 
+    $output = '';
+
     if ( $node->getField('childtype') == 'HList' ) {
-      // start tabs
-      $output = '<ul class="browse-tabs">' . "\n";
+      // tabs
+      NodeTreeFormatter::$isUsingTabs = true;
+
+      $output .= '<div class="browse-tabs"><ul>' . "\n";
+
+      foreach ($children as $child) {
+        $output .= '<a href="#browse-' . $child->getId() . '">'
+                   . $this->renderNode( $child, false )
+                   . '</a>';
+      }
+
+      $output .= "</ul>\n";
+
+      foreach ( $children as $child ) {
+        $output .= '<div id="browse-' . $child->getId() . '">'
+                   . $this->renderChildren( $child )
+                   . "</div>\n";
+      }
+
+      $output .= "</div>\n";
     }
     elseif ( ! $node->getSubnodeId() ) {
-      // $node is root - start tree
-      $output = '<ul class="browse-tree">' . "\n";
+      // $node is root - start new tree
+      NodeTreeFormatter::$isUsingTree = true;
+
+      $output .= '<ul class="browse-tree">' . "\n";
+
+      foreach ($children as $child) {
+        $output .= $this->renderNode( $child );
+      }
+
+      $output .= "</ul>\n";
     }
     elseif ( $node->getParent()->getField('childtype') != 'VList' ) {
+      // FIXME is this a performance hit?
       // first level in a VList - start tree
-      $output = '<ul class="browse-tree">' . "\n";
+      NodeTreeFormatter::$isUsingTree = true;
+
+      $output .= '<ul class="browse-tree">' . "\n";
+
+      foreach ($children as $child) {
+        $output .= $this->renderNode( $child );
+      }
+
+      $output .= "</ul>\n";
     }
     else {
       // continue existing tree
-      $output = '<ul>' . "\n";
-    }
+      $output .= '<ul>' . "\n";
 
-    foreach ($children as $child) {
-      $output .= $this->renderNode( $child );
-    }
+      foreach ($children as $child) {
+        $output .= $this->renderNode( $child );
+      }
 
-    $output .= "</ul>\n";
+      $output .= "</ul>\n";
+    }
 
     return $output;
   }
@@ -121,9 +162,10 @@ class NodeTreeFormatter
    * Renders HTML for a single child Node in the hierarchy
    *
    * @param Node $node
+   * @param boolean $recurse Whether to recurse through child Nodes
    * @return string
    */
-  protected function renderNode( Node $node )
+  protected function renderNode( Node $node, $recurse = true )
   {
     $output = "<li>\n";
     
@@ -145,10 +187,33 @@ class NodeTreeFormatter
     $node_output = str_replace( $search, $replace, $node_output );
 
     $output .= $node_output;
-    $output .= $this->renderChildren( $node );
+
+    if ( $recurse ) {
+      $output .= $this->renderChildren( $node );
+    }
 
     $output .= "</li>\n";
     
     return $output;
+  }
+
+  /**
+   * Returns whether the current page uses a tree; for loading Javascript
+   *
+   * @return boolean
+   */
+  public static function isUsingTree()
+  {
+    return NodeTreeFormatter::$isUsingTree;
+  }
+
+  /**
+   * Returns whether the current page uses tabs; for loading Javascript
+   *
+   * @return boolean
+   */
+  public static function isUsingTabs()
+  {
+    return NodeTreeFormatter::$isUsingTabs;
   }
 }

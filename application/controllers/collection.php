@@ -47,6 +47,16 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $root_node = $classifier->getNode();
     $tree      = $classifier->getTree();
 
+    if ( NodeTreeFormatter::isUsingTabs() ) {
+      $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );
+      $this->template->addJs(  'libraries/tabs/jquery-ui-1.7.2.js'  );
+    }
+
+    if ( NodeTreeFormatter::isUsingTree() ) {
+      $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
+      $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
+    }
+
     $this->view = new View( $this->theme . '/browse' );
     
     $this->template->set_global( 'method',          'browse' );
@@ -183,6 +193,20 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $text = $page->getHTML();
     }
 
+    $paged_urls = $page->getPagedUrls();
+
+    if ( ! $paged_urls ) {
+      $tree = $page->getTree();
+
+      if ( NodeTreeFormatter::isUsingTree() ) {
+        $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
+        $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
+      }
+    }
+    else {
+      $tree = false;
+    }
+
     $this->view = new View( $this->theme . '/view' );
 
     $this->template->set_global( 'method',          'view' );
@@ -195,7 +219,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->template->set_global( 'root_page',       $node->getRootNode()->getNodePage() );
     $this->template->set_global( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->template->set_global( 'tree_pager',      NodeTreePager::html( $node ) );
-    $this->template->set_global( 'paged_urls',      $page->getPagedUrls() );
+    $this->template->set_global( 'paged_urls',      $paged_urls );
+    $this->template->set_global( 'tree',            $tree );
     $this->template->set_global( 'search_terms',    $this->input->get('search') );
     $this->template->set_global( 'text',            $text );
   }

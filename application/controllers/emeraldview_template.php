@@ -33,16 +33,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $this->theme = EmeraldviewConfig::get('default_theme', 'default');
                  
     $this->template = new View( $this->theme . '/template' );
-    $this->template->set_global( 'theme', $this->theme );
-    $this->template->addCss( "views/$this->theme/css/style" );
-    $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
-    $this->template->set_global( 'languages', $this->getAvailableLanguages() );
     
-    Event::add_before(
-      'system.post_controller',
-      array( $this, '_render' ),
-      array( $this, '_injectContentIntoTemplate' )
-    );
+    $this->template->set_global( 'languages', $this->getAvailableLanguages() );
 
     if (
       $this->input->get('language')
@@ -50,15 +42,34 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     ) {
       $this->session->set('language', $this->input->get('language'));
     }
-    
+
     if ($this->session->get('language')) {
       $this->language = $this->session->get('language');
     }
     else {
       $this->language = EmeraldviewConfig::get('default_language', 'en');
     }
-    
+
     $this->loadGettextDomain( $this->language );
+
+    $this->template->set_global( 'theme', $this->theme );
+
+    $this->template->addCss( 'css/reset' );
+    $this->template->addCss( "views/$this->theme/css/style" );
+    $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
+
+    if ( L10n::_('ltr') == 'rtl' ) {
+      $this->template->addCss( "views/$this->theme/css/rtl" );
+    }
+    
+    $this->template->addJs( 'libraries/jquery' );
+    $this->template->addJs( "views/$this->theme/js/default" );
+
+    Event::add_before(
+      'system.post_controller',
+      array( $this, '_render' ),
+      array( $this, '_injectContentIntoTemplate' )
+    );
   }
   
   protected function loadCollection( $collection_name )

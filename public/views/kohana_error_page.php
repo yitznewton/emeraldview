@@ -31,7 +31,7 @@ src="<?php echo url::base() ?>views/default/js/default.js"></script>
 
 </head>
 
-<body dir="<?php echo L10n::_('ltr') ?>">
+<body>
 
 <div id="header">
     <span id="header-logo">

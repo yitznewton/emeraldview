@@ -8,28 +8,7 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<link rel="stylesheet" type="text/css"
-href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/reset.css">
-
-<link rel="stylesheet" type="text/css" media="screen"
-href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
-
 <?php echo $css_includes ?>
-
-<?php if (L10n::_('ltr') == 'rtl'): ?>
-  <link rel="stylesheet" type="text/css"
-  href="<?php echo url::base() ?>views/<?php echo $theme ?>/css/rtl.css">
-<?php endif; ?>
-
-<script type="text/javascript"
-src="<?php echo url::base() ?>libraries/jquery.js"></script>
-
-<script type="text/javascript"
-src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
-
-<script type="text/javascript"
-src="<?php echo url::base() ?>views/<?php echo $theme ?>/js/default.js"></script>
-
 <?php echo $js_includes ?>
 
 </head>
