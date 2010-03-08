@@ -35,7 +35,7 @@ class NodeTreeFormatter
    * An object representing the situation where the string is needed; used
    * for determining which format specification to use
    *
-   * @var mixed
+   * @var NodePage|SearchHandler
    */
   protected $context;
   /**
@@ -53,7 +53,7 @@ class NodeTreeFormatter
   
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
-   * @param mixed $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @param NodePage|SearchHandler $context An object representing the situation where the string is needed; used for determining which format specification to use
    */
   public function __construct( Node $node, $context )
   {
@@ -89,10 +89,22 @@ class NodeTreeFormatter
    */
   protected function renderChildren( Node $node )
   {
+
     $children = $node->getChildren();
 
     if ( ! $children ) {
       return false;
+    }
+    
+    if ( $node instanceof Node_Classifier ) {
+      $mdoffsets = $node->getMdOffsets();
+    }
+    else {
+      $mdoffsets = null;
+    }
+
+    if ( $mdoffsets && count( $mdoffsets ) != count( $node->getChildren() ) ) {
+      throw new Exception( 'mdoffset count does not match children count');
     }
 
     $output = '';
@@ -103,10 +115,13 @@ class NodeTreeFormatter
 
       $output .= '<div class="browse-tabs"><ul>' . "\n";
 
-      foreach ($children as $child) {
+      for ( $i = 0; $i < count( $children ); $i++ ) {
+        $child = $children[ $i ];
+        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+
         $dashed_id = str_replace( '.', '-', $child->getId() );
         $output .= '<li><a href="#browse-' . $dashed_id . '">'
-                   . $this->renderNode( $child, false )
+                   . $this->renderNode( $child, $mdoffset, false )
                    . "</a></li>\n";
       }
 
@@ -127,21 +142,24 @@ class NodeTreeFormatter
 
       $output .= '<ul class="browse-tree">' . "\n";
 
-      foreach ($children as $child) {
-        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
+      for ( $i = 0; $i < count( $children ); $i++ ) {
+        $child = $children[ $i ];
+        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+        $output .= '<li>' . $this->renderNode( $child, $mdoffset ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
     }
     elseif ( $node->getParent()->getField('childtype') != 'VList' ) {
-      // FIXME is this a performance hit?
       // first level in a VList - start tree
       NodeTreeFormatter::$isUsingTree = true;
 
       $output .= '<ul class="browse-tree">' . "\n";
 
-      foreach ($children as $child) {
-        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
+      for ( $i = 0; $i < count( $children ); $i++ ) {
+        $child = $children[ $i ];
+        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+        $output .= '<li>' . $this->renderNode( $child, $mdoffset ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
@@ -150,8 +168,10 @@ class NodeTreeFormatter
       // continue existing tree
       $output .= '<ul>' . "\n";
 
-      foreach ($children as $child) {
-        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
+      for ( $i = 0; $i < count( $children ); $i++ ) {
+        $child = $children[ $i ];
+        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+        $output .= '<li>' . $this->renderNode( $child, $mdoffset ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
@@ -164,15 +184,16 @@ class NodeTreeFormatter
    * Renders HTML for a single child Node in the hierarchy
    *
    * @param Node $node
+   * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @param boolean $recurse Whether to recurse through child Nodes
    * @return string
    */
-  protected function renderNode( Node $node, $recurse = true )
+  protected function renderNode( Node $node, $mdoffset, $recurse = true )
   {
     $output = '';
 
     $formatter = NodeFormatter::factory( $node, $this->context );
-    $node_output = $formatter->format();
+    $node_output = $formatter->format( $mdoffset );
 
     if (
       ( $this->rootNode instanceof Node_Classifier && $node instanceof Node_Document )

@@ -55,8 +55,6 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $this->template->set_global( 'theme', $this->theme );
 
     $this->template->addCss( 'css/reset' );
-    $this->template->addCss( "views/$this->theme/css/style" );
-    $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
 
     if ( L10n::_('ltr') == 'rtl' ) {
       $this->template->addCss( "views/$this->theme/css/rtl" );
@@ -69,6 +67,12 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       'system.post_controller',
       array( $this, '_render' ),
       array( $this, '_injectContentIntoTemplate' )
+    );
+
+    Event::add_before(
+      'system.post_controller',
+      array( $this, '_render' ),
+      array( $this, '_addThemeCss' )
     );
   }
   
@@ -159,5 +163,11 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
   {
     $this->view->theme = $this->theme;
     $this->template->content = $this->view;
+  }
+
+  public function _addThemeCss()
+  {
+    $this->template->addCss( "views/$this->theme/css/style" );
+    $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
   }
 }

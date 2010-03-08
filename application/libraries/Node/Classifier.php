@@ -26,10 +26,10 @@
 class Node_Classifier extends Node
 {
   /**
-   * Not yet implemented
+   * An array of values used to determine which metadata value to use in
+   * formatting each of the Node's children where the child has multiple values
+   * for the classifier's metadata field
    *
-   * @ignore
-   * @link http://bitbucket.org/yitznewton/emeraldview/issue/8/mdoffset-implementation
    * @var array
    */
   protected $mdoffsets;
@@ -53,13 +53,13 @@ class Node_Classifier extends Node
   }
 
   /**
-   * Not yet implemented
+   * Returns an array of values used to determine which metadata value to use in
+   * formatting each of the Node's children where the child has multiple values
+   * for the classifier's metadata field
    *
-   * @ignore
-   * @link http://bitbucket.org/yitznewton/emeraldview/issue/8/mdoffset-implementation
    * @return array
    */
-  private function getMdOffsets()
+  public function getMdOffsets()
   {
     return $this->mdoffsets;
   }

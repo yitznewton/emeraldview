@@ -41,11 +41,12 @@ class NodeFormatter_String extends NodeFormatter
   /**
    *
    * @param Node $node
+   * @param NodePage|SearchHandler An object representing the situation where the string is needed
    * @param array|string $format_config 
    */
-  public function __construct( Node $node, $format_config )
+  public function __construct( Node $node, $context, $format_config )
   {
-    parent::__construct( $node );
+    parent::__construct( $node, $context );
     
     if ( is_array( $format_config ) ) {
       // separate formats for branches and leaves specified
@@ -64,10 +65,10 @@ class NodeFormatter_String extends NodeFormatter
   }
 
   /**
+   * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @return string
    */
-  //public function format( $index = null )
-  public function format()
+  public function format( $mdoffset = null )
   {
     if ( $this->node->getChildren() ) {
       $text = $this->branchFormat;
@@ -130,7 +131,7 @@ class NodeFormatter_String extends NodeFormatter
     }
 
     // parse for remaining, generic metadata tokens
-    $text = $this->expandTokens( $text );
+    $text = $this->expandTokens( $text, $mdoffset );
 
     // clean up
     $empties = array('()', '[]', '<>', '{}');
@@ -176,10 +177,10 @@ class NodeFormatter_String extends NodeFormatter
    * with the appropriate content
    *
    * @param string $text
+   * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @return string
    */
-  //protected function expandTokens( $text, $index = null )
-  protected function expandTokens( $text )
+  protected function expandTokens( $text, $mdoffset )
   {
     preg_match_all('/ \[ ([^\]]+) \] /x', $text, $token_matches);
 
@@ -189,7 +190,7 @@ class NodeFormatter_String extends NodeFormatter
         continue;
       }
 
-      $metadata_value = $this->getMetadataForToken( $field );
+      $metadata_value = $this->getMetadataForToken( $field, $mdoffset );
 
       if ($metadata_value) {
         $text =
@@ -208,9 +209,10 @@ class NodeFormatter_String extends NodeFormatter
    * the current Node, based on the given token
    *
    * @param string $token
+   * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @return string
    */
-  protected function getMetadataForToken( $token )
+  protected function getMetadataForToken( $token, $mdoffset )
   {
     // first, special-behavior document-metadata tokens
     if ( $this->node instanceof Node_Document ) {
@@ -247,12 +249,21 @@ class NodeFormatter_String extends NodeFormatter
       // this loop handles each individual field within the token
       $value = $this->node->getField( $current_field );
       if ( $value ) {
-        // TODO: implement mdoffset for Classifiers
-        if ( is_array( $value ) ) {
+        if ( $mdoffset && $current_field == $this->context->getNode()->getRootNode()->getField('mdtype') ) {
+          if ( ! is_array( $value ) ) {
+            $msg = 'mdoffset passed for single metadata value';
+            //var_dump($this->node->getId(),$current_field);
+            //throw new Exception( $msg );
+          }
+
+          return $value[ $mdoffset ];
+        }
+        elseif ( is_array( $value ) ) {
           return $value[0];
         }
-
-        return $value;
+        else {
+          return $value;
+        }
       }
 
       // date formatting
@@ -284,5 +295,16 @@ class NodeFormatter_String extends NodeFormatter
     }
 
     return false;
+  }
+
+  /**
+   * @param Node $node
+   * @param NodePage|SearchHandler $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @return void
+   */
+  public static function factory( Node $node, $context )
+  {
+    $msg = 'Can only call Node::factory() from abstract parent class';
+    throw new Exception( $msg );
   }
 }

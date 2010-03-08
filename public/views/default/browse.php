@@ -1,3 +1,5 @@
+<?php // FIXME: if page has tree but no tabs, the tree doesn't get loaded; fix .tabs() ?>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $(".browse-tabs").tabs();

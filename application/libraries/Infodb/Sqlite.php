@@ -231,9 +231,7 @@ class Infodb_Sqlite extends Infodb
 
       if (isset( $fields[ $element_name ] )) {
         if (is_array( $fields[ $element_name ] )) {
-          $fields[ $element_name ] = array_push(
-            $fields[ $element_name ], $element_value
-          );
+          array_push( $fields[ $element_name ], $element_value );
         }
         else {
           $fields[ $element_name ] = array(
