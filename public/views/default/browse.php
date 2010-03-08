@@ -1,8 +1,8 @@
-<?php // FIXME: if page has tree but no tabs, the tree doesn't get loaded; fix .tabs() ?>
-
 <script type="text/javascript">
   $(document).ready(function(){
-    $(".browse-tabs").tabs();
+    if ( $(".browse-tabs").length != 0 ) {
+      $(".browse-tabs").tabs();
+    }
 
     $(".browse-tree").treeview({
       collapsed: true,
