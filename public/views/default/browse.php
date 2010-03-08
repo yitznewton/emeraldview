@@ -1,13 +1,11 @@
 <script type="text/javascript">
   $(document).ready(function(){
-    /*
+    $(".browse-tabs").tabs();
+
     $(".browse-tree").treeview({
       collapsed: true,
       animated:  "fast"
     });
-    */
-
-    $(".browse-tabs").tabs();
   });
 </script>
 

@@ -104,15 +104,17 @@ class NodeTreeFormatter
       $output .= '<div class="browse-tabs"><ul>' . "\n";
 
       foreach ($children as $child) {
-        $output .= '<a href="#browse-' . $child->getId() . '">'
+        $dashed_id = str_replace( '.', '-', $child->getId() );
+        $output .= '<li><a href="#browse-' . $dashed_id . '">'
                    . $this->renderNode( $child, false )
-                   . '</a>';
+                   . "</a></li>\n";
       }
 
       $output .= "</ul>\n";
 
       foreach ( $children as $child ) {
-        $output .= '<div id="browse-' . $child->getId() . '">'
+        $dashed_id = str_replace( '.', '-', $child->getId() );
+        $output .= '<div id="browse-' . $dashed_id . '">'
                    . $this->renderChildren( $child )
                    . "</div>\n";
       }
@@ -126,7 +128,7 @@ class NodeTreeFormatter
       $output .= '<ul class="browse-tree">' . "\n";
 
       foreach ($children as $child) {
-        $output .= $this->renderNode( $child );
+        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
@@ -139,7 +141,7 @@ class NodeTreeFormatter
       $output .= '<ul class="browse-tree">' . "\n";
 
       foreach ($children as $child) {
-        $output .= $this->renderNode( $child );
+        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
@@ -149,7 +151,7 @@ class NodeTreeFormatter
       $output .= '<ul>' . "\n";
 
       foreach ($children as $child) {
-        $output .= $this->renderNode( $child );
+        $output .= '<li>' . $this->renderNode( $child ) . "</li>\n";
       }
 
       $output .= "</ul>\n";
@@ -167,8 +169,8 @@ class NodeTreeFormatter
    */
   protected function renderNode( Node $node, $recurse = true )
   {
-    $output = "<li>\n";
-    
+    $output = '';
+
     $formatter = NodeFormatter::factory( $node, $this->context );
     $node_output = $formatter->format();
 
@@ -192,8 +194,6 @@ class NodeTreeFormatter
       $output .= $this->renderChildren( $node );
     }
 
-    $output .= "</li>\n";
-    
     return $output;
   }
 

@@ -208,6 +208,20 @@ ul#toc-tree{
   font-size: 0.8em;
 }
 
+.browse-tabs > ul li{
+  display: inline;
+  list-style: none;
+  padding: 0 0.4em;
+}
+
+.browse-tabs > ul{
+  margin: 0 0 1em;
+}
+
+.browse-tabs > div{
+  margin: 1em 0;
+}
+
 #classifier-list li{
   padding: 0.2em 0;
 }
