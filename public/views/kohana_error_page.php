@@ -59,7 +59,6 @@ src="<?php echo url::base() ?>views/default/js/default.js"></script>
     <h3><?php echo Kohana::lang('core.stack_trace') ?></h3>
     <?php echo $trace ?>
     <?php endif ?>
-    <p class="stats"><?php echo Kohana::lang('core.stats_footer') ?></p>
     </div>
   </div>
 

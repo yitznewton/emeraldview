@@ -15,7 +15,6 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     if ( ! EmeraldviewConfig::get('greenstone_collection_dir') ) {
       $msg = 'Greenstone collection directory not specified '
            . 'in config/emeraldview.yml';
-      // FIXME: this is not getting caught and redirected to 500
       throw new Exception( $msg );
     }
     

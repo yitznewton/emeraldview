@@ -31,7 +31,11 @@ src="<?php echo url::base() ?>views/default/js/default.js"></script>
 
 </head>
 
+<?php if ( L10n::isLoaded() ): ?>
 <body dir="<?php echo L10n::_('ltr') ?>">
+<?php else: ?>
+<body>
+<?php endif; ?>
 
 <div id="header">
     <span id="header-logo">

@@ -104,6 +104,16 @@ class L10n
   }
 
   /**
+   * Returns whether the default Gettext is loaded
+   *
+   * @return boolean
+   */
+  public static function isLoaded()
+  {
+    return isset( L10n::$gettext );
+  }
+
+  /**
    * Returns the default language
    *
    * @return string
