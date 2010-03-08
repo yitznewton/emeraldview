@@ -95,6 +95,7 @@ class NodePage_Classifier extends NodePage
 
     foreach ( $collection->getClassifiers() as $classifier ) {
       $slug = $slug_generator->toSlug( $classifier->getTitle() );
+      $slug_base = $slug;
 
       // check for existing identical slugs and suffix them
       $count = 2;

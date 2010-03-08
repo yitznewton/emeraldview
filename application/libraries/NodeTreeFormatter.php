@@ -75,6 +75,45 @@ class NodeTreeFormatter
     
     $output .= "</ul>\n";
 
+    return $this->renderChildren( $this->rootNode ); //$output;  //TODO scrub
+  }
+
+  /**
+   * Renders HTML for the children of a single Node
+   *
+   * @param array $nodes
+   */
+  protected function renderChildren( Node $node )
+  {
+    $children = $node->getChildren();
+
+    if ( ! $children ) {
+      return false;
+    }
+
+    if ( $node->getField('childtype') == 'HList' ) {
+      // start tabs
+      $output = '<ul class="browse-tabs">' . "\n";
+    }
+    elseif ( ! $node->getSubnodeId() ) {
+      // $node is root - start tree
+      $output = '<ul class="browse-tree">' . "\n";
+    }
+    elseif ( $node->getParent()->getField('childtype') != 'VList' ) {
+      // first level in a VList - start tree
+      $output = '<ul class="browse-tree">' . "\n";
+    }
+    else {
+      // continue existing tree
+      $output = '<ul>' . "\n";
+    }
+
+    foreach ($children as $child) {
+      $output .= $this->renderNode( $child );
+    }
+
+    $output .= "</ul>\n";
+
     return $output;
   }
   
@@ -106,18 +145,7 @@ class NodeTreeFormatter
     $node_output = str_replace( $search, $replace, $node_output );
 
     $output .= $node_output;
-
-    $children = $node->getChildren();
-    
-    if ( $children ) {
-      $output .= "<ul>\n";
-      
-      foreach ($children as $child) {
-        $output .= $this->renderNode( $child );
-      }
-      
-      $output .= "</ul>\n";
-    }
+    $output .= $this->renderChildren( $node );
 
     $output .= "</li>\n";
     
