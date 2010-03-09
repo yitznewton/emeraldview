@@ -104,6 +104,13 @@ class Infodb_Sqlite extends Infodb
    */
   public function getNode( $id )
   {
+    if ( $this->collection->getConfig( 'preload_all_nodes' ) !== false ) {
+      // this speeds up node-heavy pages like search results and classifiers,
+      // but with a memory cost
+      $this->getAllNodes();
+      return $this->allNodes[$id];
+    }
+
     $q = 'SELECT value FROM data WHERE key=?';
     $stmt = $this->pdo->prepare( $q );
     $stmt->execute( array( $id ) );
@@ -117,7 +124,7 @@ class Infodb_Sqlite extends Infodb
    */
   public function getAllNodes()
   {
-    if ($this->allNodes) {
+    if ( isset( $this->allNodes ) ) {
       return $this->allNodes;
     }
 
@@ -141,7 +148,7 @@ class Infodb_Sqlite extends Infodb
       }
     }
     
-    return $all_nodes;
+    return $this->allNodes = $all_nodes;
   }
   
   /**

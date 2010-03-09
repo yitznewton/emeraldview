@@ -45,6 +45,12 @@ class SlugLookup
    * @var Collection
    */
   protected $collection;
+  /**
+   * An associative array of root Node_Document ids and their slugs
+   *
+   * @var array
+   */
+  protected $slugs;
 
   /**
    * @param Collection $collection
@@ -122,7 +128,7 @@ class SlugLookup
       return;
     }
 
-    if (! $stmt) {
+    if ( ! $stmt ) {
       copy( $db_filename, $db_filename . '.bak' );
       $this->buildFull();
       return;
@@ -135,7 +141,8 @@ class SlugLookup
       $this->buildIncremental();
       return;
     }
-    $this->buildIncremental();
+
+    //$this->load();
   }
 
   /**
@@ -166,6 +173,22 @@ class SlugLookup
     $stmt->execute( array( $slug_string ) );
 
     return $stmt->fetchColumn();
+  }
+
+  /**
+   * Loads $this->slugs with data from slug database
+   */
+  protected function load()
+  {
+    Benchmark::start('a');
+    $query = 'SELECT key, slug FROM slugs';
+    $stmt = $this->pdo->query( $query );
+
+    while ( $record = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
+      $this->data[ $record['key'] ] = $record[ 'slug' ];
+    }
+    Benchmark::stop('a');
+    var_dump(Benchmark::get('a'));
   }
 
   /**

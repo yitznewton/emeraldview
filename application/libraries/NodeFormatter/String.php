@@ -77,7 +77,10 @@ class NodeFormatter_String extends NodeFormatter
       $text = $this->leafFormat;
     }
 
-    $text = str_ireplace( '[href]', $this->nodePage->getUrl(), $text );
+    if ( stripos( $text, '[href]') !== false ) {
+      // NodePage::getUrl() is expensive
+      $text = str_ireplace( '[href]', $this->nodePage->getUrl(), $text );
+    }
 
     if ($this->node->getChildren()) {
       $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
@@ -252,8 +255,7 @@ class NodeFormatter_String extends NodeFormatter
         if ( $mdoffset && $current_field == $this->context->getNode()->getRootNode()->getField('mdtype') ) {
           if ( ! is_array( $value ) ) {
             $msg = 'mdoffset passed for single metadata value';
-            //var_dump($this->node->getId(),$current_field);
-            //throw new Exception( $msg );
+            throw new Exception( $msg );
           }
 
           return $value[ $mdoffset ];
