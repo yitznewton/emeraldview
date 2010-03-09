@@ -311,6 +311,7 @@ abstract class Node
   }
 
   /**
+   * @todo does the $recurse switch actually make a difference?
    * @param Collection $collection
    * @param string $node_id
    * @param boolean $recurse

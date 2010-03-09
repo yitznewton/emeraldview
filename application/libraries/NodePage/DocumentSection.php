@@ -101,6 +101,7 @@ class NodePage_DocumentSection extends NodePage
    */
   public function getUrl()
   {
+    // TODO: this is expensive; can we optimize?
     $subnode_id = $this->getNode()->getSubnodeId();
 
     if ( $subnode_id ) {

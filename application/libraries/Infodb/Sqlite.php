@@ -108,7 +108,13 @@ class Infodb_Sqlite extends Infodb
       // this speeds up node-heavy pages like search results and classifiers,
       // but with a memory cost
       $this->getAllNodes();
-      return $this->allNodes[$id];
+      
+      if ( isset( $this->allNodes[ $id ] ) ) {
+        return $this->allNodes[ $id ];
+      }
+      else {
+        return false;
+      }
     }
 
     $q = 'SELECT value FROM data WHERE key=?';

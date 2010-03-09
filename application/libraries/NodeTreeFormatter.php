@@ -78,7 +78,7 @@ class NodeTreeFormatter
       $msg = 'Attempting to create node tree for a non-root node';
       throw new Exception( $msg );
     }
-    
+
     return $this->renderChildren( $this->rootNode );
   }
 
@@ -89,7 +89,6 @@ class NodeTreeFormatter
    */
   protected function renderChildren( Node $node )
   {
-
     $children = $node->getChildren();
 
     if ( ! $children ) {
