@@ -120,9 +120,6 @@ class Hit
     if ( ! $text ) {
       return false;
     }
-
-    $doc = Zend_Search_Lucene_Document_Html::loadHTML( $text );
-
     $max_length = $this->search_handler->getCollection()
                   ->getConfig( 'snippet_max_length' );
 
@@ -132,15 +129,15 @@ class Hit
 
     // find the first instance of any one of the terms
 
-    $text = preg_replace('/\s{2,}/u', ' ', $text);
+    $text = preg_replace('/\s{2,}/', ' ', $text);
     $terms = $this->search_handler->getQueryBuilder()->getRawTerms();
     array_walk( $terms, 'preg_quote' );
 
     $term_pattern  = implode( '|', $terms );
     $pattern = sprintf( Hit::HIT_PATTERN, $term_pattern );
-    preg_match( $pattern, $text, $matches );
+    preg_match( $pattern, $text, $matches, PREG_OFFSET_CAPTURE );
     
-    $first_hit_position = strpos( $text, $matches[1] );
+    $first_hit_position = $matches[1][1];
 
     // take snippet, padding around the term match
 

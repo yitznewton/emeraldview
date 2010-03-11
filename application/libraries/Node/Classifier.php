@@ -72,7 +72,7 @@ class Node_Classifier extends Node
       && $this->data['contains']
     ) {
       // ... node has 'contains' and is not empty
-      $children_names = split(';', $this->data['contains']);
+      $children_names = explode(';', $this->data['contains']);
 
       $children = array();
       foreach ($children_names as $child) {
