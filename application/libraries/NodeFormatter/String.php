@@ -51,12 +51,19 @@ class NodeFormatter_String extends NodeFormatter
     if ( is_array( $format_config ) ) {
       // separate formats for branches and leaves specified
 
-      if ( ! isset($format_config['branch']) || ! isset($format_config['leaf'] )) {
-        throw new Exception( 'Invalid format config setting' );
+      if ( isset( $format_config['branch']) ) {
+        $this->branchFormat = $format_config['branch'];
+      }
+      else {
+        $this->branchFormat = '[Title]';
       }
 
-      $this->branchFormat = $format_config['branch'];
-      $this->leafFormat   = $format_config['leaf'];
+      if ( isset( $format_config['leaf']) ) {
+        $this->leafFormat = $format_config['leaf'];
+      }
+      else {
+        $this->leafFormat = '[Title]';
+      }
     }
     else {
       $this->branchFormat = $format_config;
