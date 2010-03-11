@@ -140,12 +140,25 @@ class Hit
     $first_hit_position = $matches[1][1];
 
     // take snippet, padding around the term match
-
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;
-    $prev_sentence_end = strripos( $text, '. ', $first_hit_reverse_position );
+    $prev_sent_end = strrpos( $text, '. ', $first_hit_reverse_position );
+
+    // if the sentence starts near end of text, roll back one sentence
+    while ( strlen( $text ) - $prev_sent_end < 150 ) {
+      $prev_sent_reverse_end = 0 - strlen( $text ) + $prev_sent_end - 1;
+      $new_prev_sent_end = strrpos( $text, '. ', $prev_sent_reverse_end );
+
+      if ($new_prev_sent_end) {
+        $prev_sent_end = $new_prev_sent_end;
+      }
+      else {
+        // did not find an earlier sentence break
+        break;
+      }
+    }
 
     // ignore earlier sentences
-    $sentence_start = $prev_sentence_end ? $prev_sentence_end + 2 : 0;
+    $sentence_start = $prev_sent_end ? $prev_sent_end + 2 : 0;
     $first_hit_position -= $sentence_start;
     $text = substr( $text, $sentence_start );
 
