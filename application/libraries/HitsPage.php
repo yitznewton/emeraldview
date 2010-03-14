@@ -136,7 +136,7 @@ class HitsPage
         $hit->build();
       }
 
-      $this->links = $this->buildLinks();
+      $this->buildLinks();
     }
   }
 
