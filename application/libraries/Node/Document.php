@@ -25,23 +25,6 @@
  */
 class Node_Document extends Node
 {
-  protected function recurse()
-  {
-    if (
-      isset($this->data['contains'])
-      && $this->data['contains']
-    ) {
-      // ... node has 'contains' and is not empty
-      $children_names = explode(';', $this->data['contains']);
-
-      $children = array();
-      foreach ($children_names as $child) {
-        $child_id = str_replace('"', $this->id, $child);
-        $this->children[] = $this->getChild( $child_id );
-      }
-    }
-  }
-
   /**
    * Returns the previous Node in the document's sequence
    *

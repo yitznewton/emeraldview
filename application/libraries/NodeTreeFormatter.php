@@ -92,7 +92,7 @@ class NodeTreeFormatter
     $children = $node->getChildren();
 
     if ( ! $children ) {
-      return false;
+      return '';
     }
     
     if ( $node instanceof Node_Classifier ) {
@@ -170,7 +170,11 @@ class NodeTreeFormatter
       for ( $i = 0; $i < count( $children ); $i++ ) {
         $child = $children[ $i ];
         $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
-        $output .= '<li>' . $this->renderNode( $child, $mdoffset ) . "</li>\n";
+        
+        $recurse = ( get_class( $node ) == get_class( $child ) );
+
+        // TODO: recurse cutoff works; now fix leaf status of the leaf node
+        $output .= '<li>' . $this->renderNode( $child, $mdoffset, $recurse ) . "</li>\n";
       }
 
       $output .= "</ul>\n";

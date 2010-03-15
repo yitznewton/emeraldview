@@ -72,12 +72,18 @@ class NodeFormatter_String extends NodeFormatter
   }
 
   /**
+   * @todo incorporate the branch/leaf logic into some prepackaged code for NodeFormatter_Format
    * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @return string
    */
   public function format( $mdoffset = null )
   {
-    if ( $this->node->getChildren() ) {
+    $children = $this->node->getChildren();
+
+    if (
+      $children
+      && ( get_class( $this->node ) == get_class( $this->context->getNode() ) )
+    ) {
       $text = $this->branchFormat;
     }
     else {
@@ -89,8 +95,8 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_ireplace( '[href]', $this->nodePage->getUrl(), $text );
     }
 
-    if ($this->node->getChildren()) {
-      $text = str_ireplace('[numleafdocs]', count( $this->node->getChildren() ), $text);
+    if ( $children ) {
+      $text = str_ireplace('[numleafdocs]', count( $children ), $text);
     }
 
     if ( $this->node instanceof Node_Document ) {

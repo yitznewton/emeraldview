@@ -55,10 +55,6 @@ abstract class Node
   protected $rootNode;
   
   /**
-   * Builds the next generation of child Nodes
-   */
-  abstract protected function recurse();
-  /**
    * Returns the current Node's child of specified id.  This is abstract
    * because, for example, Node_Classifier::getChild() may return a
    * Node_Classifier or a Node_Document depending on the context
@@ -86,13 +82,6 @@ abstract class Node
     }
 
     $this->collection = $collection;
-    
-    if ( $recurse ) {
-      $this->recurse();
-    }
-
-    // clean up for later metadata retrieval
-    unset( $this->data['contains'] );
   }
   
   /**
@@ -258,6 +247,26 @@ abstract class Node
    */
   public function getChildren()
   {
+    if ( $this->children ) {
+      return $this->children;
+    }
+
+    if (
+      isset($this->data['contains'])
+      && $this->data['contains']
+    ) {
+      // ... node has 'contains' and is not empty
+      $children_names = explode(';', $this->data['contains']);
+
+      $children = array();
+      foreach ($children_names as $child) {
+        $child_id = str_replace('"', $this->id, $child);
+        $this->children[] = $this->getChild( $child_id );
+      }
+    }
+
+    unset( $this->data['contains'] );
+
     return $this->children;
   }
 

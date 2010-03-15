@@ -64,24 +64,6 @@ class Node_Classifier extends Node
     return $this->mdoffsets;
   }
 
-  protected function recurse()
-  {
-    if (
-      substr($this->id, 0, 1) == 'C'
-      && isset($this->data['contains'])
-      && $this->data['contains']
-    ) {
-      // ... node has 'contains' and is not empty
-      $children_names = explode(';', $this->data['contains']);
-
-      $children = array();
-      foreach ($children_names as $child) {
-        $child_id = str_replace('"', $this->id, $child);
-        $this->children[] = $this->getChild( $child_id );
-      }
-    }
-  }
-
   /**
    * @param string $node_id
    * @return Node
