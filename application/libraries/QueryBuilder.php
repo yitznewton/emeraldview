@@ -99,7 +99,7 @@ abstract class QueryBuilder
       }
     }
     elseif ( ! empty( $this->params['q'] ) ) {
-      $pattern = '/ " \b (.+?) \b " | \S+ /ux';
+      $pattern = '/ " (?<=[^_\pL\pN]) (.+?) (?=[^_\pL\pN]) " | [^"\s]+ /ux';
       preg_match_all( $pattern, $this->params['q'], $term_matches );
 
       for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {

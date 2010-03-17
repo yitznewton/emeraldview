@@ -83,9 +83,9 @@ class search_Core
   {
     if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Fielded ) {
       $params = $search_handler->getParams();
-      $index_default = $params['i'];
-      $level_default = $params['l'];
-      $text_default = $params['q'];
+      $index_default = isset( $params['i'] ) ? $params['i'] : null;
+      $level_default = isset( $params['l'] ) ? $params['l'] : null;
+      $text_default  = isset( $params['q'] ) ? $params['q'] : null;
     }
     else {
       $params = null;
