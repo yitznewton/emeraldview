@@ -87,14 +87,9 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $page_number = 1;
     }
 
-    try {
-      $search_handler = new SearchHandler(
-        $this->input->get(), $collection
-      );
-    }
-    catch (Exception $e) {
-      url::redirect( $collection->getUrl() );
-    }
+    $search_handler = new SearchHandler(
+      $this->input->get(), $collection
+    );
 
     try {
       $per_page = $collection->getConfig('search_hits_per_page');
@@ -107,6 +102,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       }
     }
     catch (InvalidArgumentException $e) {
+      // TODO: document what is throwing this
       url::redirect( $collection->getUrl() );
     }
 

@@ -29,8 +29,8 @@ class Hit
   // FIXME: this being here is part of the temporary centralization this type of
   // functionality before we actually factor the snippet generation and
   // highlighting in a sensible way
-  const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';
-  // const HIT_PATTERN = '/\\b(%s)\\b/i';
+  const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';  // Unicode
+  // const HIT_PATTERN = '/\\b(%s)\\b/i';  // ASCII-only
 
   /**
    * The headline link of the Hit
@@ -100,11 +100,12 @@ class Hit
 
     $lucene_document = $this->lucene_hit->getDocument();
 
-    try {
-      $text_field = $lucene_document->getField('TX');
-      $this->snippet = $this->snippetize( $text_field->value );
+    $text = $this->search_handler->getRawText( $this->lucene_hit->docOID );
+
+    if ( $text ) {
+      $this->snippet = $this->snippetize( $text );
     }
-    catch ( Zend_Search_Lucene_Exception $e ) {
+    else {
       $this->snippet = null;
     }
   }

@@ -49,6 +49,12 @@ class SearchHandler
    */
   protected $collection;
   /**
+   * The full path of the directory containing raw node text
+   *
+   * @var string
+   */
+  protected $rawTextDir;
+  /**
    * A QueryBuilder representing this search
    *
    * @var QueryBuilder
@@ -87,6 +93,9 @@ class SearchHandler
     $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
     $index_dir = $collection->getGreenstoneDirectory()
                . "/index/$level_prefix" . 'idx';
+
+    $this->rawTextDir = $collection->getGreenstoneDirectory()
+                      . "/index/raw-text/$level_prefix" . 'idx';
 
     if (!is_dir( $index_dir ) || !is_readable( $index_dir )) {
       throw new Exception("Could not read index directory $index_dir");
@@ -155,6 +164,24 @@ class SearchHandler
   public function getQueryBuilder()
   {
     return $this->queryBuilder;
+  }
+
+  public function getRawText( $docOID )
+  {
+    if ( ! is_dir( $this->rawTextDir ) ) {
+      return false;
+    }
+
+    $filename = $this->rawTextDir . '/' . $docOID . '.txt';
+
+    if ( ! file_exists( $filename ) ) {
+      return false;
+    }
+
+    $text = file_get_contents( $filename );
+    $text = trim( $text );
+
+    return $text;
   }
   
   /**
