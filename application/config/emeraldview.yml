@@ -5,7 +5,7 @@ emeraldview_name:          Wassamatta Digital Collections
 institution_url:           http://wassamatta-u.example.com/library/
 institution_name:          Wassamatta University Libraries
 
-greenstone_collection_dir: /www/websites/collect
+greenstone_collection_dir: files
 
 default_theme: default
 default_language: en
@@ -41,25 +41,3 @@ collections:
     display_metadata:
       Title: Title
       Author: Author
-
-  azhebtes:
-    active: true
-    classifiers:
-      CL3:
-        format:
-          branch: "[Title]"
-          leaf: "[dc.Title]"
-
-  paged:
-    active: true
-    
-  tidhar:
-    active: true
-    search_results_format_function: |
-      return L10n::vsprintf( 'Page %s', array( $node->getField( 'Title' ) ) );
-    classifiers:
-      CL1:
-        format: "[Volume]"
-      CL2:
-        format:
-          leaf: "[Subject]"

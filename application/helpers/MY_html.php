@@ -7,7 +7,7 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://yitznewton.net/emeraldview/index.php/License
+ * http://yitznewton.org/emeraldview/index.php?title=License
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to yitznewton@hotmail.com so we can send you a copy immediately.
@@ -19,8 +19,8 @@
  * html fixes html_Core::link() for HTML 4.01 Transitional validity
  *
  * @package helpers
- * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.net/)
- * @license    http://yitznewton.net/emeraldview/index.php/License     New BSD License
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
+ * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
 class html extends html_Core
 {
