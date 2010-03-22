@@ -140,38 +140,46 @@ class Collection_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    // root node; default to this if not replaced by a subnode later
-    $node = Node_Document::factory( $collection, $document_id );
-    $subnode = null;
+    $root_node = Node_Document::factory( $collection, $document_id );
+    $subnode_id = null;
+    $subnode_title = null;
 
-    if ( ! $node ) {
+    if ( ! $root_node ) {
       return $this->show404();
     }
 
-    if ( $node->isPaged() ) {
+    if ( $root_node->isPaged() ) {
       if ( isset( $args[2] ) ) {
-        $subnode = $node->getCousinByTitle( (int) $args[2] );
+        $subnode_title = (int) $args[2];
       }
       elseif ( $this->input->get('page') ) {
-        $page_number = (int) $this->input->get('page');
-        $subnode = $node->getCousinByTitle( $page_number );
+        $subnode_title = (int) $this->input->get('page');
       }
-
-      if ( ! $subnode ) {
-        $subnode = $node->getCousin( '1' );
+      else {
+        // page not indicated; default to first page
+        $subnode_id = '1';
       }
     }
     elseif (count( $args ) > 2) {
+      // not paged, and subnode is indicated
       $subnodes = array_slice( $args, 2 );
       $subnode_id = implode( '.', $subnodes );
-      $subnode = $node->getCousin( $subnode_id );
+    } // ... otherwise no subnode specified; will default to root Node
+
+    if ( $subnode_id ) {
+      $node = $root_node->getCousin( $subnode_id );
+    }
+    elseif ( $subnode_title ) {
+      $node = $root_node->getCousinByTitle( $subnode_title );
+    }
+    else {
+      $node = $root_node;
     }
 
-    if ( $subnode ) {
-      $node = $subnode;
+    if ( ! $node ) {
+      // whatever subnode was requested could not be found
+      return $this->show404();
     }
-
-    // FIXME: if no subnode detected, display root node or first subnode?
 
     $page = $node->getNodePage();
     $search_terms = $this->input->get('search');
