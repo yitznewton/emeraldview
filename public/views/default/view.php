@@ -63,8 +63,7 @@
   Page <?php echo $node->getField( 'Title' ) ?>
 </h2>
 
-<form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>"
-onsubmit="return pageFormToUrl(this, '<?php echo $root_page->getUrl() ?>')">
+<form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>">
 
 <?php if ($paged_urls['previous']): ?>
   <span class="prev-button">

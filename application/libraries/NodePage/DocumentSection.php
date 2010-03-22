@@ -97,12 +97,25 @@ class NodePage_DocumentSection extends NodePage
   }
   
   /**
+   * @todo this is expensive; can we optimize?
    * @return string
    */
   public function getUrl()
   {
-    // TODO: this is expensive; can we optimize?
-    $subnode_id = $this->getNode()->getSubnodeId();
+    $root_id = $this->getNode()->getRootId();
+
+    if ( $this->getNode()->isPaged() ) {
+      if ( $this->getNode()->getId() == $root_id ) {
+        $subnode_id = false;
+      }
+      else {
+        $subnode_id = $this->getNode()->getField( 'Title' );
+        //$subnode_id = 'jim';
+      }
+    }
+    else {
+      $subnode_id = $this->getNode()->getSubnodeId();
+    }
 
     if ( $subnode_id ) {
       $section_url = '/' . str_replace( '.', '/', $subnode_id );
@@ -112,7 +125,7 @@ class NodePage_DocumentSection extends NodePage
     }
 
     $slug = $this->getCollection()->getSlugLookup()
-            ->retrieveSlug( $this->getNode()->getRootNode()->getId() );
+            ->retrieveSlug( $root_id );
 
     if ( ! $slug ) {
       throw new Exception( 'Slug lookup failed' );
@@ -281,13 +294,13 @@ class NodePage_DocumentSection extends NodePage
     $prev_node = $this->getNode()->getPreviousNode();
     $next_node = $this->getNode()->getNextNode();
 
-    if ( $prev_node != $this->getNode()->getRootNode() ) {
+    if ( $prev_node->getId() == $this->getNode()->getRootId() ) {
+      $prev_url = '';
+    }
+    else {
       // previous node exists and is not the root, but rather another child
       // Node
       $prev_url = NodePage::factory( $prev_node )->getUrl();
-    }
-    else {
-      $prev_url = '';
     }
 
     if ( $next_node ) {

@@ -118,7 +118,7 @@ class Node_Document extends Node
    */
   protected function hasChildren()
   {
-    if ( $this->getChildren() ) {
+    if ( $this->children || $this->getField( 'contains' ) ) {
       return true;
     }
     else {

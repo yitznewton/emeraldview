@@ -44,15 +44,16 @@ class Collection_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    $root_node = $classifier->getNode();
-    $tree      = $classifier->getTree();
+    $root_node           = $classifier->getNode();
+    $node_tree_formatter = $classifier->getNodeTreeFormatter();
+    $tree                = $node_tree_formatter->render();
 
-    if ( NodeTreeFormatter::isUsingTabs() ) {
+    if ( $node_tree_formatter->isUsingTabs() ) {
       $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );
       $this->template->addJs(  'libraries/tabs/jquery-ui-1.7.2.js'  );
     }
 
-    if ( NodeTreeFormatter::isUsingTree() ) {
+    if ( $node_tree_formatter->isUsingTree() ) {
       $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
       $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
     }
@@ -127,11 +128,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $subnode_id = '';
     $args = func_get_args();
 
-    if (count( $args ) > 2) {
-      $subnodes = array_slice( $args, 2 );
-      $subnode_id = '.' . implode( '.', $subnodes );
-    }
-
     $collection = $this->loadCollection( $collection_name );
 
     if ( ! $collection ) {
@@ -144,37 +140,38 @@ class Collection_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    $node = Node_Document::factory( $collection, $document_id . $subnode_id );
-    
+    // root node; default to this if not replaced by a subnode later
+    $node = Node_Document::factory( $collection, $document_id );
+    $subnode = null;
+
     if ( ! $node ) {
       return $this->show404();
     }
 
     if ( $node->isPaged() ) {
-      if ( $this->input->get('page') ) {
-        // user submitted the 'go to page' form
-        $page_number = (int) $this->input->get('page');
-        $paged_node = $node->getCousinByTitle( $page_number );
-
-        if ($paged_node) {
-          // found a subnode with the requested page number
-          $node = $paged_node;
-        }
-        else {
-          // no subnode has that page number; redirect to first page
-          url::redirect( $node->getNodePage()->getUrl() );
-        }
+      if ( isset( $args[2] ) ) {
+        $subnode = $node->getCousinByTitle( (int) $args[2] );
       }
-      elseif ( ! $subnode_id ) {
-        // there's no appropriate NodePage for root node of a Paged document;
-        // set to display first subnode
-        $node = Node_Document::factory( $collection, "$document_id.1" );
+      elseif ( $this->input->get('page') ) {
+        $page_number = (int) $this->input->get('page');
+        $subnode = $node->getCousinByTitle( $page_number );
+      }
 
-        if (!$node) {
-          return $this->show404();
-        }
+      if ( ! $subnode ) {
+        $subnode = $node->getCousin( '1' );
       }
     }
+    elseif (count( $args ) > 2) {
+      $subnodes = array_slice( $args, 2 );
+      $subnode_id = implode( '.', $subnodes );
+      $subnode = $node->getCousin( $subnode_id );
+    }
+
+    if ( $subnode ) {
+      $node = $subnode;
+    }
+
+    // FIXME: if no subnode detected, display root node or first subnode?
 
     $page = $node->getNodePage();
     $search_terms = $this->input->get('search');
@@ -192,9 +189,10 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $paged_urls = $page->getPagedUrls();
 
     if ( ! $paged_urls ) {
-      $tree = $page->getTree();
+      $node_tree_formatter = $page->getNodeTreeFormatter();
+      $tree = $node_tree_formatter->render();
 
-      if ( NodeTreeFormatter::isUsingTree() ) {
+      if ( $node_tree_formatter->isUsingTree() ) {
         $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
         $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
       }

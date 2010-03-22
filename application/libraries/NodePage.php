@@ -68,15 +68,13 @@ abstract class NodePage
   }
 
   /**
-   * Returns an HTML <<ul>> element containing the hierarchical tree for this
-   * entire classifier or document
+   * Returns the NodeTreeFormatter for this entire classifier or document
    *
    * @return string
    */
-  public function getTree()
+  public function getNodeTreeFormatter()
   {
-    $formatter = new NodeTreeFormatter( $this->getNode()->getRootNode(), $this );
-    return $formatter->format();
+    return new NodeTreeFormatter( $this->getNode()->getRootNode(), $this );
   }
 
   /**

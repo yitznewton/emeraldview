@@ -43,13 +43,13 @@ class NodeTreeFormatter
    *
    * @var boolean
    */
-  protected static $isUsingTree = false;
+  protected $isUsingTree = false;
   /**
    * Whether the current page uses tabs; for loading Javascript
    *
    * @var boolean
    */
-  protected static $isUsingTabs = false;
+  protected $isUsingTabs = false;
   
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
@@ -66,7 +66,7 @@ class NodeTreeFormatter
    *
    * @return string
    */
-  public function format()
+  public function render()
   {
     $children = $this->rootNode->getChildren();
 
@@ -110,7 +110,7 @@ class NodeTreeFormatter
 
     if ( $node->getField('childtype') == 'HList' ) {
       // tabs
-      NodeTreeFormatter::$isUsingTabs = true;
+      $this->isUsingTabs = true;
 
       $top_html    = '';
       $bottom_html = '';
@@ -135,7 +135,7 @@ class NodeTreeFormatter
     }
     elseif ( ! $node->getSubnodeId() ) {
       // $node is root - start new tree
-      NodeTreeFormatter::$isUsingTree = true;
+      $this->isUsingTree = true;
 
       $output .= '<ul class="browse-tree">' . "\n";
 
@@ -151,7 +151,7 @@ class NodeTreeFormatter
     }
     elseif ( $node->getParent()->getField('childtype') != 'VList' ) {
       // first level in a VList - start tree
-      NodeTreeFormatter::$isUsingTree = true;
+      $this->isUsingTree = true;
 
       $output .= '<ul class="browse-tree">' . "\n";
 
@@ -227,9 +227,9 @@ class NodeTreeFormatter
    *
    * @return boolean
    */
-  public static function isUsingTree()
+  public function isUsingTree()
   {
-    return NodeTreeFormatter::$isUsingTree;
+    return $this->isUsingTree;
   }
 
   /**
@@ -237,8 +237,8 @@ class NodeTreeFormatter
    *
    * @return boolean
    */
-  public static function isUsingTabs()
+  public function isUsingTabs()
   {
-    return NodeTreeFormatter::$isUsingTabs;
+    return $this->isUsingTabs;
   }
 }
