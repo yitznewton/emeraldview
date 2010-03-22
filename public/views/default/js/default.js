@@ -146,4 +146,6 @@ $(document).ready( function() {
   $('#search-form-link-boolean').click( function() {
     chooseSearchForm( 'search-form-boolean', true );
   });
+
+  $('h2.browse-section').hide();
 });

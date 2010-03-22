@@ -1,0 +1,17 @@
+EmeraldView
+version 0.2.0-b3 (third beta release)
+http://yitznewton.org/emeraldview/
+
+Changes from b2
+* fixed bugs in installation script
+* added support for tab-based HList classifier formatting
+* completed implementation of mdoffset for correct display of classifer
+  metadata where a node has multiple values for one field
+* improved error redirecting and forwarding
+* optimized Node building (necessary for building Node trees and using
+  NodeTreeFormatter)
+* fixed bug in parsing quoted search terms
+* redesigned search snippet backend to use flat files instead of storing
+  raw fulltext in the Lucene index
+* various other bugfixes
+

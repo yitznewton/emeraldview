@@ -112,28 +112,26 @@ class NodeTreeFormatter
       // tabs
       NodeTreeFormatter::$isUsingTabs = true;
 
-      $output .= '<div class="browse-tabs"><ul>' . "\n";
+      $top_html    = '';
+      $bottom_html = '';
 
       for ( $i = 0; $i < count( $children ); $i++ ) {
         $child = $children[ $i ];
         $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+        $child_output = $this->renderNode( $child, $mdoffset, false );
 
         $dashed_id = str_replace( '.', '-', $child->getId() );
-        $output .= '<li><a href="#browse-' . $dashed_id . '">'
-                   . $this->renderNode( $child, $mdoffset, false )
-                   . "</a></li>\n";
-      }
+        $top_html .= '<li><a href="#browse-' . $dashed_id . '">'
+                     . $child_output . "</a></li>\n";
 
-      $output .= "</ul>\n";
-
-      foreach ( $children as $child ) {
         $dashed_id = str_replace( '.', '-', $child->getId() );
-        $output .= '<div id="browse-' . $dashed_id . '">'
-                   . $this->renderChildren( $child )
-                   . "</div>\n";
+        $bottom_html .= '<div id="browse-' . $dashed_id . '">' . "\n"
+                        . '<h2 class="browse-section">' . $child_output . '</h2>'
+                        . $this->renderChildren( $child ) . "</div>\n";
       }
 
-      $output .= "</div>\n";
+      $output .= '<div class="browse-tabs"><ul>' . "\n"
+                 . $top_html . "</ul>\n" . $bottom_html . '</div>' . "\n";
     }
     elseif ( ! $node->getSubnodeId() ) {
       // $node is root - start new tree
