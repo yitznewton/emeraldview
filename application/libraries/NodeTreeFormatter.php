@@ -50,6 +50,12 @@ class NodeTreeFormatter
    * @var boolean
    */
   protected $isUsingTabs = false;
+  /**
+   * Whether to load branches using AJAX
+   *
+   * @var boolean
+   */
+  protected $loadAjax = false;
 
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
@@ -59,6 +65,15 @@ class NodeTreeFormatter
   {
     $this->rootNode = $node;
     $this->context = $context;
+  }
+
+  public function setLoadAjax( $a )
+  {
+    if ( ! is_bool( $a ) ) {
+      throw new InvalidArgumentException( 'Argument must be a boolean' );
+    }
+
+    $this->loadAjax = ( $a );
   }
 
   /**

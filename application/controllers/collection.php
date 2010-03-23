@@ -44,9 +44,15 @@ class Collection_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    $root_node           = $classifier->getNode();
+    $root_node = $classifier->getNode();
+    
     $node_tree_formatter = $classifier->getNodeTreeFormatter();
-    $tree                = $node_tree_formatter->render();
+
+    if ( $classifier->getConfig( 'load_ajax' ) ) {
+      $node_tree_formatter->setLoadAjax( true );
+    }
+
+    $tree = $node_tree_formatter->render();
 
     if ( $node_tree_formatter->isUsingTabs() ) {
       $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );

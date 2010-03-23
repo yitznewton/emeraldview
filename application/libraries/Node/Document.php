@@ -112,21 +112,6 @@ class Node_Document extends Node
   }
 
   /**
-   * Whether the current Node has child Nodes
-   *
-   * @return boolean
-   */
-  protected function hasChildren()
-  {
-    if ( $this->children || $this->getField( 'contains' ) ) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  /**
    * Returns an array of all root Node_Document instances for the given
    * Collection
    *

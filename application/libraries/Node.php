@@ -271,6 +271,21 @@ abstract class Node
   }
 
   /**
+   * Whether the current Node has child Nodes
+   *
+   * @return boolean
+   */
+  public function hasChildren()
+  {
+    if ( $this->children || $this->getField( 'contains' ) ) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  /**
    * Returns a string (if single value) or array of strings (if multiple
    * values) corresponding to the specified metadata field for the current Node
    *
