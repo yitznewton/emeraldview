@@ -50,7 +50,7 @@ class NodeTreeFormatter
    * @var boolean
    */
   protected $isUsingTabs = false;
-  
+
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
    * @param NodePage|SearchHandler $context An object representing the situation where the string is needed; used for determining which format specification to use
@@ -68,33 +68,29 @@ class NodeTreeFormatter
    */
   public function render()
   {
-    $children = $this->rootNode->getChildren();
-
-    if ( ! $children ) {
+    if ( ! $this->rootNode->hasChildren() ) {
       return false;
     }
 
-    if ( $this->rootNode != $this->rootNode->getRootNode() ) {
+    if ( $this->rootNode->getId() != $this->rootNode->getRootId() ) {
       $msg = 'Attempting to create node tree for a non-root node';
       throw new Exception( $msg );
     }
 
-    return $this->renderChildren( $this->rootNode );
+    return $this->renderNode( $this->rootNode );
   }
 
   /**
-   * Renders HTML for the children of a single Node
+   * Renders HTML for a Node and its children
    *
    * @param array $nodes
    */
-  protected function renderChildren( Node $node )
+  protected function renderNode( Node $node )
   {
-    $children = $node->getChildren();
-
-    if ( ! $children ) {
+    if ( ! $node->hasChildren() ) {
       return '';
     }
-    
+
     if ( $node instanceof Node_Classifier ) {
       $mdoffsets = $node->getMdOffsets();
     }
@@ -106,84 +102,101 @@ class NodeTreeFormatter
       throw new Exception( 'mdoffset count does not match children count');
     }
 
-    $output = '';
-
     if ( $node->getField('childtype') == 'HList' ) {
-      // tabs
-      $this->isUsingTabs = true;
-
-      $top_html    = '';
-      $bottom_html = '';
-
-      for ( $i = 0; $i < count( $children ); $i++ ) {
-        $child = $children[ $i ];
-        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
-        $child_output = $this->renderNode( $child, $mdoffset, false );
-
-        $dashed_id = str_replace( '.', '-', $child->getId() );
-        $top_html .= '<li><a href="#browse-' . $dashed_id . '">'
-                     . $child_output . "</a></li>\n";
-
-        $dashed_id = str_replace( '.', '-', $child->getId() );
-        $bottom_html .= '<div id="browse-' . $dashed_id . '">' . "\n"
-                        . '<h2 class="browse-section">' . $child_output . '</h2>'
-                        . $this->renderChildren( $child ) . "</div>\n";
-      }
-
-      $output .= '<div class="browse-tabs"><ul>' . "\n"
-                 . $top_html . "</ul>\n" . $bottom_html . '</div>' . "\n";
+      return $this->renderNodeTabRoot( $node, $mdoffsets );
     }
     elseif ( ! $node->getSubnodeId() ) {
-      // $node is root - start new tree
-      $this->isUsingTree = true;
-
-      $output .= '<ul class="browse-tree">' . "\n";
-
-      for ( $i = 0; $i < count( $children ); $i++ ) {
-        $child = $children[ $i ];
-        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
-
-        $recurse = ( get_class( $node ) == get_class( $child ) );
-        $output .= '<li>' . $this->renderNode( $child, $mdoffset, $recurse ) . "</li>\n";
-      }
-
-      $output .= "</ul>\n";
+      return $this->renderNodeTreeRoot( $node, $mdoffsets );
     }
     elseif ( $node->getParent()->getField('childtype') != 'VList' ) {
-      // first level in a VList - start tree
-      $this->isUsingTree = true;
-
-      $output .= '<ul class="browse-tree">' . "\n";
-
-      for ( $i = 0; $i < count( $children ); $i++ ) {
-        $child = $children[ $i ];
-        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
-
-        $recurse = ( get_class( $node ) == get_class( $child ) );
-        $output .= '<li>' . $this->renderNode( $child, $mdoffset, $recurse ) . "</li>\n";
-      }
-
-      $output .= "</ul>\n";
+      return $this->renderNodeTreeRoot( $node, $mdoffsets );
     }
     else {
-      // continue existing tree
-      $output .= '<ul>' . "\n";
-
-      for ( $i = 0; $i < count( $children ); $i++ ) {
-        $child = $children[ $i ];
-        $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
-        
-        $recurse = ( get_class( $node ) == get_class( $child ) );
-
-        $output .= '<li>' . $this->renderNode( $child, $mdoffset, $recurse ) . "</li>\n";
-      }
-
-      $output .= "</ul>\n";
+      return $this->renderNodeTreeBranch( $node, $mdoffsets );
     }
+  }
+
+  /**
+   * Renders HTML for a Node at the root of a tabset and its children
+   *
+   * @param array $nodes
+   */
+  protected function renderNodeTabRoot( Node $node, $mdoffsets )
+  {
+    $this->isUsingTabs = true;
+
+    $children    = $node->getChildren();
+    $top_html    = '';
+    $bottom_html = '';
+
+    for ( $i = 0; $i < count( $children ); $i++ ) {
+      $child = $children[ $i ];
+      $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+      $child_output = $this->formatNode( $child, $mdoffset, false );
+
+      $dashed_id = str_replace( '.', '-', $child->getId() );
+      $top_html .= '<li><a href="#browse-' . $dashed_id . '">'
+                   . $child_output . "</a></li>\n";
+
+      $dashed_id = str_replace( '.', '-', $child->getId() );
+      $bottom_html .= '<div id="browse-' . $dashed_id . '">' . "\n"
+                      . '<h2 class="browse-section">' . $child_output . '</h2>'
+                      . $this->renderNode( $child ) . "</div>\n";
+    }
+
+    return '<div class="browse-tabs"><ul>' . "\n"
+           . $top_html . "</ul>\n" . $bottom_html . '</div>' . "\n";
+  }
+
+  /**
+   * Renders HTML for a Node at the root of a tree and its children
+   *
+   * @param array $nodes
+   */
+  protected function renderNodeTreeRoot( Node $node, $mdoffsets )
+  {
+    $this->isUsingTree = true;
+
+    $children = $node->getChildren();
+    $output   = '<ul class="browse-tree">' . "\n";
+
+    for ( $i = 0; $i < count( $children ); $i++ ) {
+      $child = $children[ $i ];
+      $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+
+      $recurse = ( get_class( $node ) == get_class( $child ) );
+      $output .= '<li>' . $this->formatNode( $child, $mdoffset, $recurse ) . "</li>\n";
+    }
+
+    $output .= "</ul>\n";
 
     return $output;
   }
-  
+
+  /**
+   * Renders HTML for a sub-Node of a tree, and its children
+   *
+   * @param array $nodes
+   */
+  protected function renderNodeTreeBranch( Node $node, $mdoffsets )
+  {
+    $children = $node->getChildren();
+    $output   = '<ul>' . "\n";
+
+    for ( $i = 0; $i < count( $children ); $i++ ) {
+      $child = $children[ $i ];
+      $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
+
+      $recurse = ( get_class( $node ) == get_class( $child ) );
+
+      $output .= '<li>' . $this->formatNode( $child, $mdoffset, $recurse ) . "</li>\n";
+    }
+
+    $output .= "</ul>\n";
+
+    return $output;
+  }
+
   /**
    * Renders HTML for a single child Node in the hierarchy
    *
@@ -192,7 +205,7 @@ class NodeTreeFormatter
    * @param boolean $recurse Whether to recurse through child Nodes
    * @return string
    */
-  protected function renderNode( Node $node, $mdoffset, $recurse = true )
+  protected function formatNode( Node $node, $mdoffset, $recurse = true )
   {
     $output = '';
 
@@ -216,7 +229,7 @@ class NodeTreeFormatter
     $output .= $node_output;
 
     if ( $recurse ) {
-      $output .= $this->renderChildren( $node );
+      $output .= $this->renderNode( $node );
     }
 
     return $output;
