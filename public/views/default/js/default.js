@@ -97,5 +97,29 @@ $(document).ready( function() {
     chooseSearchForm( 'search-form-boolean', true );
   });
 
+  if ( $(".browse-tabs").length != 0 ) {
+    $(".browse-tabs").tabs({
+      // callback to fire treeview() on trees within AJAX-loaded tabs
+      load: function( event, ui ) {
+        var trees = $( ui.panel ).children( '.browse-tree' );
+        if ( $( trees ).length != 0 ) {
+          $( trees ).treeview({
+            collapsed: true,
+            animated:  "fast",
+            persist:   "location"
+          });
+        }
+      }
+    });
+  }
+
+  if ( $(".browse-tree").length != 0 ) {
+    $(".browse-tree").treeview({
+      collapsed: true,
+      animated:  "fast",
+      persist:   "location"
+    });
+  }
+
   $('h2.browse-section').hide();
 });

@@ -87,11 +87,6 @@ class NodeTreeFormatter
       return false;
     }
 
-    if ( $this->rootNode->getId() != $this->rootNode->getRootId() ) {
-      $msg = 'Attempting to create node tree for a non-root node';
-      throw new Exception( $msg );
-    }
-
     return $this->renderNode( $this->rootNode );
   }
 
@@ -150,13 +145,21 @@ class NodeTreeFormatter
       $child_output = $this->formatNode( $child, $mdoffset, false );
 
       $dashed_id = str_replace( '.', '-', $child->getId() );
-      $top_html .= '<li><a href="#browse-' . $dashed_id . '">'
-                   . $child_output . "</a></li>\n";
 
-      $dashed_id = str_replace( '.', '-', $child->getId() );
-      $bottom_html .= '<div id="browse-' . $dashed_id . '">' . "\n"
-                      . '<h2 class="browse-section">' . $child_output . '</h2>'
-                      . $this->renderNode( $child ) . "</div>\n";
+      if ( $this->loadAjax ) {
+        $url = url::base() . 'ajax/' . $node->getCollection()->getName()
+               . '/browse/' . $child->getId();
+        
+        $top_html .= "<li><a href=\"$url\">" . $child_output . '</a></li>';
+      }
+      else {
+        $top_html .= '<li><a href="#browse-' . $dashed_id . '">'
+                     . $child_output . "</a></li>\n";
+
+        $bottom_html .= '<div id="browse-' . $dashed_id . '">' . "\n"
+                        . '<h2 class="browse-section">' . $child_output . '</h2>'
+                        . $this->renderNode( $child ) . "</div>\n";
+      }
     }
 
     return '<div class="browse-tabs"><ul>' . "\n"

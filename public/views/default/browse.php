@@ -1,16 +1,3 @@
-<script type="text/javascript">
-  $(document).ready(function(){
-    if ( $(".browse-tabs").length != 0 ) {
-      $(".browse-tabs").tabs();
-    }
-
-    $(".browse-tree").treeview({
-      collapsed: true,
-      animated:  "fast"
-    });
-  });
-</script>
-
 <div id="main-content">
 
 <?php echo $language_select ?>

@@ -1,5 +1,6 @@
 <?php
 
+// TODO: rename this controller to something more generic, comparable to Ajax_Controller
 class Collection_Controller extends Emeraldview_Template_Controller
 {
 	public function index()
@@ -47,19 +48,20 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $root_node = $classifier->getNode();
     
     $node_tree_formatter = $classifier->getNodeTreeFormatter();
+    $is_ajax = $classifier->getConfig( 'load_ajax' );
 
-    if ( $classifier->getConfig( 'load_ajax' ) ) {
+    if ( $is_ajax ) {
       $node_tree_formatter->setLoadAjax( true );
     }
 
     $tree = $node_tree_formatter->render();
 
-    if ( $node_tree_formatter->isUsingTabs() ) {
+    if ( $node_tree_formatter->isUsingTabs() || $is_ajax ) {
       $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );
       $this->template->addJs(  'libraries/tabs/jquery-ui-1.7.2.js'  );
     }
 
-    if ( $node_tree_formatter->isUsingTree() ) {
+    if ( $node_tree_formatter->isUsingTree() || $is_ajax ) {
       $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
       $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
     }
