@@ -23,8 +23,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->loadView( 'about' );
 
-    $session = Session::instance();
-    $history = $session->getSearchHistory( $collection );
+    $history = $this->session->getSearchHistory( $collection );
 
     $this->passDown( 'method',          'about' );
     $this->passDown( 'page_title',      $collection->getDisplayName( $this->language )
@@ -73,8 +72,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->passDown( 'method',          'browse' );
     $this->passDown( 'page_title',      $classifier->getTitle()
-                                                    . ' | ' . $collection->getDisplayName( $this->language )
-                                                    . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
+                                        . ' | ' . $collection->getDisplayName( $this->language )
+                                        . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'page',            $classifier );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'tree',            $tree );
@@ -118,16 +117,14 @@ class Collection_Controller extends Emeraldview_Template_Controller
       url::redirect( $collection->getUrl() );
     }
 
-    $session = Session::instance();
-    $history = $session->getSearchHistory( $collection );
-    $session->recordSearch( $search_handler );
+    $history = $this->session->getSearchHistory( $collection );
+    $this->session->recordSearch( $search_handler );
 
     $this->loadView( 'search' );
 
-    $this->passDown( 'page_title',      'Search | '
-                                 . $this->collection->getDisplayName( $this->language )
-                                 . " | $this->emeraldviewName"
-                               );
+    $this->passDown( 'page_title', 'Search | '
+                                   . $this->collection->getDisplayName( $this->language )
+                                   . " | $this->emeraldviewName" );
     $this->passDown( 'method',          'search' );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'search_handler',  $search_handler );
@@ -225,8 +222,8 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->passDown( 'method',          'view' );
     $this->passDown( 'page_title',      $node->getField('Title')
-                                                    . ' | ' . $collection->getDisplayName( $this->language )
-                                                    . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
+                                        . ' | ' . $collection->getDisplayName( $this->language )
+                                        . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'node',            $node );
     $this->passDown( 'page',            $page );
     $this->passDown( 'root_node',       $node->getRootNode() );

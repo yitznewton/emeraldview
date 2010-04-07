@@ -30,7 +30,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     
     $this->emeraldviewName = EmeraldviewConfig::get('emeraldview_name', 'EmeraldView');
                            
-    $this->theme = EmeraldviewConfig::get('default_theme', 'default');
+    $this->setTheme( EmeraldviewConfig::get('default_theme', 'default') );
 
     $this->passDown( 'languages', $this->getAvailableLanguages() );
 
@@ -69,27 +69,57 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     );
   }
 
+  /**
+   * Allows us to set variables to be passed globally to the View objects,
+   * before the View objects are created
+   *
+   * @param string $name
+   * @param mixed $value 
+   */
   protected function passDown( $name, $value )
   {
     $this->globals[ $name ] = $value;
   }
 
+  protected function setTheme( $name )
+  {
+    $this->theme = $name;
+    $this->passDown( 'theme', $name );
+  }
+
   protected function loadView( $name )
   {
-    $this->template = new View( $this->theme . '/template' );
+    // first load the template...
+
+    $l10n_template = $this->theme . "/locale/$this->language/template";
+    
+    if ( file_exists( PUBLICPATH . 'views/' . $l10n_template . '.php' )) {
+      $this->template = new View( $l10n_template );
+    }
+    else {
+      $this->template = new View( $this->theme . '/template' );
+    }
+
     $this->template->addCss( 'css/reset' );
 
     if ( L10n::_('ltr') == 'rtl' ) {
       $this->template->addCss( "views/$this->theme/css/rtl" );
     }
 
-    // FIXME: move this to individual theme files?
+    // TODO: move this to individual theme files?
     $this->template->addJs( 'libraries/jquery' );
     $this->template->addJs( "views/$this->theme/js/default" );
 
-    $this->passDown( 'theme', $this->theme );
+    // ... and now load the specific view
 
-    $this->view = new View( $this->theme . '/' . $name );
+    $l10n_view = $this->theme . "/locale/$this->language/$name";
+
+    if ( file_exists( PUBLICPATH . 'views/' . $l10n_view . '.php' )) {
+      $this->view = new View( $l10n_view );
+    }
+    else {
+      $this->view = new View( $this->theme . '/' . $name );
+    }
   }
 
   protected function loadCollection( $collection_name )
@@ -108,6 +138,10 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       $this->language = $this->collection->getConfig('default_language');
     }
     
+    if ( $this->collection->getConfig('theme') ) {
+      $this->setTheme( $this->collection->getConfig('theme') );
+    }
+    
     $this->passDown( 'collection', $this->collection );
     $this->passDown( 'collection_display_name',    $this->collection->getDisplayName( $this->language ) );
 
@@ -123,9 +157,9 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $locale_dir = realpath(
       PUBLICPATH . 'views/' . $this->theme . '/locale' );
     
-    if (!$locale_dir) {
+    if ( ! $locale_dir ) {
       $msg = "Unable to find locale directory "
-           . "for this theme ($this->theme)";
+           . "for theme ($this->theme)";
       throw new Exception( $msg );
     }
     
@@ -133,11 +167,14 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $languages = array();
     
     foreach ( $locale_dir_iterator as $file ) {
+      $mo_file = $locale_dir . '/' . $file->getBasename() . '/'
+                 . $file->getBasename() . '.mo';
       if (
-        !$file->isDot() 
-        && preg_match('/^(\w+)\.mo$/', $file->getFilename(), $matches)
+        ! $file->isDot()
+        && $file->isDir()
+        && file_exists( $mo_file )
       ) {
-        $languages[] = $matches[1];
+        $languages[] = $file->getBasename();
       }
     }
     
@@ -150,8 +187,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
   protected function loadGettextDomain( $language, $domain_name = null )
   {
-    $mofile = realpath(PUBLICPATH . 'views/' . $this->theme . '/locale/'
-            . $language . '.mo');
+    $mofile = realpath( PUBLICPATH . 'views/' . $this->theme . '/locale/'
+              . "$language/$language.mo" );
               
     if (!$mofile) {
       throw new Exception("Could not find .mo file for language $language");
