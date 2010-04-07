@@ -150,7 +150,8 @@ class NodeTreeFormatter
         $url = url::base() . 'ajax/' . $node->getCollection()->getName()
                . '/browse/' . $child->getId();
         
-        $top_html .= "<li><a href=\"$url\">" . $child_output . '</a></li>';
+        $top_html .= "<li><a href=\"$url\"><span class=\"spinner\"></span>"
+                     . $child_output . '</a></li>';
       }
       else {
         $top_html .= '<li><a href="#browse-' . $dashed_id . '">'

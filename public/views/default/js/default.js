@@ -98,10 +98,18 @@ $(document).ready( function() {
   });
 
   if ( $(".browse-tabs").length != 0 ) {
+    var spinners = $('.browse-tabs .spinner');
+    spinners.hide();
+    $( spinners.get(0) ).show();
+    
     $(".browse-tabs").tabs({
-      // callback to fire treeview() on trees within AJAX-loaded tabs
+      // callbacks to fire treeview() on trees within AJAX-loaded tabs
+      select: function( event, ui ) {
+        spinners.hide();  // earlier selections
+        $( ui.tab ).children('.spinner').show();
+      },
       load: function( event, ui ) {
-        var trees = $( ui.panel ).children( '.browse-tree' );
+        var trees = $( ui.panel ).children('.browse-tree');
         if ( $( trees ).length != 0 ) {
           $( trees ).treeview({
             collapsed: true,
@@ -109,7 +117,10 @@ $(document).ready( function() {
             persist:   "location"
           });
         }
-      }
+
+        $( ui.tab ).children('.spinner').hide();
+      },
+      spinner: '&nbsp;'
     });
   }
 

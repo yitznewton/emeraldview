@@ -226,6 +226,15 @@ ul#toc-tree{
   padding: 0;
 }
 
+.browse-tabs .spinner{
+  background: url(../images/spinner.gif) no-repeat;
+  width: 16px;
+  height: 16px;
+  float: left;
+  display: block;
+  padding: 0 2px;
+}
+
 #classifier-list li{
   padding: 0.2em 0;
 }
