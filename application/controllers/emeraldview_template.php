@@ -9,6 +9,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
   protected $emeraldviewName;
   protected $collection;
   protected $session;
+  protected $globals = array();
 
   public function __construct()
   {
@@ -30,10 +31,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     $this->emeraldviewName = EmeraldviewConfig::get('emeraldview_name', 'EmeraldView');
                            
     $this->theme = EmeraldviewConfig::get('default_theme', 'default');
-                 
-    $this->template = new View( $this->theme . '/template' );
-    
-    $this->template->set_global( 'languages', $this->getAvailableLanguages() );
+
+    $this->passDown( 'languages', $this->getAvailableLanguages() );
 
     if (
       $this->input->get('language')
@@ -51,16 +50,11 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
     $this->loadGettextDomain( $this->language );
 
-    $this->template->set_global( 'theme', $this->theme );
-
-    $this->template->addCss( 'css/reset' );
-
-    if ( L10n::_('ltr') == 'rtl' ) {
-      $this->template->addCss( "views/$this->theme/css/rtl" );
-    }
-    
-    $this->template->addJs( 'libraries/jquery' );
-    $this->template->addJs( "views/$this->theme/js/default" );
+    Event::add_before(
+      'system.post_controller',
+      array( $this, '_render' ),
+      array( $this, '_transferGlobals' )
+    );
 
     Event::add_before(
       'system.post_controller',
@@ -74,7 +68,30 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       array( $this, '_addThemeCss' )
     );
   }
-  
+
+  protected function passDown( $name, $value )
+  {
+    $this->globals[ $name ] = $value;
+  }
+
+  protected function loadView( $name )
+  {
+    $this->template = new View( $this->theme . '/template' );
+    $this->template->addCss( 'css/reset' );
+
+    if ( L10n::_('ltr') == 'rtl' ) {
+      $this->template->addCss( "views/$this->theme/css/rtl" );
+    }
+
+    // FIXME: move this to individual theme files?
+    $this->template->addJs( 'libraries/jquery' );
+    $this->template->addJs( "views/$this->theme/js/default" );
+
+    $this->passDown( 'theme', $this->theme );
+
+    $this->view = new View( $this->theme . '/' . $name );
+  }
+
   protected function loadCollection( $collection_name )
   {
     $this->collection = Collection::factory( $collection_name );
@@ -91,12 +108,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       $this->language = $this->collection->getConfig('default_language');
     }
     
-    if ( $this->collection->getConfig('theme') ) {
-      $this->theme = $this->collection->getConfig('theme');
-    }
-    
-    $this->template->set_global( 'collection', $this->collection );
-    $this->template->set_global( 'collection_display_name',    $this->collection->getDisplayName( $this->language ) );
+    $this->passDown( 'collection', $this->collection );
+    $this->passDown( 'collection_display_name',    $this->collection->getDisplayName( $this->language ) );
 
     return $this->collection;
   }
@@ -134,7 +147,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     
     return $this->availableLanguages = $languages;
   }
-  
+
   protected function loadGettextDomain( $language, $domain_name = null )
   {
     $mofile = realpath(PUBLICPATH . 'views/' . $this->theme . '/locale/'
@@ -158,9 +171,15 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     return $this->collection;
   }
 
+  public function _transferGlobals()
+  {
+    foreach ( $this->globals as $name => $value ) {
+      $this->template->set_global( $name, $value );
+    }
+  }
+
   public function _injectContentIntoTemplate()
   {
-    $this->view->theme = $this->theme;
     $this->template->content = $this->view;
   }
 
