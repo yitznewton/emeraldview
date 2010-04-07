@@ -72,7 +72,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->passDown( 'method',          'browse' );
     $this->passDown( 'page_title',      $classifier->getTitle()
-                                        . ' | ' . $collection->getDisplayName( $this->language )
                                         . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'page',            $classifier );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
@@ -122,9 +121,9 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->loadView( 'search' );
 
-    $this->passDown( 'page_title', 'Search | '
-                                   . $this->collection->getDisplayName( $this->language )
-                                   . " | $this->emeraldviewName" );
+    $this->passDown( 'page_title', 'Search'
+                                   . ' | ' . $this->collection->getDisplayName( $this->language )
+                                   . ' | ' . $this->emeraldviewName );
     $this->passDown( 'method',          'search' );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'search_handler',  $search_handler );
@@ -222,12 +221,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $this->passDown( 'method',          'view' );
     $this->passDown( 'page_title',      $node->getField('Title')
-                                        . ' | ' . $collection->getDisplayName( $this->language )
                                         . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'node',            $node );
     $this->passDown( 'page',            $page );
-    $this->passDown( 'root_node',       $node->getRootNode() );
-    $this->passDown( 'root_page',       $node->getRootNode()->getNodePage() );
+    $this->passDown( 'root_node',       $root_node );
+    $this->passDown( 'root_page',       $root_node->getNodePage() );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'tree_pager',      NodeTreePager::html( $node ) );
     $this->passDown( 'paged_urls',      $paged_urls );
