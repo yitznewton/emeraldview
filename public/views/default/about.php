@@ -66,6 +66,15 @@
 
 </div>
 
+<?php if ( ! empty( $search_history ) ): ?>
+
+<div id="about-search-history-container">
+  <h3><?php echo L10n::_('Recent searches') ?></h3>
+  <?php echo search::history( $collection, $search_history ) ?>
+</div>
+
+<?php endif; ?>
+
 <?php if ($collection_description): ?>
   <div id="about-description">
     <h2><?php echo L10n::_('About this collection') ?></h2>

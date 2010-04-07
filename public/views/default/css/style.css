@@ -131,12 +131,17 @@ dl{
 
 #about-browse-container{
   float: left;
-  width: 300px;
+  width: 180px;
 }
 
 #about-search-container{
   float: left;
-  width: 400px;
+  width: 350px;
+}
+
+#about-search-history-container{
+  float: left;
+  width: 180px;
 }
 
 ul.breadcrumbs{
