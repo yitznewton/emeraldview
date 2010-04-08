@@ -103,7 +103,8 @@ class Collection
     $this->infodb     = Infodb::factory( $this );
     $this->buildCfg   = BuildCfg::factory( $this );
     $this->slugLookup = new SlugLookup( $this );
-    // $this->archive    = GreenstoneArchive::factory( $this );
+
+    $this->slugLookup->initialize();
   }
   
   /**

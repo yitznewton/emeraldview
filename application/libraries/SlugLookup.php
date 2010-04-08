@@ -51,6 +51,12 @@ class SlugLookup
    * @var array
    */
   protected $slugs;
+  /**
+   * Whether this instance is responsible for creating a new database file
+   *
+   * @var boolean
+   */
+  protected $isNewDb;
 
   /**
    * @param Collection $collection
@@ -62,17 +68,13 @@ class SlugLookup
     $this->filepath = APPPATH . 'data/';
     
     if ( ! file_exists( $this->filepath ) ) {
+      if ( ! is_writable( APPPATH ) ) {
+        throw new Exception('Cannot write to application path ' . APPPATH);
+      }
+
       mkdir( $this->filepath );
     }    
 
-    $this->lockFilename = $this->filepath . $this->collection->getGreenstoneName()
-                        . '_slugs.lck';
-
-    $db_filename = $this->filepath . $collection->getGreenstoneName()
-                . '_slugs.db';
-
-    $is_new_db = file_exists( $db_filename ) ? false : true;
-    
     if ( ! is_writable( $this->filepath ) ) {
       throw new Exception("Cannot write to data path $this->filepath");
     }
@@ -81,38 +83,48 @@ class SlugLookup
       throw new Exception('Data path exists and is not a directory');
     }
 
-    if ( ! file_exists( $this->filepath ) ) {
-      mkdir( $this->filepath );
-    }
+    $this->lockFilename = $this->filepath . $this->collection->getGreenstoneName()
+                        . '_slugs.lck';
+  }
+
+  /**
+   *
+   */
+  public function initialize()
+  {
+    $db_filename = $this->filepath . $this->collection->getGreenstoneName()
+                   . '_slugs.db';
+
+    $this->isNewDb = ! ( file_exists( $db_filename ) );
 
     $this->pdo = new PDO( 'sqlite:' . $db_filename );
     $this->pdo->setAttribute( PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION );
 
-    if ($is_new_db) {
+    if ( $this->isNewDb ) {
       $this->buildFull();
       return;
     }
-    
-    $elements = $collection
+
+    $elements = $this->collection
                 ->getConfig( 'slug_metadata_elements', array( 'Title' ) );
 
     $elements_string = serialize( $elements );
 
     $query = 'SELECT value FROM metadata WHERE key="elements_string"';
-    
+
     try {
       $stmt = $this->pdo->query( $query );
     }
     catch (PDOException $e) {
       // database corrupt or absent; do full build
-      copy( $db_filename, $db_filename . '.bak' );
+      copy( $db_filename, $db_filename . '.' . time() );
       $this->buildFull();
       return;
     }
 
     if ( ! $stmt || $stmt->fetchColumn() != $elements_string ) {
       // changed metadata settings since last build; backup and rebuild
-      copy( $db_filename, $db_filename . '.bak' );
+      copy( $db_filename, $db_filename . '.' . time() );
       $this->buildFull();
       return;
     }
@@ -129,20 +141,18 @@ class SlugLookup
     }
 
     if ( ! $stmt ) {
-      copy( $db_filename, $db_filename . '.bak' );
+      copy( $db_filename, $db_filename . '.' . time() );
       $this->buildFull();
       return;
     }
-    
+
     $build_date = $stmt->fetchColumn();
 
-    if ($collection->getBuildCfg()->getBuildDate() > $build_date) {
+    if ($this->collection->getBuildCfg()->getBuildDate() != $build_date) {
       // collection was built since last slug build; do incremental build
       $this->buildIncremental();
       return;
     }
-
-    //$this->load();
   }
 
   /**
@@ -176,22 +186,6 @@ class SlugLookup
   }
 
   /**
-   * Loads $this->slugs with data from slug database
-   */
-  protected function load()
-  {
-    Benchmark::start('a');
-    $query = 'SELECT key, slug FROM slugs';
-    $stmt = $this->pdo->query( $query );
-
-    while ( $record = $stmt->fetch( PDO::FETCH_ASSOC ) ) {
-      $this->data[ $record['key'] ] = $record[ 'slug' ];
-    }
-    Benchmark::stop('a');
-    var_dump(Benchmark::get('a'));
-  }
-
-  /**
    * Builds the slug database from scratch
    */
   protected function buildFull()
@@ -216,7 +210,6 @@ class SlugLookup
       DROP TABLE IF EXISTS metadata; DROP TABLE IF EXISTS slugs;
       CREATE TABLE metadata (key VARCHAR, value VARCHAR);
       CREATE TABLE slugs (key VARCHAR(50), slug VARCHAR);
-      INSERT INTO metadata VALUES ('build_date', '$build_date');
 EOF;
 
     $this->pdo->exec( $query );
@@ -233,7 +226,8 @@ EOF;
    */
   protected function buildIncremental()
   {
-    // go through all [nodes?] and formulate & store slugs for them
+    // go through all [nodes?] and formulate & store slugs for those that
+    // do not yet have slugs
     
     $this->lock();
 
@@ -242,51 +236,65 @@ EOF;
 
     $stmt->execute();
     $existing_keys  = $stmt->fetchAll( PDO::FETCH_COLUMN );
+
     $stmt->execute();
     $existing_slugs = $stmt->fetchAll( PDO::FETCH_COLUMN, 1 );
 
     $all_nodes = Node_Document::getAllRootNodes( $this->collection );
 
     foreach ( $all_nodes as $node ) {
-      if ( ! in_array( $node->getId(), $existing_keys ) ) {
-        // no slug for this document yet
-
-        $config_elements = $this->collection->getConfig( 'slug_metadata_elements' );
-        $element = $node->getFirstFieldFound( $config_elements );
-
-        if ( ! $element ) {
-          $element = $node->getField( 'Title' );
-        }
-
-        if ( ! $element ) {
-          $element = $node->getId();
-        }
-
-        $slug_generator = new SlugGenerator( $this->collection );
-        $slug_base = $slug_generator->toSlug( $element );
-        $slug = $slug_base;
-
-        // check for existing identical slugs and suffix them
-        $count = 2;
-        while ( in_array( $slug, $existing_slugs ) ) {
-          $slug = "$slug_base-$count";
-          $count++;
-        }
-
-        try {
-          $query = 'INSERT INTO slugs VALUES (?, ?)';
-          $stmt = $this->pdo->prepare( $query );
-          $stmt->execute( array( $node->getId(), $slug ) );
-        }
-        catch (Exception $e) {
-          Log::add( 'error', 'insert into slug database failed' );
-          throw $e;
-        }
-
-        $existing_keys[]  = $node->getId();
-        $existing_slugs[] = $slug;
+      if ( in_array( $node->getId(), $existing_keys ) ) {
+        // this document already has a slug stored
+        continue;
       }
+
+      $config_elements = $this->collection->getConfig( 'slug_metadata_elements' );
+      $element = $node->getFirstFieldFound( $config_elements );
+
+      if ( ! $element ) {
+        $element = $node->getField( 'Title' );
+      }
+
+      if ( ! $element ) {
+        $element = $node->getId();
+      }
+
+      $slug_generator = new SlugGenerator( $this->collection );
+      $slug_base = $slug_generator->toSlug( $element );
+      $slug = $slug_base;
+
+      // check for existing identical slugs and suffix them
+      $count = 2;
+      while ( in_array( $slug, $existing_slugs ) ) {
+        $slug = "$slug_base-$count";
+        $count++;
+      }
+
+      try {
+        $query = 'INSERT INTO slugs VALUES (?, ?)';
+        $stmt = $this->pdo->prepare( $query );
+        $stmt->execute( array( $node->getId(), $slug ) );
+      }
+      catch (Exception $e) {
+        Log::add( 'error', 'insert into slug database failed' );
+        throw $e;
+      }
+
+      $existing_keys[]  = $node->getId();
+      $existing_slugs[] = $slug;
     }
+
+    $build_date = $this->collection->getBuildCfg()->getBuildDate();
+    
+    if ( $this->isNewDb ) {
+      $query = 'INSERT INTO metadata VALUES ("build_date", ?)';
+    }
+    else {
+      $query = 'UPDATE metadata SET value=? where key="build_date"';
+    }
+
+    $stmt  = $this->pdo->prepare( $query );
+    $stmt->execute( array( $build_date ) );
 
     $this->unlock();
   }
