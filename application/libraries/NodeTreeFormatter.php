@@ -179,6 +179,16 @@ class NodeTreeFormatter
     $children = $node->getChildren();
     $output   = '<ul class="browse-tree">' . "\n";
 
+    if ( $this->rootNode instanceof Node_Document ) {
+      $node_page = $this->rootNode->getNodePage();
+
+      if ( $node_page->getHTML() ) {
+        $url = $node_page->getUrl();
+        // TODO: rename this?
+        $output .= "<li><a href=\"$url\">" . L10n::_('Title page') . "</a></li>\n";
+      }
+    }
+
     for ( $i = 0; $i < count( $children ); $i++ ) {
       $child = $children[ $i ];
       $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;

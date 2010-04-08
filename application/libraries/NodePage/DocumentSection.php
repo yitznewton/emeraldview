@@ -26,6 +26,13 @@
 class NodePage_DocumentSection extends NodePage
 {
   /**
+   * The NodePage as rendered in HTML
+   *
+   * @var string
+   */
+  protected $html;
+
+  /**
    * Returns the URL for the document's cover image
    *
    * @return string
@@ -49,6 +56,10 @@ class NodePage_DocumentSection extends NodePage
    */
   public function getHTML()
   {
+    if ( isset( $this->html ) ) {
+      return $this->html;
+    }
+
     $xml_file = $this->getCollection()->getGreenstoneDirectory()
                 . '/index/text/' . $this->getNode()->getRootNode()->getField( 'archivedir' )
                 . '/doc.xml';
@@ -60,7 +71,7 @@ class NodePage_DocumentSection extends NodePage
     $dom_nodes = $xpath->query( $query );
 
     if ($dom_nodes->length == 0) {
-      return false;
+      return $this->html = false;
     }
 
     $html = trim( $dom_nodes->item(0)->nodeValue );
@@ -93,7 +104,7 @@ class NodePage_DocumentSection extends NodePage
     // rip out Javascript (hackish)
     $html = preg_replace('_ \<script .*? \</script\> _x', '', $html);
 
-    return $html;
+    return $this->html = $html;
   }
   
   /**
