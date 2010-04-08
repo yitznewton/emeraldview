@@ -8,7 +8,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     
     $this->passDown( 'collections', Collection::getAllAvailable() );
 		$this->passDown( 'page_title',      EmeraldviewConfig::get('emeraldview_name') );
-    $this->passDown( 'method',          'index' );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'language',        $this->language );
   }
@@ -25,7 +24,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $history = $this->session->getSearchHistory( $collection );
 
-    $this->passDown( 'method',          'about' );
     $this->passDown( 'page_title',      $collection->getDisplayName( $this->language )
                                                     . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
@@ -70,7 +68,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
     }
 
-    $this->passDown( 'method',          'browse' );
     $this->passDown( 'page_title',      $classifier->getTitle()
                                         . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'page',            $classifier );
@@ -124,7 +121,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->passDown( 'page_title', 'Search'
                                    . ' | ' . $this->collection->getDisplayName( $this->language )
                                    . ' | ' . $this->emeraldviewName );
-    $this->passDown( 'method',          'search' );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
     $this->passDown( 'search_handler',  $search_handler );
     $this->passDown( 'search_history',  $history );
@@ -219,7 +215,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $tree = false;
     }
 
-    $this->passDown( 'method',          'view' );
     $this->passDown( 'page_title',      $node->getField('Title')
                                         . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'node',            $node );
@@ -236,8 +231,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
   public function show404()
   {
-    $this->view = new View( 'default/show404' );
-    $this->passDown( 'method',          'show404' );
-    $this->passDown( 'page_title', 'Page not found' );
+    $this->loadView( 'show404' );
+    $this->passDown( 'page_title',      'Page not found' );
   }
 }

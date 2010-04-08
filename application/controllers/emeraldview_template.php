@@ -89,6 +89,9 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
   protected function loadView( $name )
   {
+    // set view name as method for use in View code
+    $this->passDown( 'method', $name );
+
     // first load the template...
 
     $l10n_template = $this->theme . "/locale/$this->language/template";

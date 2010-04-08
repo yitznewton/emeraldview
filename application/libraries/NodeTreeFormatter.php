@@ -184,7 +184,7 @@ class NodeTreeFormatter
 
       if ( $node_page->getHTML() ) {
         $url = $node_page->getUrl();
-        // TODO: rename this?
+        // TODO: rename link?
         $output .= "<li><a href=\"$url\">" . L10n::_('Title page') . "</a></li>\n";
       }
     }
