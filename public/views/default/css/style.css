@@ -206,11 +206,13 @@ ul#toc-tree{
 
 #body-text > h2{
   font-size: 1.1em;
+  margin-top: 1em;
 }
 
 #body-text > h3{
   font-size: 1em;
   font-weight: bold;
+  margin-top: 1em;
 }
 
 #bottom-pager{

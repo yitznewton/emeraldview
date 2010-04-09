@@ -85,6 +85,13 @@ $(document).ready( function() {
     $('#toc-container').show();
   });
 
+  /*
+  // not working
+  $('.toc-toggle').click( function() {
+    return toggleTOC();
+  });
+  */
+
   $('#search-form-link-simple').click( function() {
     chooseSearchForm( 'search-form-simple', true );
   });

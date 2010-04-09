@@ -45,6 +45,14 @@ body{
   text-decoration: none;
 }
 
+.toc-toggle{
+  display: none;
+}
+
 #tree-pager{
+  display: none;
+}
+
+#pager-form{
   display: none;
 }
