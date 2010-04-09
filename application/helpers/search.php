@@ -245,6 +245,29 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
 
+  public static function chooser()
+  {
+    $simple  = L10n::_('Simple');
+    $fielded = L10n::_('Fielded');
+    $boolean = L10n::_('Boolean');
+
+    $html = <<<EOF
+      <ul id="search-form-chooser">
+        <li>
+          <a id="search-form-link-simple" href="#">$simple</a>
+        </li>
+        <li>
+          | <a id="search-form-link-fielded" href="#">$fielded</a>
+        </li>
+        <li>
+          | <a id="search-form-link-boolean" href="#">$boolean</a>
+        </li>
+      </ul>
+EOF;
+
+    return $html;
+  }
+
   /**
    * Returns an HTML <select> element corresponding to the available index
    * levels for the specified Collection

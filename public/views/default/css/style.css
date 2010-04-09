@@ -130,17 +130,22 @@ dl{
 }
 
 #about-browse-container{
-  float: left;
   width: 180px;
+  margin: 0 0 2em;
+}
+
+#about-search-outer-container{
+  float: left;
+  padding: 0 0 2em;
 }
 
 #about-search-container{
   float: left;
-  width: 350px;
+  width: 500px;
 }
 
 #about-search-history-container{
-  float: left;
+  float: right;
   width: 180px;
 }
 
@@ -236,7 +241,7 @@ ul#toc-tree{
   width: 16px;
   height: 16px;
   float: left;
-  display: block;
+  display: none;
   padding: 0 2px;
 }
 

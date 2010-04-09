@@ -41,6 +41,7 @@
 
 <?php endif; ?>
 
+<div id="about-search-outer-container">
 <div id="about-search-container">
 
   <h2><?php echo L10n::_('Search') ?></h2>
@@ -64,6 +65,7 @@
     </li>
   </ul>
 
+</div>
 </div>
 
 <?php if ( ! empty( $search_history ) ): ?>

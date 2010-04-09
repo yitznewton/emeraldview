@@ -39,27 +39,15 @@ else {
   </li>
 </ul>
 
+<div id="about-search-outer-container">
 <div id="about-search-container">
   <h2><?php echo L10n::_('Search') ?></h2>
 
   <?php echo search::form_simple(  $collection, $search_handler ) ?>
   <?php echo search::form_fielded( $collection, $search_handler ) ?>
   <?php echo search::form_boolean( $collection, $search_handler ) ?>
-
-  <ul id="search-form-chooser">
-    <li>
-      <a id="search-form-link-simple" href="#">
-      <?php echo L10n::_('Simple') ?></a>
-    </li>
-    <li>
-      | <a id="search-form-link-fielded" href="#">
-      <?php echo L10n::_('Fielded') ?></a>
-    </li>
-    <li>
-      | <a id="search-form-link-boolean" href="#">
-      <?php echo L10n::_('Boolean') ?></a>
-    </li>
-  </ul>
+  <?php echo search::chooser() ?>
+</div>
 </div>
 
 <?php if ( ! empty( $search_history ) ): ?>
