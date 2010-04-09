@@ -1,7 +1,6 @@
 <?php
 define('IN_PRODUCTION', FALSE);
 
-$kohana_local       = 'local';
 $kohana_application = 'application';
 $kohana_modules     = 'modules';
 $kohana_system      = 'system';
@@ -49,14 +48,12 @@ define('KOHANA',  $kohana_pathinfo['basename']);
 is_link(KOHANA) and chdir(dirname(realpath(__FILE__)));
 
 // If kohana folders are relative paths, make them absolute.
-$kohana_local = file_exists($kohana_local) ? $kohana_local : DOCROOT.$kohana_local;
 $kohana_application = file_exists($kohana_application) ? $kohana_application : DOCROOT.$kohana_application;
 $kohana_modules = file_exists($kohana_modules) ? $kohana_modules : DOCROOT.$kohana_modules;
 $kohana_system = file_exists($kohana_system) ? $kohana_system : DOCROOT.$kohana_system;
 $kohana_public = file_exists($kohana_public) ? $kohana_public : DOCROOT.$kohana_public;
 
 // Define application and system paths
-define('LOCALPATH', $kohana_local . '/');
 define('MODPATH', $kohana_modules .'/');
 define('APPPATH', str_replace('\\', '/', realpath($kohana_application)).'/');
 define('SYSPATH', str_replace('\\', '/', realpath($kohana_system)).'/');
@@ -71,11 +68,11 @@ if ( is_dir( $vendor_dir_name ) ) {
 // Clean up
 unset($kohana_application, $kohana_modules, $kohana_system);
 
-if ( ! file_exists( LOCALPATH . 'config/kohana.php' ) ) {
+if ( file_exists( DOCROOT.'install'.EXT ) ) {
 	// Load the installation tests
 	require DOCROOT.'install'.EXT;
 }
 else {
 	// Initialize Kohana
-  require APPPATH.'core/Bootstrap'.EXT;
+  require MODPATH.'emeraldview/core/Bootstrap'.EXT;
 }

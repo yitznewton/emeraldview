@@ -19,7 +19,7 @@
     else {
       $clean_hostname = trim($_POST['hostname'], '/') . '/';
       $config_lines = "\n" . '$config[\'site_domain\'] = \''
-                      . $clean_hostname . '\';';
+                      . $clean_hostname . "';\n";
       $fh = fopen( APPPATH . 'config/kohana.php', 'ab' );
       fwrite( $fh, $config_lines );
     }

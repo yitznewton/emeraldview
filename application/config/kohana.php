@@ -124,5 +124,3 @@ $config['modules'] = array
 	// MODPATH.'payment',   // Online payments
 	// MODPATH.'unit_test', // Unit testing
 );
-
-$config['site_domain'] = 'emeraldview/';
