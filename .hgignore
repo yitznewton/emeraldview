@@ -1,4 +1,5 @@
 syntax: glob
-local
 application/logs
 application/data
+application/config
+
