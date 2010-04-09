@@ -10,7 +10,6 @@ class Ajax_Controller extends Emeraldview_Template_Controller
 
   public function __construct()
   {
-    // TODO: content-type header
     $this->auto_render = false;
 
     if ( ! EmeraldviewConfig::get('greenstone_collection_dir') ) {
@@ -62,14 +61,14 @@ class Ajax_Controller extends Emeraldview_Template_Controller
     $collection = $this->loadCollection( $collection_name );
 
     if ( ! $collection ) {
-      // FIXME: 404 header
+      // FIXME: 404 header (#19)
       exit;
     }
 
     $node = Node_Classifier::factory( $collection, $node_id );
 
     if ( ! $node ) {
-      // FIXME: 404 header
+      // FIXME: 404 header (#19)
       exit;
     }
 

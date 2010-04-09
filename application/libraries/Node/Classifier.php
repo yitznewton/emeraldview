@@ -37,13 +37,10 @@ class Node_Classifier extends Node
   /**
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    */
-  protected function __construct(
-    Collection $collection, $node_id = null, $recurse = true
-  )
+  protected function __construct( Collection $collection, $node_id = null )
   {
-    parent::__construct( $collection, $node_id, $recurse );
+    parent::__construct( $collection, $node_id );
     
     if ( isset( $this->data['mdoffset'] ) && $this->data['mdoffset'] !== '') {
       $this->mdoffsets = explode( ';', $this->data['mdoffset'] );
@@ -74,22 +71,19 @@ class Node_Classifier extends Node
       return new Node_Classifier( $this->collection, $node_id );
     }
     else {
-      return Node_Document::factory( $this->collection, $node_id, false );
+      return Node_Document::factory( $this->collection, $node_id );
     }
   }
 
   /**
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    * @return Node_Classifier
    */
-  public static function factory(
-    Collection $collection, $node_id, $recurse = true
-  )
+  public static function factory( Collection $collection, $node_id )
   {
     try {
-      return new Node_Classifier( $collection, $node_id, $recurse );
+      return new Node_Classifier( $collection, $node_id );
     }
     catch (InvalidArgumentException $e) {
       return false;
@@ -99,13 +93,10 @@ class Node_Classifier extends Node
   /**
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    * @return Node_Classifier
    */
-  protected function staticFactory(
-    Collection $collection, $node_id, $recurse = true
-  )
+  protected function staticFactory( Collection $collection, $node_id )
   {
-    return Node_Classifier::factory( $collection, $node_id, $recurse );
+    return Node_Classifier::factory( $collection, $node_id );
   }
 }

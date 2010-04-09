@@ -59,7 +59,7 @@ abstract class Node
    * because, for example, Node_Classifier::getChild() may return a
    * Node_Classifier or a Node_Document depending on the context
    *
-   * @todo just incorporate subclass detection based on id into Node::factory
+   * @todo just incorporate subclass detection based on id into Node::factory (#20)
    * @param string $node_id
    * @return Node
    */
@@ -68,10 +68,9 @@ abstract class Node
   /**
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    */
   protected function __construct(
-    Collection $collection, $node_id = null, $recurse = false
+    Collection $collection, $node_id = null
   )
   {
     $this->id = $node_id;
@@ -335,15 +334,11 @@ abstract class Node
   }
 
   /**
-   * @todo does the $recurse switch actually make a difference?
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    * @return Node
    */
-  abstract public static function factory(
-    Collection $collection, $node_id, $recurse = true
-  );
+  abstract public static function factory( Collection $collection, $node_id );
 
   /**
    * This is a pseudo-static proxy function that allows code in this abstract
@@ -352,9 +347,6 @@ abstract class Node
    *
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    */
-  abstract protected function staticFactory(
-    Collection $collection, $node_id, $recurse = true
-  );
+  abstract protected function staticFactory( Collection $collection, $node_id );
 }

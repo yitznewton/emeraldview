@@ -111,7 +111,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
     // TODO: move this to individual theme files?
     $this->template->addJs( 'libraries/jquery' );
-    $this->template->addJs( "views/$this->theme/js/default" );
+    $this->template->addJs( "views/$this->theme/js/$this->theme" );
 
     // ... and now load the specific view
 

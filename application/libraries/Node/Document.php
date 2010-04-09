@@ -140,15 +140,12 @@ class Node_Document extends Node
   /**
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    * @return Node_Document
    */
-  public static function factory(
-    Collection $collection, $node_id, $recurse = true
-  )
+  public static function factory( Collection $collection, $node_id )
   {
     try {
-      return new Node_Document( $collection, $node_id, $recurse );
+      return new Node_Document( $collection, $node_id );
     }
     catch (InvalidArgumentException $e) {
       return false;
@@ -159,13 +156,10 @@ class Node_Document extends Node
    *
    * @param Collection $collection
    * @param string $node_id
-   * @param boolean $recurse
    * @return Node_Document
    */
-  protected function staticFactory(
-    Collection $collection, $node_id, $recurse = true
-  )
+  protected function staticFactory( Collection $collection, $node_id )
   {
-    return Node_Document::factory( $collection, $node_id, $recurse );
+    return Node_Document::factory( $collection, $node_id );
   }
 }

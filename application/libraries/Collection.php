@@ -240,7 +240,6 @@ class Collection
   /**
    * Returns the subdirectory of GSDLHOME/collect which houses the Collection
    *
-   * @todo move this out of Collection; was rename this getGreenstoneDirName()
    * @return string
    */
   public function getGreenstoneName()

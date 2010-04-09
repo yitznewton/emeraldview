@@ -109,7 +109,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       }
     }
     catch (InvalidArgumentException $e) {
-      // TODO: document what is throwing this
+      // page number requested doesn't fit with number of hits and $per_page
       url::redirect( $collection->getUrl() );
     }
 
