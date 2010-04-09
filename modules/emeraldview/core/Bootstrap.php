@@ -21,7 +21,7 @@ Benchmark::start(SYSTEM_BENCHMARK.'_kohana_loading');
 require SYSPATH.'core/utf8'.EXT;
 require SYSPATH.'core/Event'.EXT;
 // use customized EmeraldView file
-require APPPATH.'core/Kohana'.EXT;
+require MODPATH.'emeraldview/core/Kohana'.EXT;
 
 // Prepare the environment
 Kohana::setup();

@@ -7,30 +7,20 @@
     mkdir( MODPATH ) or die('Incomplete write permissions');
   }
 
-  $local_config_dir = LOCALPATH.'config/';
-
-  if ( ! file_exists( LOCALPATH ) ) {
-    mkdir( LOCALPATH ) or die('Incomplete write permissions');
-  }
-
-  if ( ! file_exists( $local_config_dir ) ) {
-    mkdir( $local_config_dir ) or die('Incomplete write permissions');
-  }
-
   if (!empty($_POST['hostname'])) {
     $config_error = null;
     
     if (preg_match('/[^A-Za-z0-9\-\.]/', $_POST['hostname'])) {
       $config_error = 'Did you really mean to set hostname to '
                       . htmlentities($_POST['hostname']) . '? If so, please '
-                      . 'copy application/config/kohana.php to local/config/'
-                      . 'and set $config[\'site_domain\'] manually.';
+                      . 'set $config[\'site_domain\'] in '
+                      . 'application/config/kohana.php manually.';
     }
     else {
-      $fixed_hostname = trim($_POST['hostname'], '/') . '/';
-      $config_lines = "<?php\n\n"
-                      .'$config[\'site_domain\'] = \'' . $fixed_hostname . '\';';
-      $fh = fopen( $local_config_dir . 'kohana.php', 'wb' );
+      $clean_hostname = trim($_POST['hostname'], '/') . '/';
+      $config_lines = "\n" . '$config[\'site_domain\'] = \''
+                      . $clean_hostname . '\';';
+      $fh = fopen( APPPATH . 'config/kohana.php', 'ab' );
       fwrite( $fh, $config_lines );
     }
     
@@ -45,6 +35,7 @@
            . 'reload the page to see EmeraldView in action.  See '
            . '<a href="http://yitznewton.org/emeraldview/index.php/Customization">Customization</a> '
            . 'for more options.</p>';
+      unlink( DOCROOT.'install'.EXT);
       exit;
     }
   }

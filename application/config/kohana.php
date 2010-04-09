@@ -116,6 +116,7 @@ $config['extension_prefix'] = 'MY_';
  */
 $config['modules'] = array
 (
+  MODPATH.'emeraldview', // EmeraldView core
 	// MODPATH.'auth',      // Authentication
 	// MODPATH.'kodoc',     // Self-generating documentation
 	// MODPATH.'gmaps',     // Google Maps integration
@@ -123,3 +124,5 @@ $config['modules'] = array
 	// MODPATH.'payment',   // Online payments
 	// MODPATH.'unit_test', // Unit testing
 );
+
+$config['site_domain'] = 'emeraldview/';

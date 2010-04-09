@@ -314,7 +314,7 @@ class Kohana {
 			// Add APPPATH as the first path
       // this changed for EmeraldView
 			// self::$include_paths = array(APPPATH);
-			self::$include_paths = array(LOCALPATH, APPPATH, PUBLICPATH);
+			self::$include_paths = array(APPPATH, PUBLICPATH);
 
 			foreach (self::$configuration['core']['modules'] as $path)
 			{
@@ -434,10 +434,6 @@ class Kohana {
 		{
 			// Load the local and application configuration files
 			require APPPATH.'config/kohana'.EXT;
-
-      if ( file_exists( LOCALPATH.'config/kohana'.EXT ) ) {
-        require LOCALPATH.'config/kohana'.EXT;
-      }
 
 			if ( ! isset($config['site_domain']))
 			{
