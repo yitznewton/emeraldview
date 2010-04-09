@@ -108,7 +108,6 @@ class NodePage_DocumentSection extends NodePage
   }
   
   /**
-   * @todo this is expensive; can we optimize?
    * @return string
    */
   public function getUrl()

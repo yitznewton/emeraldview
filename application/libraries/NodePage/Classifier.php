@@ -85,7 +85,7 @@ class NodePage_Classifier extends NodePage
   /**
    * Builds all classifier slugs
    *
-   * @todo add support for custom slugs via emeraldview.yml
+   * @todo add support for custom slugs via emeraldview.yml (#21)
    * @param Collection $collection 
    */
   protected static function buildSlugs( Collection $collection )

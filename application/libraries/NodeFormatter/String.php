@@ -72,7 +72,7 @@ class NodeFormatter_String extends NodeFormatter
   }
 
   /**
-   * @todo incorporate the branch/leaf logic into some prepackaged code for NodeFormatter_Format
+   * @todo refactor the branch/leaf logic such that NodeFormatter_Format can use it (#22)
    * @param integer $mdoffset The index of the value of a classifier's metadata field to use
    * @return string
    */
@@ -182,7 +182,6 @@ class NodeFormatter_String extends NodeFormatter
       }
     }
 
-    // FIXME: a bit hardcoded, no?
     $fields[ count($fields)-1 ] = '[a]' . $fields[ count($fields)-1 ] . '[/a]';
 
     return implode( $separator, $fields );
