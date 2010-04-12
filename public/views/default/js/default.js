@@ -106,9 +106,7 @@ $(document).ready( function() {
 
   if ( $(".browse-tabs").length != 0 ) {
     var spinners = $('.browse-tabs .spinner');
-    spinners.hide();
-    $( spinners.get(0) ).show();
-    
+
     $(".browse-tabs").tabs({
       // callbacks to fire treeview() on trees within AJAX-loaded tabs
       select: function( event, ui ) {
@@ -127,8 +125,22 @@ $(document).ready( function() {
 
         $( ui.tab ).children('.spinner').hide();
       },
-      spinner: '&nbsp;'
+      spinner: '&nbsp;',
+
+      cookie: { expires: 0 }
     });
+
+    var tabs = $('.browse-tabs').tabs();
+    var selected = tabs.tabs('option', 'selected');
+
+    if (selected === 0){
+      spinners.hide();
+      $( spinners.get(0) ).show();
+    }
+    else {
+      spinners.hide();
+      $( spinners.get(selected) ).show();
+    }
   }
 
   if ( $(".browse-tree").length != 0 ) {

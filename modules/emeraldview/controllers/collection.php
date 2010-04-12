@@ -61,6 +61,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
     if ( $node_tree_formatter->isUsingTabs() || $is_ajax ) {
       $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );
       $this->template->addJs(  'libraries/tabs/jquery-ui-1.7.2.js'  );
+      $this->template->addJs(  'libraries/tabs/jquery.cookie.js'  );
     }
 
     if ( $node_tree_formatter->isUsingTree() || $is_ajax ) {
