@@ -125,6 +125,7 @@ class SlugLookup
     if ( ! $stmt || $stmt->fetchColumn() != $elements_string ) {
       // changed metadata settings since last build; backup and rebuild
       copy( $db_filename, $db_filename . '.' . time() );
+      unset($stmt);
       $this->buildFull();
       return;
     }
