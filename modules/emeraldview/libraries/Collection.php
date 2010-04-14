@@ -99,18 +99,12 @@ class Collection
       throw new Exception( $msg );
     }
     
-    try {
-      $this->collectCfg = CollectCfg::factory( $this );
-      $this->infodb     = Infodb::factory( $this );
-      $this->buildCfg   = BuildCfg::factory( $this );
-      $this->slugLookup = new SlugLookup( $this );
+    $this->collectCfg = CollectCfg::factory( $this );
+    $this->infodb     = Infodb::factory( $this );
+    $this->buildCfg   = BuildCfg::factory( $this );
+    $this->slugLookup = new SlugLookup( $this );
 
-      $this->slugLookup->initialize();
-    }
-    catch (Exception $e) {
-      Kohana::log( 'error', $e->getMessage() );
-      throw $e;
-    }
+    $this->slugLookup->initialize();
   }
   
   /**
@@ -332,6 +326,7 @@ class Collection
       return new Collection( $name );
     }
     catch (Exception $e) {
+      Kohana::log( 'error', $e->getMessage() );
       return false;
     }
   }
