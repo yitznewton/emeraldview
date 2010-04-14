@@ -99,12 +99,18 @@ class Collection
       throw new Exception( $msg );
     }
     
-    $this->collectCfg = CollectCfg::factory( $this );
-    $this->infodb     = Infodb::factory( $this );
-    $this->buildCfg   = BuildCfg::factory( $this );
-    $this->slugLookup = new SlugLookup( $this );
+    try {
+      $this->collectCfg = CollectCfg::factory( $this );
+      $this->infodb     = Infodb::factory( $this );
+      $this->buildCfg   = BuildCfg::factory( $this );
+      $this->slugLookup = new SlugLookup( $this );
 
-    $this->slugLookup->initialize();
+      $this->slugLookup->initialize();
+    }
+    catch (Exception $e) {
+      Kohana::log( 'error', $e->getMessage() );
+      throw $e;
+    }
   }
   
   /**
