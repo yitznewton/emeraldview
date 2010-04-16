@@ -145,7 +145,7 @@ class Hit
     $prev_sent_end = strrpos( $text, '. ', $first_hit_reverse_position );
 
     // if the sentence starts near end of text, roll back one sentence
-    while ( strlen( $text ) - $prev_sent_end < 150 ) {
+    while ( $prev_sent_end && strlen( $text ) - $prev_sent_end < 150 ) {
       $prev_sent_reverse_end = 0 - strlen( $text ) + $prev_sent_end - 1;
       $new_prev_sent_end = strrpos( $text, '. ', $prev_sent_reverse_end );
 
