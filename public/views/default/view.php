@@ -50,7 +50,7 @@
 <div id="image-pager">
 
 <h2>
-  Page <?php echo $node->getField( 'Title' ) ?>
+  <?php echo L10n::vsprintf( 'Page %s', array( $node->getField( 'Title' ) ) ) ?>
 </h2>
 
 <form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>">

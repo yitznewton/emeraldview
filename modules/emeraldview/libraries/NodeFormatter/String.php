@@ -78,10 +78,10 @@ class NodeFormatter_String extends NodeFormatter
    */
   public function format( $mdoffset = null )
   {
-    $children = $this->node->getChildren();
+    $child_count = $this->node->getChildCount();
 
     if (
-      $children
+      $child_count
       && ( get_class( $this->node ) == get_class( $this->context->getNode() ) )
     ) {
       $text = $this->branchFormat;
@@ -95,8 +95,8 @@ class NodeFormatter_String extends NodeFormatter
       $text = str_ireplace( '[href]', $this->nodePage->getUrl(), $text );
     }
 
-    if ( $children ) {
-      $text = str_ireplace('[numleafdocs]', count( $children ), $text);
+    if ( $child_count ) {
+      $text = str_ireplace('[numleafdocs]', $child_count, $text);
     }
 
     if ( $this->node instanceof Node_Document ) {

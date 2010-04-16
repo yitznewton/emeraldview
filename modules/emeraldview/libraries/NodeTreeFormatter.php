@@ -83,7 +83,7 @@ class NodeTreeFormatter
    */
   public function render()
   {
-    if ( ! $this->rootNode->hasChildren() ) {
+    if ( ! $this->rootNode->getChildCount() ) {
       return false;
     }
 
@@ -97,7 +97,7 @@ class NodeTreeFormatter
    */
   protected function renderNode( Node $node )
   {
-    if ( ! $node->hasChildren() ) {
+    if ( ! $node->getChildCount() ) {
       return '';
     }
 

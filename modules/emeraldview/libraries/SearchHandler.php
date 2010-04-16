@@ -124,6 +124,7 @@ class SearchHandler
     }
     catch (Zend_Search_Lucene_Exception $e) {
       // malformed search
+      Kohana::log( 'error', $e->getMessage() );
       return array();
     }
 

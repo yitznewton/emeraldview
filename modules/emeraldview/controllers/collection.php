@@ -14,7 +14,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
   
   public function about( $collection_name )
   {
-		$collection = $this->loadCollection( $collection_name );
+    $collection = $this->loadCollection( $collection_name );
 
     if ( ! $collection ) {
       return $this->show404();
@@ -24,11 +24,11 @@ class Collection_Controller extends Emeraldview_Template_Controller
 
     $history = $this->session->getSearchHistory( $collection );
 
-    $this->passDown( 'page_title',      $collection->getDisplayName( $this->language )
-                                                    . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
-    $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->passDown( 'collection_description',     $collection->getDescription( $this->language ) );
-    $this->passDown( 'search_history',     $history );
+    $this->passDown( 'page_title',             $collection->getDisplayName( $this->language )
+                                               . ' | ' . EmeraldviewConfig::get('emeraldview_name') );
+    $this->passDown( 'language_select',        myhtml::language_select( $this->availableLanguages, $this->language ) );
+    $this->passDown( 'collection_description', $collection->getDescription( $this->language ) );
+    $this->passDown( 'search_history',         $history );
   }
   
   public function browse( $collection_name, $classifier_slug )

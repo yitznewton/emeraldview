@@ -92,7 +92,7 @@ class Node_Document extends Node
   public function isPaged()
   {
     if (
-      $this->getRootNode()->hasChildren()
+      $this->getRootNode()->getChildCount()
       && $this->getRootNode()->getField( 'childtype' ) == 'Paged'
     ) {
       return true;

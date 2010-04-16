@@ -255,7 +255,7 @@ abstract class Node
       && $this->data['contains']
     ) {
       // ... node has 'contains' and is not empty
-      $children_names = explode(';', $this->data['contains']);
+      $children_names = explode( ';', $this->getField( 'contains' ) );
 
       $children = array();
       foreach ($children_names as $child) {
@@ -270,17 +270,20 @@ abstract class Node
   }
 
   /**
-   * Whether the current Node has child Nodes
+   * The number of child Nodes that this Node posesses
    *
-   * @return boolean
+   * @return integer
    */
-  public function hasChildren()
+  public function getChildCount()
   {
-    if ( $this->children || $this->getField( 'contains' ) ) {
-      return true;
+    if ( $this->children ) {
+      return count( $this->children );
+    }
+    elseif ( $this->getField( 'contains' ) ) {
+      return count( explode( ';', $this->getField( 'contains') ) );
     }
     else {
-      return false;
+      return 0;
     }
   }
 
