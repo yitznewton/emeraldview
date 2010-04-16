@@ -104,9 +104,13 @@ class Infodb_Sqlite extends Infodb
    */
   public function getNode( $id )
   {
-    if ( $this->collection->getConfig( 'preload_all_nodes' ) !== false ) {
+    /**
+     * Removed: bad with large collections, and the problem this was made
+     * to fix may be addressed by r181:b959f8f55648
+
+    if ( $this->collection->getConfig( 'preload_all_nodes' ) === true ) {
       // this speeds up node-heavy pages like search results and classifiers,
-      // but with a memory cost
+      // but with a memory cost; bad for large collections
       $this->getAllNodes();
       
       if ( isset( $this->allNodes[ $id ] ) ) {
@@ -116,6 +120,8 @@ class Infodb_Sqlite extends Infodb
         return false;
       }
     }
+     *
+     */
 
     $q = 'SELECT value FROM data WHERE key=?';
     $stmt = $this->pdo->prepare( $q );
