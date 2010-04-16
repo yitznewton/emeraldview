@@ -116,9 +116,13 @@ class SlugLookup
       $stmt = $this->pdo->query( $query );
     }
     catch (PDOException $e) {
-      // database corrupt or absent; do full build
+      $msg = 'Slug database for ' . $this->collection->getName() . ' absent '
+             . 'or corrupt; doing buildFull()';
+      Kohana::log( 'alert', $msg );
+
       copy( $db_filename, $db_filename . '.' . time() );
       $this->buildFull();
+      
       return;
     }
 
@@ -136,7 +140,10 @@ class SlugLookup
       $stmt = $this->pdo->query( $query );
     }
     catch (PDOException $e) {
-      // database corrupt or absent; full build
+      $msg = 'Slug database for ' . $this->collection->getName() . ' absent '
+             . 'or corrupt; doing buildFull()';
+      Kohana::log( 'alert', $msg );
+
       $this->buildFull();
       return;
     }
@@ -277,7 +284,10 @@ EOF;
         $stmt->execute( array( $node->getId(), $slug ) );
       }
       catch (Exception $e) {
-        Log::add( 'error', 'insert into slug database failed' );
+        $msg = 'Insert into slug database for ' . $this->collection->getName()
+               . ' failed';
+        Kohana::log( 'error', $msg );
+        
         throw $e;
       }
 
