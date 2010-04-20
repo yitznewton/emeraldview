@@ -77,11 +77,11 @@
 
 <?php endif; ?>
 
-<?php if ($collection_description): ?>
-  <div id="about-description">
+<div id="about-description">
+  <?php if ($collection_description): ?>
     <h2><?php echo L10n::_('About this collection') ?></h2>
     <p><?php echo $collection_description ?></p>
-  </div>
-<?php endif; ?>
+  <?php endif; ?>
+</div>
 
 </div>
