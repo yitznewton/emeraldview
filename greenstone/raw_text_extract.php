@@ -1,5 +1,23 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.org/emeraldview/index.php?title=License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to yitznewton@hotmail.com so we can send you a copy immediately.
+ *
+ * @version 0.2.0-b4
+ * @package greenstone
+ *
+ * This script extracts raw text from Greenstone documents for processing by
+ * EmeraldView's search snippet code
+ */
 if ( $argc != 3 ) {
   echo 'Usage: raw_text_extract.php build_directory index_sub_directory' . "\n";
   exit(1);

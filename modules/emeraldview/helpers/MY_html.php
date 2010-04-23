@@ -12,7 +12,7 @@
  * obtain it through the world-wide-web, please send an email
  * to yitznewton@hotmail.com so we can send you a copy immediately.
  *
- * @version 0.2.0b1
+ * @version 0.2.0-b4
  * @package helpers
  */
 /**

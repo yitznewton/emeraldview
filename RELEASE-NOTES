@@ -1,17 +1,17 @@
 EmeraldView
-version 0.2.0-b3 (third beta release)
+version 0.2.0-b4 (fourth beta release)
 http://yitznewton.org/emeraldview/
 
-Changes from b2
-* fixed bugs in installation script
-* added support for tab-based HList classifier formatting
-* completed implementation of mdoffset for correct display of classifer
-  metadata where a node has multiple values for one field
-* improved error redirecting and forwarding
-* optimized Node building (necessary for building Node trees and using
-  NodeTreeFormatter)
-* fixed bug in parsing quoted search terms
-* redesigned search snippet backend to use flat files instead of storing
-  raw fulltext in the Lucene index
-* various other bugfixes
+Changes from b3
+* move EmeraldView code into a module; allow for local overloading of
+  EmeraldView classes in /application
+* added AJAX option for tabbed (HList) classifier nodes
+* added search history to /about pages
+* refactored loading of Views in controllers
+* added root node to document table of contents in /view
+* fix bugs in SlugLookup build
+* add cookie support to jQuery tabview; "remember" user's last tab viewed
+* improve exception logging coverage
+* various bugfixes, refactoring, view formatting tweaks
 
+* update Zend_Search_Lucene to 1.10.3
