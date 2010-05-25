@@ -151,5 +151,7 @@ class NodePage_Classifier extends NodePage
         return $node->getNodePage();
       }
     }
+
+    return false;
   }
 }

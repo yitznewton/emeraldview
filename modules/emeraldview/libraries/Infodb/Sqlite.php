@@ -267,6 +267,10 @@ class Infodb_Sqlite extends Infodb
 
     $ret = array();
 
+    while ( $count > count( $leaf_nodes ) ) {
+      $count--;
+    }
+
     for ( $i = 0; $i < $count; $i++ ) {
       $index = rand( 0, count( $leaf_nodes ) - 1 );
       $ret[] = $leaf_nodes[ $index ];
