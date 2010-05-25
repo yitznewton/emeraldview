@@ -83,6 +83,24 @@ class NodePage_Classifier extends NodePage
   }
 
   /**
+   * Returns NodePage_DocumentSections for randomly-selected leaf Nodes
+   *
+   * @param integer $count
+   * @return array
+   */
+  public function getRandomLeafNodePages( $count = 1 )
+  {
+    $nodes = $this->node->getRandomLeafNodes( $count );
+    $pages = array();
+    
+    foreach ( $nodes as $node ) {
+      $pages[] = $node->getNodePage();
+    }
+
+    return $pages;
+  }
+
+  /**
    * Builds all classifier slugs
    *
    * @todo add support for custom slugs via emeraldview.yml (#21)

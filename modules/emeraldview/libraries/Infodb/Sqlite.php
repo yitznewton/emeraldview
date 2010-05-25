@@ -217,7 +217,7 @@ class Infodb_Sqlite extends Infodb
     $params = array(
       strlen( $node->getRootId() ),
       $node->getRootId(),
-      "%<Title>$title%"
+      "%<Title>$title%",
     );
 
     $query  = 'SELECT key, value FROM data '
@@ -228,6 +228,51 @@ class Infodb_Sqlite extends Infodb
     $stmt->execute( $params );
 
     return $stmt->fetchColumn();
+  }
+
+  /**
+   * @param Node_Classifier $node
+   * @param integer $count
+   * @return array
+   */
+  public function getRandomLeafNodeIds( Node_Classifier $node, $count = 1 )
+  {
+    if ( ! is_int ( $count ) || $count < 1 ) {
+      $msg = 'Second argument must be an integer greater than zero';
+      throw new InvalidArgumentException( $msg );
+    }
+
+    $params = array(
+      strlen( $node->getRootId() ) + 1,
+      $node->getRootId() . '.',
+    );
+    
+    $query = 'SELECT value FROM data WHERE SUBSTR(key, 1, ?)=?';
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute( $params );
+
+    $leaf_nodes = array();
+
+    while ( $blob = $stmt->fetchColumn() ) {
+      preg_match( '/ (?<=contains\\>) [^\\<\\s]+ /x', $blob, $contains );
+
+      if ( isset( $contains[0] ) ) {
+        preg_match_all( '/ (?:HASH|D) [^;]+ /x', $contains[0], $current_leaf_nodes );
+        
+        if ( isset( $current_leaf_nodes[0] ) ) {
+          $leaf_nodes = array_merge( $leaf_nodes, $current_leaf_nodes[0] );
+        }
+      }
+    }
+
+    $ret = array();
+
+    for ( $i = 0; $i < $count; $i++ ) {
+      $index = rand( 0, count( $leaf_nodes ) - 1 );
+      $ret[] = $leaf_nodes[ $index ];
+    }
+
+    return $ret;
   }
 
   /**

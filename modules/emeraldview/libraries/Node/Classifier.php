@@ -62,6 +62,24 @@ class Node_Classifier extends Node
   }
 
   /**
+   * Returns randomly-selected leaf Node_Documents
+   *
+   * @param integer $count
+   * @return array
+   */
+  public function getRandomLeafNodes( $count = 1 )
+  {
+    $node_ids = $this->collection->getInfodb()->getRandomLeafNodeIds( $this, $count );
+    $nodes    = array();
+
+    foreach ( $node_ids as $id ) {
+      $nodes[] = Node_Document::factory( $this->collection, $id );
+    }
+
+    return $nodes;
+  }
+
+  /**
    * @param string $node_id
    * @return Node
    */
