@@ -85,6 +85,15 @@ abstract class Infodb
    * @return string
    */
   abstract public function getCousinIdByTitle( Node_Document $node, $title );
+  /**
+   * Returns ids of a specified number of randomly-selected leaf Node_Documents
+   * for the given Node_Classifier
+   *
+   * @param Node_Classifier $node
+   * @param integer $count
+   * @return array
+   */
+  abstract public function getRandomLeafNodeIds( Node_Classifier $node );
 
   /**
    * @param Collection $collection
