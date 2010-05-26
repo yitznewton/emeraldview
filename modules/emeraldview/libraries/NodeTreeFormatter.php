@@ -163,8 +163,17 @@ class NodeTreeFormatter
       }
     }
 
-    return '<div class="browse-tabs"><ul>' . "\n"
-           . $top_html . "</ul>\n" . $bottom_html . '</div>' . "\n";
+    $dir = strtolower( $node->getNodePage()->getConfig('dir') );
+
+    $attr = array( 'class' => 'browse-tabs ' . $dir );
+
+    if ( $dir ) {
+      $attr[ 'dir' ] = $dir;
+    }
+
+    $inner_html = "<ul>\n$top_html\n</ul>\n$bottom_html\n</div>\n";
+
+    return myhtml::element( 'div', $inner_html, $attr );
   }
 
   /**
@@ -177,14 +186,15 @@ class NodeTreeFormatter
     $this->isUsingTree = true;
 
     $children = $node->getChildren();
-    $output   = '<ul class="browse-tree">' . "\n";
+
+    $inner_html = '';
 
     if ( $this->rootNode instanceof Node_Document ) {
       $node_page = $this->rootNode->getNodePage();
 
       if ( $node_page->getHTML() ) {
         $url = $node_page->getUrl();
-        $output .= "<li><a href=\"$url\">" . L10n::_('Title page') . "</a></li>\n";
+        $inner_html .= "<li><a href=\"$url\">" . L10n::_('Title page') . "</a></li>\n";
       }
     }
 
@@ -193,12 +203,18 @@ class NodeTreeFormatter
       $mdoffset = isset( $mdoffsets[ $i ] ) ? $mdoffsets[ $i ] : null;
 
       $recurse = ( get_class( $node ) == get_class( $child ) );
-      $output .= '<li>' . $this->formatNode( $child, $mdoffset, $recurse ) . "</li>\n";
+      $inner_html .= '<li>' . $this->formatNode( $child, $mdoffset, $recurse ) . "</li>\n";
     }
 
-    $output .= "</ul>\n";
+    $dir = strtolower( $node->getNodePage()->getConfig('dir') );
 
-    return $output;
+    $attr = array( 'class' => 'browse-tree ' . $dir );
+
+    if ( $dir ) {
+      $attr[ 'dir' ] = $dir;
+    }
+
+    return myhtml::element( 'ul', $inner_html, $attr );
   }
 
   /**

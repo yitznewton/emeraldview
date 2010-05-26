@@ -37,9 +37,10 @@ class NodePage_Classifier extends NodePage
    * specified in config/emeraldview.yml
    *
    * @param string $subnode
-   * @return array
+   * @param mixed $default
+   * @return mixed
    */
-  public function getConfig( $subnode = null )
+  public function getConfig( $subnode = null, $default = null )
   {
     $node = 'classifiers.' . $this->getId();
     
@@ -47,7 +48,7 @@ class NodePage_Classifier extends NodePage
       $node .= '.' . $subnode;
     }
     
-    return $this->getCollection()->getConfig( $node );
+    return $this->getCollection()->getConfig( $node, $default );
   }
 
   /**

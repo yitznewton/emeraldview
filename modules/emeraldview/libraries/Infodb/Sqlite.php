@@ -231,6 +231,40 @@ class Infodb_Sqlite extends Infodb
   }
 
   /**
+   * @param string $element
+   * @param integer $count
+   * @return array
+   */
+  public function getRandomLeafNodeIdsHavingMetadata( $element, $count = 1 )
+  {
+    if ( ! is_int ( $count ) || $count < 1 ) {
+      $msg = 'Second argument must be an integer greater than zero';
+      throw new InvalidArgumentException( $msg );
+    }
+
+    $element_mask = '%<' . $element . '>%';
+
+    $query = 'SELECT key FROM data WHERE value LIKE ?';
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( array( $element_mask ) );
+
+    $node_ids = $stmt->fetchAll( PDO::FETCH_COLUMN, 0 );
+
+    $ret = array();
+
+    while ( $count > count( $node_ids ) ) {
+      $count--;
+    }
+
+    for ( $i = 0; $i < $count; $i++ ) {
+      $index = rand( 0, count( $node_ids ) - 1 );
+      $ret[] = $node_ids[ $index ];
+    }
+
+    return $ret;
+  }
+
+  /**
    * @param Node_Classifier $node
    * @param integer $count
    * @return array

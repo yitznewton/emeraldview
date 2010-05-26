@@ -86,6 +86,15 @@ abstract class Infodb
    */
   abstract public function getCousinIdByTitle( Node_Document $node, $title );
   /**
+   * Returns ids of a specified number of randomly-selected Nodes
+   * which have at least one instance of the specified metadata element
+   *
+   * @param string $element
+   * @param integer $count
+   * @return array
+   */
+  abstract public function getRandomLeafNodeIdsHavingMetadata( $element, $count = 1 );
+  /**
    * Returns ids of a specified number of randomly-selected leaf Node_Documents
    * for the given Node_Classifier
    *
@@ -93,7 +102,7 @@ abstract class Infodb
    * @param integer $count
    * @return array
    */
-  abstract public function getRandomLeafNodeIds( Node_Classifier $node );
+  abstract public function getRandomLeafNodeIds( Node_Classifier $node, $count = 1 );
 
   /**
    * @param Collection $collection

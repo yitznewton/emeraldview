@@ -48,6 +48,8 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       $this->language = EmeraldviewConfig::get('default_language', 'en');
     }
 
+    $this->passDown( 'language', $this->language );
+
     $this->loadGettextDomain( $this->language );
 
     Event::add_before(
@@ -102,8 +104,6 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     else {
       $this->template = new View( $this->theme . '/template' );
     }
-
-    $this->template->addCss( 'css/reset' );
 
     if ( L10n::_('ltr') == 'rtl' ) {
       $this->template->addCss( "views/$this->theme/css/rtl" );

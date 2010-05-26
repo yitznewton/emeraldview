@@ -315,6 +315,26 @@ class Collection
     
     return $this->classifiers = $classifiers;
   }
+
+  /**
+   * Returns an array of randomly-selected nodes which have at least one
+   * instance of the specified metadata element
+   *
+   * @param string $element
+   * @param integer $count
+   * @return array
+   */
+  public function getRandomNodesHavingMetadata( $element, $count = 1 )
+  {
+    $node_ids = $this->getInfodb()->getRandomLeafNodeIdsHavingMetadata( $element, $count );
+    $nodes    = array();
+
+    foreach ( $node_ids as $id ) {
+      $nodes[] = Node_Document::factory( $this, $id );
+    }
+
+    return $nodes;
+  }
   
   /**
    * @param string $name
