@@ -9,7 +9,7 @@
 </ul>
 
 <h1>
-  <?php printf( L10n::_('Browse by %s'), L10n::_( $page->getTitle() ) )?>
+  <?php printf( L10n::vsprintf('Browse by %s', array($page->getTitle()), true ) ) ?>
 </h1>
 
 <?php echo $tree ?>

@@ -74,7 +74,7 @@ class L10n
     $format = L10n::_( $format );
 
     if ( $translate_args ) {
-      array_walk( $args, array( 'L10n', '_' ) );
+      $args = array_map( array( 'L10n', '_' ), $args );
     }
 
     return vsprintf( $format, $args );

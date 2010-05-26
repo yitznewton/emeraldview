@@ -42,15 +42,11 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     }
 
     if ($this->session->get('language')) {
-      $this->language = $this->session->get('language');
+      $this->setLanguage( $this->session->get('language') );
     }
     else {
-      $this->language = EmeraldviewConfig::get('default_language', 'en');
+      $this->setLanguage( EmeraldviewConfig::get('default_language', 'en') );
     }
-
-    $this->passDown( 'language', $this->language );
-
-    $this->loadGettextDomain( $this->language );
 
     Event::add_before(
       'system.post_controller',
@@ -133,18 +129,22 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       return false;
     }
     
+    if ( $this->collection->getConfig('theme') ) {
+      $this->setTheme( $this->collection->getConfig('theme') );
+    }
+    
     // override global defaults if collection config values set
     if (
       ! $this->session->get('language')
       && $this->collection->getConfig('default_language')
     ) {
-      $this->language = $this->collection->getConfig('default_language');
+      $this->setLanguage( $this->collection->getConfig('default_language') );
     }
-    
-    if ( $this->collection->getConfig('theme') ) {
-      $this->setTheme( $this->collection->getConfig('theme') );
+    else {
+      // re-set to catch theme changes for locale
+      $this->setLanguage( $this->language );
     }
-    
+
     $this->passDown( 'collection', $this->collection );
     $this->passDown( 'collection_display_name',    $this->collection->getDisplayName( $this->language ) );
 
@@ -188,6 +188,14 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
     return $this->availableLanguages = $languages;
   }
 
+  protected function setLanguage( $language )
+  {
+    $this->language = $language;
+    $this->passDown( 'language', $this->language );
+    
+    $this->loadGettextDomain( $language );
+  }
+
   protected function loadGettextDomain( $language, $domain_name = null )
   {
     $mofile = realpath( PUBLICPATH . 'views/' . $this->theme . '/locale/'
@@ -227,5 +235,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
   {
     $this->template->addCss( "views/$this->theme/css/style" );
     $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
+    $this->template->addCss( "views/$this->theme/css/$this->language" );
+    $this->template->addCss( "views/$this->theme/css/$this->language-print", 'print' );
   }
 }

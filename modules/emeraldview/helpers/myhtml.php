@@ -87,6 +87,36 @@ class myhtml_Core {
   }
 
   /**
+   * Returns the URL for the current page, adding a query parameter for
+   * interface language
+   *
+   * @param string $language_code The language to request
+   * @return string
+   */
+  public static function language_url( $language_code )
+  {
+    if ( ! is_string( $language_code ) ) {
+      throw new InvalidArgumentException( 'Argument must be a string' );
+    }
+
+    $url = url::site( url::current( true ) );
+    $parsed_url = parse_url( $url );
+
+    $query = isset( $parsed_url[ 'query' ] ) ? $parsed_url[ 'query' ] : '';
+
+    if ( ! $query ) {
+      return $url . '?language=' . $language_code;
+    }
+    elseif( preg_match( '/&?language=/', $query ) ) {
+      $ptn = '/(&?language=)[^&]*/';
+      return preg_replace( $ptn, '\\1'.$language_code, $url );
+    }
+    else {
+      return $url . '&language=' . $language_code;
+    }
+  }
+
+  /**
    * Returns an HTML <select> element corresponding to given interface languages
    *
    * @param array $languages An associative array of language keys and values
