@@ -85,7 +85,7 @@ class SearchHandler
    */
   public function __construct( array $params, Collection $collection )
   {
-    $this->params = $params;
+    $this->params = $this->filterParams( $params );
     $this->collection = $collection;
     $this->queryBuilder = QueryBuilder::factory( $params, $collection );
     $this->boundariesPattern = $collection->getConfig( 'boundaries_pattern', SearchHandler::BOUNDARIES_PATTERN_ASCII );
@@ -145,6 +145,18 @@ class SearchHandler
   public function getParams()
   {
     return $this->params;
+  }
+
+  /**
+   * Returns an array of query parameters with irrelevant ones filtered out -
+   * prepares them for search history processing
+   *
+   * @param array $params An array of raw parameters
+   * @return array
+   */
+  protected function filterParams( array $params )
+  {
+    throw new Exception('write me');
   }
 
   /**
