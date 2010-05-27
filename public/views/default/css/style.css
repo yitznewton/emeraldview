@@ -182,6 +182,27 @@ ul#browse-tree{
   direction: ltr;
 }
 
+ul.browse-tree.rtl li, .browse-tabs.rtl ul.browse-tree li{
+  background-image: url(../../../images/treeview-default-line-rtl.gif);
+  background-position: right 0;
+  padding: 3px 19px 3px 0;
+}
+
+ul.browse-tree.rtl li.last, .browse-tabs.rtl ul.browse-tree li.last{
+  background-position: right -1766px;
+}
+
+.browse-tabs.rtl .ui-tabs-nav li{
+  float: right;
+  margin: 0 0 -1px 0.2em;
+}
+
+#sidebar ul.rtl li{
+  background-position: right 7px;
+  padding-left: 0;
+  padding-right: 10px;
+}
+
 ul#toc-tree{
   font-size: 0.8em;
   direction: ltr;

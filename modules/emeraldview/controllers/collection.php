@@ -9,7 +9,6 @@ class Collection_Controller extends Emeraldview_Template_Controller
     $this->passDown( 'collections', Collection::getAllAvailable() );
 		$this->passDown( 'page_title',      EmeraldviewConfig::get('emeraldview_name') );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->passDown( 'language',        $this->language );
   }
   
   public function about( $collection_name )

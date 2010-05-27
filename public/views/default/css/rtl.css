@@ -17,3 +17,18 @@
 #search-history-container{
   float: right;
 }
+
+ul.browse-tree li, .browse-tabs ul.browse-tree li{
+  background-image: url(../../../images/treeview-default-line-rtl.gif);
+  background-position: right 0;
+  padding: 3px 19px 3px 0;
+}
+
+ul.browse-tree li.last, .browse-tabs ul.browse-tree li.last{
+  background-position: right -1766px;
+}
+
+.browse-tabs .ui-tabs-nav li{
+  float: right;
+  margin: 0 0 -1px 0.2em;
+}
