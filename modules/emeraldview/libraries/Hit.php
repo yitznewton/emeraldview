@@ -26,7 +26,7 @@
  */
 class Hit
 {
-  // FIXME: this being here is part of the temporary centralization this type of
+  // TODO: this being here is part of the temporary centralization this type of
   // functionality before we actually factor the snippet generation and
   // highlighting in a sensible way
   const HIT_PATTERN = '/(?<=[^_\pL\pN]|^)(%s)(?=[^_\pL\pN]|$)/iu';  // Unicode
@@ -138,7 +138,12 @@ class Hit
     $pattern = sprintf( Hit::HIT_PATTERN, $term_pattern );
     preg_match( $pattern, $text, $matches, PREG_OFFSET_CAPTURE );
     
-    $first_hit_position = $matches[1][1];
+    if ( $matches ) {
+      $first_hit_position = $matches[1][1];
+    }
+    else {
+      $first_hit_position = 0;
+    }
 
     // take snippet, padding around the term match
     $first_hit_reverse_position = 0 - strlen( $text ) + $first_hit_position;

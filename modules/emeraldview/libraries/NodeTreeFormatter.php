@@ -206,7 +206,12 @@ class NodeTreeFormatter
       $inner_html .= '<li>' . $this->formatNode( $child, $mdoffset, $recurse ) . "</li>\n";
     }
 
-    $dir = strtolower( $node->getNodePage()->getConfig('dir') );
+    if ( $node instanceof Node_Classifier ) {
+      $dir = strtolower( $node->getNodePage()->getConfig('dir') );
+    }
+    else {
+      $dir = null;
+    }
 
     $attr = array( 'class' => 'browse-tree ' . $dir );
 
