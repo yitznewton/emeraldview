@@ -101,10 +101,6 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
       $this->template = new View( $this->theme . '/template' );
     }
 
-    if ( L10n::_('ltr') == 'rtl' ) {
-      $this->template->addCss( "views/$this->theme/css/rtl" );
-    }
-
     // TODO: move this to individual theme files?
     $this->template->addJs( 'libraries/jquery' );
     $this->template->addJs( "views/$this->theme/js/$this->theme" );
@@ -235,6 +231,12 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
   {
     $this->template->addCss( "views/$this->theme/css/style" );
     $this->template->addCss( "views/$this->theme/css/style-print", 'print' );
+
+    if ( L10n::_('ltr') == 'rtl' ) {
+      $this->template->addCss( "views/$this->theme/css/rtl" );
+      $this->template->addCss( "views/$this->theme/css/rtl-print", 'print' );
+    }
+
     $this->template->addCss( "views/$this->theme/css/$this->language" );
     $this->template->addCss( "views/$this->theme/css/$this->language-print", 'print' );
   }

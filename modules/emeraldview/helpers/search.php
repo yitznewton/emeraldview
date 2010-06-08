@@ -388,6 +388,11 @@ EOF;
         'li', html::anchor( $hits_page->links->last, '>>' )
       );
     }
+    else {
+      $pages .= myhtml::element(
+        'li', '>>'
+      );
+    }
     
     if ($pages) {
       return myhtml::element(
