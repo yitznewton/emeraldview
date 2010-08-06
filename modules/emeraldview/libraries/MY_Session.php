@@ -66,6 +66,10 @@ class Session extends Session_Core
     $collection = $search_handler->getCollection();
     $params     = $search_handler->getParams();
     $history    = $this->getSearchHistory( $collection );
+
+    if ( ! $params ) {
+      return $history;
+    }
     
     $already_there = array_search( $params, $history );
     

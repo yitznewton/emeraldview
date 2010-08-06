@@ -156,7 +156,17 @@ class SearchHandler
    */
   protected function filterParams( array $params )
   {
-    throw new Exception('write me');
+    $valid_params = array(
+      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3',
+    );
+    
+    foreach( $params as $key => $value ) {
+      if ( ! in_array( $key, $valid_params ) ) {
+        unset( $params[ $key ] );
+      }
+    }
+
+    return $params;
   }
 
   /**
