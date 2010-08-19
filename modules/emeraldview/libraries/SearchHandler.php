@@ -152,14 +152,17 @@ class SearchHandler
    * prepares them for search history processing
    *
    * @param array $params An array of raw parameters
+   * @param array $valid_params An array of parameters to allow
    * @return array
    */
-  protected function filterParams( array $params )
+  protected function filterParams( array $params, array $valid_params = null )
   {
-    $valid_params = array(
-      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3',
-    );
-    
+    if ( ! $valid_params ) {
+      $valid_params = array(
+        'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3',
+      );
+    }
+
     foreach( $params as $key => $value ) {
       if ( ! in_array( $key, $valid_params ) ) {
         unset( $params[ $key ] );
