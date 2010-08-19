@@ -86,21 +86,20 @@ class NodeFormatter
    */
   public static function factory( Node $node, $context )
   {
-    switch ( get_class( $context ) ) {
-      case 'NodePage_Classifier':
-        $prefix = 'classifiers.' . $context->getId() . '.';
-        break;
-        
-      case 'NodePage_DocumentSection':
-        $prefix = 'document_tree_';
-        break;
-      
-      case 'SearchHandler':
-        $prefix = 'search_results_';
-        break;
-      
-      default:
-        throw new InvalidArgumentException( 'Invalid $caller' );
+    // changed from switch ( get_class() ) to accomodate custom
+    // application-level subclasses of SearchHandler
+
+    if ( $context instanceof NodePage_Classifier ) {
+      $prefix = 'classifiers.' . $context->getId() . '.';
+    }
+    elseif ( $context instanceof NodePage_DocumentSection ) {
+      $prefix = 'document_tree_';
+    }
+    elseif ( $context instanceof SearchHandler ) {
+      $prefix = 'search_results_';
+    }
+    else{
+      throw new InvalidArgumentException( 'Invalid $caller' );
     }
 
     $format_string = $context->getCollection()->getConfig( $prefix . 'format' );
