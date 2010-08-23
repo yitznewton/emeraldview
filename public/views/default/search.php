@@ -58,15 +58,9 @@ else {
 <?php endif; ?>
 
 <div id="search-results-container">
-  <?php if ($hits_page->hits): ?>
-    <div id="search-results-count">
-      <?php echo search::result_summary( $hits_page, $search_handler ) ?>
-    </div>
-  <?php else: ?>
-    <div id="search-results-fail">
-      No results were found matching your search.
-    </div>
-  <?php endif; ?>
+  <div id="search-results-count">
+    <?php echo search::result_summary( $hits_page, $search_handler ) ?>
+  </div>
 
   <?php if ($hits_page->hits): ?>
   <ol id="search-hits" start="<?php echo $hits_page->firstHit ?>">

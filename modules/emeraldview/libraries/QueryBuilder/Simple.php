@@ -39,6 +39,8 @@ class QueryBuilder_Simple extends QueryBuilder
     // run it against TX at regular boost, plus title with extra boost
     $query = Zend_Search_Lucene_Search_QueryParser::parse( $querystring );
     
+    // FIXME: $title_indexes doesn't seem to work, at least with
+    // queries like tidh*
     $title_indexes = array();
     
     foreach ( $this->collection->getIndexes() as $key => $index ) {

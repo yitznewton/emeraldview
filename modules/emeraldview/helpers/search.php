@@ -307,17 +307,23 @@ EOF;
    */
   public static function result_summary( HitsPage $hits_page, SearchHandler $search_handler )
   {
-    $format = 'Results <strong>%d</strong> - <strong>%d</strong> of '
-              . '<strong>%d</strong> for <strong>%s</strong>';
+    if ( $hits_page->hits ) {
+      $format = 'Results <strong>%d</strong> - <strong>%d</strong> of '
+                . '<strong>%d</strong> for <strong>%s</strong>';
+
+      $args = array(
+        $hits_page->firstHit, $hits_page->lastHit,
+        $hits_page->totalHitCount,
+        $search_handler->getQueryBuilder()->getDisplayQuery(),
+      );
+    }
+    else {
+      $format = 'No results were found for your search '
+                . '<strong>%s</strong>.';
+      $args = array( $search_handler->getQueryBuilder()->getDisplayQuery() );
+    }
     
-    $args = array(
-      $hits_page->firstHit, $hits_page->lastHit,
-      $hits_page->totalHitCount, $search_handler->getQueryBuilder()->getDisplayQuery(),
-    );
-    
-    $summary = L10n::vsprintf( $format, $args );
-    
-    return $summary;
+    return L10n::vsprintf( $format, $args );
   }
 
   /**
