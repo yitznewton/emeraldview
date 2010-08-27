@@ -98,22 +98,26 @@ abstract class QueryBuilder
         }
       }
     }
-    elseif ( ! empty( $this->params['q'] ) ) {
-      $pattern = '/ " (?<=[^_\pL\pN]) (.+?) (?=[^_\pL\pN]) " | [^"\s]+ /ux';
-      preg_match_all( $pattern, $this->params['q'], $term_matches );
+    else {
+      $to_check = array( 'q', 'q1', 'q2', 'q3' );
+      $terms    = array();
+      $pattern  = '/ " (?<=[^_\pL\pN]) (.+?) (?=[^_\pL\pN]) " | [^"\s]+ /ux';
+      
+      foreach ( $to_check as $key ) {
+        if ( isset( $this->params[ $key ] ) ) {
+          preg_match_all( $pattern, $this->params[ $key ], $term_matches );
 
-      for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {
-        if ( $term_matches[1][$i] ) {
-          // matched a quoted segment
-          $terms[] = $term_matches[1][$i];
-        }
-        else {
-          $terms[] = $term_matches[0][$i];
+          for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {
+            if ( $term_matches[1][$i] ) {
+              // matched a quoted segment
+              $terms[] = $term_matches[1][$i];
+            }
+            else {
+              $terms[] = $term_matches[0][$i];
+            }
+          }
         }
       }
-    }
-    else {
-      throw new Exception( 'Could not get raw query terms' );
     }
 
     return $this->rawTerms = $terms;

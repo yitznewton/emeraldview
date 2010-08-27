@@ -157,7 +157,7 @@ class SearchHandler
   protected function filterParams( array $params )
   {
     $valid_params = array(
-      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3',
+      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3', 'b1', 'b2', 'b3',
     );
 
     foreach( $params as $key => $value ) {
