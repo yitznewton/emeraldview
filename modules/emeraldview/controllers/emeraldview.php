@@ -1,6 +1,6 @@
 <?php
 
-class Collection_Controller extends Emeraldview_Template_Controller
+class Emeraldview_Controller extends Emeraldview_Template_Controller
 {
 	public function index()
   {
@@ -94,7 +94,7 @@ class Collection_Controller extends Emeraldview_Template_Controller
       $page_number = 1;
     }
 
-    $search_handler = new SearchHandler(
+    $search_handler = SearchHandler::factory(
       $this->input->get(), $collection
     );
 

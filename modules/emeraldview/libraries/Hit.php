@@ -59,10 +59,10 @@ class Hit
   protected $lucene_hit;
 
   /**
-   * @param Zend_Search_Lucene_Search_QueryHit $lucene_hit
    * @param SearchHandler $search_handler 
+   * @param Zend_Search_Lucene_Search_QueryHit $lucene_hit
    */
-  public function __construct( Zend_Search_Lucene_Search_QueryHit $lucene_hit, SearchHandler $search_handler )
+  public function __construct( SearchHandler $search_handler, Zend_Search_Lucene_Search_QueryHit $lucene_hit )
   {
     $this->search_handler = $search_handler;
     $this->lucene_hit = $lucene_hit;

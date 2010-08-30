@@ -1,8 +1,8 @@
 <?php
 
-$config['_default']              = 'collection';
+$config['_default']              = 'emeraldview';
 $config['ajax/(.+)/browse/(.+)'] = 'ajax/browse/$1/$2';
-$config['(.+)/browse/(.+)']      = 'collection/browse/$1/$2';
-$config['(.+)/view/(.+)']        = 'collection/view/$1/$2';
-$config['(.+)/search']           = 'collection/search/$1';
-$config['([^/]+)']               = 'collection/about/$1';
+$config['(.+)/browse/(.+)']      = 'emeraldview/browse/$1/$2';
+$config['(.+)/view/(.+)']        = 'emeraldview/view/$1/$2';
+$config['(.+)/search']           = 'emeraldview/search/$1';
+$config['([^/]+)']               = 'emeraldview/about/$1';
