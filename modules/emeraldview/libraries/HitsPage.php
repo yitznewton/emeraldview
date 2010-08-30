@@ -26,12 +26,6 @@
 class HitsPage
 {
   /**
-   * Total number of hits that the Lucene library returned for the request
-   *
-   * @var integer
-   */
-  public $totalHitCount;
-  /**
    * An object of URLs corresponding to various pages of hits
    *
    * @var HitsPageLinks
@@ -86,7 +80,7 @@ class HitsPage
    * @param integer $page_number
    * @param integer $per_page 
    */
-  public function __construct( SearchHandler $search_handler, $page_number, $per_page = 20 )
+  public function __construct( SearchHandler $search_handler, $page_number = 1, $per_page = 20 )
   {
     $this->searchHandler = $search_handler;
 
@@ -100,19 +94,20 @@ class HitsPage
     
     // calculate page breakdown
 
-    $this->perPage = $per_page;
+    $this->perPage  = $per_page;
+    $this->firstHit = ( $page_number-1 ) * $per_page + 1;
 
-    $all_hits = $search_handler->execute();
-    
-    $this->totalHitCount = count( $all_hits );
+    $this->hits = $search_handler->execute( $this->perPage, $this->firstHit );
 
-    if ( $this->totalHitCount === 0 ) {
+    $total_hit_count = $search_handler->getTotalHitCount();
+
+    if ( $total_hit_count === 0 ) {
       $this->totalPages = 0;
       $this->hits = array();
       $this->links = false;
     }
     else {
-      $this->totalPages = ceil( $this->totalHitCount / $per_page );
+      $this->totalPages = ceil( $total_hit_count / $per_page );
 
       if ( $this->totalPages >= $page_number ) {
         $this->pageNumber = $page_number;
@@ -121,18 +116,14 @@ class HitsPage
         throw new InvalidArgumentException( 'Page number exceeds total pages' );
       }
 
-      $this->firstHit = ( $this->pageNumber - 1 ) * $this->perPage + 1;
-
-      if ( $this->firstHit + $this->perPage <= $this->totalHitCount ) {
+      if ( $this->firstHit + $this->perPage <= $total_hit_count ) {
         $this->lastHit = $this->firstHit + $this->perPage - 1;
       }
       else {
-        $this->lastHit = $this->totalHitCount;
+        $this->lastHit = $total_hit_count;
       }
 
-      $this->hits = array_slice( $all_hits, $this->firstHit - 1, $this->perPage );
-
-      foreach( $this->hits as $hit ) {
+      foreach ( $this->hits as $hit ) {
         $hit->build();
       }
 

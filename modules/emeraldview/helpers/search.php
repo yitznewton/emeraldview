@@ -313,7 +313,7 @@ EOF;
 
       $args = array(
         $hits_page->firstHit, $hits_page->lastHit,
-        $hits_page->totalHitCount,
+        $search_handler->getTotalHitCount(),
         $search_handler->getQueryBuilder()->getDisplayQuery(),
       );
     }
