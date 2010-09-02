@@ -38,12 +38,6 @@ abstract class QueryBuilder
    */
   protected $params;
   /**
-   * The query represented as a Zend_Search_Lucene_Query object
-   *
-   * @var Zend_Search_Lucene_Search_Query
-   */
-  protected $query;
-  /**
    * An array of the search terms represented in string form
    *
    * @var array
@@ -55,23 +49,18 @@ abstract class QueryBuilder
     $this->params     = $params;
     $this->collection = $collection;
   }
-  
+
   /**
-   * Returns the query represented as a Zend_Search_Lucene_Query object
-   *
-   * @return Zend_Search_Lucene_Search_Query
-   */
-  abstract public function getQuery();
-  /**
-   * Returns a string representing the query in human-readable form
+   * Returns one string representing all terms in the query; for display and
+   * for use by SearchHandler
    *
    * @return string
    */
-  abstract public function getDisplayQuery();
+  abstract public function getQuerystring();
 
   /**
-   * Returns an array of the search terms represented in string form, building
-   * it first if needed
+   * Returns an array of the search term string fragments for highlighting,
+   * building it first if needed
    *
    * @todo are there any URL, HTML, or regex encoding issues that haven't been dealt with?
    * @return array
@@ -84,37 +73,21 @@ abstract class QueryBuilder
 
     $terms = array();
 
-    if ( method_exists( $this->getQuery(), 'getTerms' ) ) {
-      // query is instance of e.g. Zend_Search_Lucene_Search_Query_MultiTerm -
-      // leverage Zend_Search_Lucene API for this
+    $to_check = array( 'q', 'q1', 'q2', 'q3' );
+    $terms    = array();
+    $pattern  = '/ " (?<=[^_\pL\pN]) (.+?) (?=[^_\pL\pN]) " | [^"\s]+ /ux';
 
-      $all_terms = $this->getQuery()->getTerms();
-      $signs = $this->getQuery()->getSigns();
+    foreach ( $to_check as $key ) {
+      if ( isset( $this->params[ $key ] ) ) {
+        preg_match_all( $pattern, $this->params[ $key ], $term_matches );
 
-      for ( $i = 0; $i < count($all_terms); $i++ ) {
-        if ( $signs === null || $signs[ $i ] !== false ) {
-          // not a NOT term
-          $terms[] = $all_terms[ $i ]->text;
-        }
-      }
-    }
-    else {
-      $to_check = array( 'q', 'q1', 'q2', 'q3' );
-      $terms    = array();
-      $pattern  = '/ " (?<=[^_\pL\pN]) (.+?) (?=[^_\pL\pN]) " | [^"\s]+ /ux';
-      
-      foreach ( $to_check as $key ) {
-        if ( isset( $this->params[ $key ] ) ) {
-          preg_match_all( $pattern, $this->params[ $key ], $term_matches );
-
-          for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {
-            if ( $term_matches[1][$i] ) {
-              // matched a quoted segment
-              $terms[] = $term_matches[1][$i];
-            }
-            else {
-              $terms[] = $term_matches[0][$i];
-            }
+        for ( $i = 0; $i < count( $term_matches[0] ); $i++ ) {
+          if ( $term_matches[1][$i] ) {
+            // matched a quoted segment
+            $terms[] = $term_matches[1][$i];
+          }
+          else {
+            $terms[] = $term_matches[0][$i];
           }
         }
       }

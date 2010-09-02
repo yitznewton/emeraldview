@@ -77,24 +77,6 @@ abstract class SearchHandler
     $this->params = $this->filterParams( $params );
     $this->collection = $collection;
     $this->queryBuilder = QueryBuilder::factory( $params, $collection );
-
-    $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
-    $index_dir = $collection->getGreenstoneDirectory()
-               . "/index/$level_prefix" . 'idx';
-
-    $this->rawTextDir = $collection->getGreenstoneDirectory()
-                      . "/index/raw-text/$level_prefix" . 'idx';
-
-    if (!is_dir( $index_dir ) || !is_readable( $index_dir )) {
-      throw new Exception("Could not read index directory $index_dir");
-    }
-
-    $b_and = Zend_Search_Lucene_Search_QueryParser::B_AND;
-    Zend_Search_Lucene_Search_QueryParser::setDefaultOperator( $b_and );
-    Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-      new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8());
-
-    $this->luceneObject = Zend_Search_Lucene::open( $index_dir );
   }
 
   /**
@@ -204,18 +186,10 @@ abstract class SearchHandler
    */
   public static function factory( array $params, Collection $collection )
   {
-    $zend_index_dir = $collection->getGreenstoneDirectory() . '/index';
-
-    if ( is_dir( $zend_index_dir ) ) {
-      return new SearchHandler_Zend( $params, $collection );
-    }
-    elseif ( $this->collection->getConfig( 'solr_path' ) ) {
+    if ( $collection->getConfig( 'solr_host' ) ) {
       return new SearchHandler_Solr( $params, $collection );
     }
-    else {
-      $msg = 'No searchable resource found for collection '
-             . $collection->getGreenstoneName();
-      throw new Exception( $msg );
-    }
+    
+    return new SearchHandler_Zend( $params, $collection );
   }
 }

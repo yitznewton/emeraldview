@@ -82,7 +82,7 @@ class SearchHandler_Zend extends SearchHandler
     $hits = array();
 
     foreach ($lucene_hits as $lucene_hit) {
-      $hits[] = new Hit( $this, $lucene_hit );
+      $hits[] = new Hit_Zend( $this, $lucene_hit );
     }
 
     $this->totalHitCount = count( $hits );
