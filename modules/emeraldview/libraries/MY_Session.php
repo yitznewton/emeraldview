@@ -24,6 +24,8 @@
  */
 class Session extends Session_Core
 {
+  protected $relevantParams = array('q', 'q1', 'q2', 'q3', 'i', 'i1', 'i2', 'i3', 'b1', 'b2', 'b3', 'l');
+
   /**
    * Returns an array of previous search parameter sets
    *
@@ -58,14 +60,16 @@ class Session extends Session_Core
   /**
    * Records a new search, and returns an array of the new history
    *
-   * @param SearchHandler $search_handler
+   * @param Query $query
    * @return array
    */
-  public function recordSearch( SearchHandler $search_handler )
+  public function recordSearch( Query $query )
   {
-    $collection = $search_handler->getCollection();
-    $params     = $search_handler->getParams();
+    $collection = $query->getCollection();
+    $params     = $query->getParams();
     $history    = $this->getSearchHistory( $collection );
+
+    $params = $this->filterParams( $params );
 
     if ( ! $params ) {
       return $history;
@@ -95,5 +99,42 @@ class Session extends Session_Core
     $this->setSearchHistory( $collection, $history );
 
     return $history;
+  }
+  
+  /**
+   * Returns the relevant parameters
+   *
+   * @return array
+   */
+  public function getRelevantParams()
+  {
+    return $this->relevantParams;
+  }
+  
+  /**
+   * Sets the relevant query parameters
+   *
+   * @param array $keys An array of relevant keys
+   */
+  public function setRelevantParams( array $keys )
+  {
+    $this->relevantParams = $keys;
+  }
+
+  /**
+   * Returns an array of query parameters with irrelevant ones filtered out
+   *
+   * @param array $params An array of raw parameters
+   * @return array
+   */
+  protected function filterParams( array $params )
+  {
+    foreach( $params as $key => $value ) {
+      if ( ! in_array( $key, $this->relevantParams ) ) {
+        unset( $params[ $key ] );
+      }
+    }
+
+    return $params;
   }
 }

@@ -16,41 +16,20 @@
  * @package libraries
  */
 /**
- * QueryBuilder_Fielded creates Zend_Search_Lucene objects for search, based on
- * the Collection and fielded query parameters
+ * Query_Fielded parses the query parameters for fielded searches in the
+ * context of a given collection
  *
  * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class QueryBuilder_Fielded extends QueryBuilder
+class Query_Fielded extends Query
 {
-  /**
-   * @return Zend_Search_Lucene_Search_Query
-   */
-  public function getQuery()
-  {
-    if ($this->query) {
-      return $this->query;
-    }
-
-    $index = $this->params['i'];
-
-    if ( ! in_array( $index, array_keys( $this->collection->getIndexes() ) ) ) {
-      throw new Exception( 'Invalid index' );
-    }
-
-    Zend_Search_Lucene::setDefaultSearchField( $index );
-    $query = Zend_Search_Lucene_Search_QueryParser::parse( $this->params['q'] );
-
-    return $this->query = $query;
-  }
-  
   /**
    * @return string
    */
-  public function getDisplayQuery()
+  public function getQuerystring()
   {
-    return $this->params['i'] . ':' . $this->params['q'];
+    return $this->params['i'] . ':(' . $this->params['q'] . ')';
   }
 }

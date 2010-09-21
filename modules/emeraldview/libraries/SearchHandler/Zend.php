@@ -25,12 +25,6 @@
 class SearchHandler_Zend extends SearchHandler
 {
   /**
-   * The full path of the directory containing raw node text
-   *
-   * @var string
-   */
-  protected $rawTextDir;
-  /**
    * The Zend_Search_Lucene interface to the appropriate index
    *
    * @var Zend_Search_Lucene
@@ -41,20 +35,17 @@ class SearchHandler_Zend extends SearchHandler
    * @param array $params An array of the query parameters
    * @param Collection $collection The Collection to search
    */
-  public function __construct( array $params, Collection $collection )
+  protected function __construct( Query $query )
   {
-    $this->params = $this->filterParams( $params );
-    $this->collection = $collection;
-    $this->queryBuilder = QueryBuilder::factory( $params, $collection );
+    parent::__construct( $query );
+
+    $collection = $query->getCollection();
 
     $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
     $index_dir = $collection->getGreenstoneDirectory()
                . "/index/$level_prefix" . 'idx';
 
-    $this->rawTextDir = $collection->getGreenstoneDirectory()
-                      . "/index/raw-text/$level_prefix" . 'idx';
-
-    if (!is_dir( $index_dir ) || !is_readable( $index_dir )) {
+    if ( ! is_dir( $index_dir ) || ! is_readable( $index_dir ) ) {
       throw new Exception("Could not read index directory $index_dir");
     }
 
@@ -66,9 +57,9 @@ class SearchHandler_Zend extends SearchHandler
     $this->luceneObject = Zend_Search_Lucene::open( $index_dir );
   }
 
-  public function execute( $per_page, $start_at = 1 )
+  public function execute()
   {
-    $query = $this->queryBuilder->getQuery();
+    $query = $this->query->getQuerystring();
     
     try {
       $lucene_hits = @$this->luceneObject->find( $query );
@@ -79,32 +70,17 @@ class SearchHandler_Zend extends SearchHandler
       return array();
     }
 
+    $this->totalHitCount = count( $lucene_hits );
+
+    $lucene_hits = array_slice( $lucene_hits, $this->startAt-1, $this->hitsPerPage );
+
     $hits = array();
 
-    foreach ($lucene_hits as $lucene_hit) {
+    foreach ( $lucene_hits as $lucene_hit ) {
       $hits[] = new Hit_Zend( $this, $lucene_hit );
     }
 
-    $this->totalHitCount = count( $hits );
-
-    return array_slice( $hits, $start_at-1, $per_page );
-  }
-
-  public function getRawText( $docOID )
-  {
-    if ( ! is_dir( $this->rawTextDir ) ) {
-      return false;
-    }
-
-    $filename = $this->rawTextDir . '/' . $docOID . '.txt';
-
-    if ( ! file_exists( $filename ) ) {
-      return false;
-    }
-
-    $text = file_get_contents( $filename );
-    $text = trim( $text );
-
-    return $text;
+    //return array_slice( $hits, $start_at-1, $per_page );
+    return $hits;
   }
 }

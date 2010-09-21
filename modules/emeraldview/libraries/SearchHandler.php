@@ -26,29 +26,11 @@
 abstract class SearchHandler
 {
   /**
-   * An array of the query parameters for this search
+   * The Query being performed
    *
-   * @var array
+   * @var Query
    */
-  protected $params;
-  /**
-   * The Collection being searched
-   *
-   * @var Collection
-   */
-  protected $collection;
-  /**
-   * The full path of the directory containing raw node text
-   *
-   * @var string
-   */
-  protected $rawTextDir;
-  /**
-   * A QueryBuilder representing this search
-   *
-   * @var QueryBuilder
-   */
-  protected $queryBuilder;
+  protected $query;
   /**
    * The level of node being searched (document or section)
    *
@@ -62,72 +44,52 @@ abstract class SearchHandler
    */
   protected $totalHitCount;
   /**
-   * The Zend_Search_Lucene interface to the appropriate index
+   * The number of hits to return at a time
    *
-   * @var Zend_Search_Lucene
+   * @var integer
    */
-  protected $luceneObject;
+  protected $hitsPerPage = 20;
+  /**
+   * The index of the first hit to return
+   *
+   * @var integer
+   */
+  protected $startAt = 1;
 
   /**
    * @param array $params An array of the query parameters
    * @param Collection $collection The Collection to search
    */
-  public function __construct( array $params, Collection $collection )
+  protected function __construct( Query $query )
   {
-    $this->params = $this->filterParams( $params );
-    $this->collection = $collection;
-    $this->queryBuilder = QueryBuilder::factory( $params, $collection );
+    $this->query = $query;
   }
 
   /**
-   * Performs query and returns an array Hit objects
+   * Performs query and returns resultant Hits
    *
-   * @param integer $per_page
-   * @param integer $start_at
    * @return array Hit[]
    */
-  abstract public function execute( $per_page, $start_at = 1 );
+  abstract public function execute();
 
   /**
-   * Returns an array of the query parameters
+   * Returns associated Query
    *
-   * @return array
+   * @return Query
    */
-  public function getParams()
+  public function getQuery()
   {
-    return $this->params;
+    return $this->query;
   }
 
   /**
-   * Returns an array of query parameters with irrelevant ones filtered out -
-   * prepares them for search history processing
-   *
-   * @param array $params An array of raw parameters
-   * @return array
-   */
-  protected function filterParams( array $params )
-  {
-    $valid_params = array(
-      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3', 'b1', 'b2', 'b3',
-    );
-
-    foreach( $params as $key => $value ) {
-      if ( ! in_array( $key, $valid_params ) ) {
-        unset( $params[ $key ] );
-      }
-    }
-
-    return $params;
-  }
-
-  /**
-   * Returns the Collection to search
+   * Returns Collection for the search
    *
    * @return Collection
    */
   public function getCollection()
   {
-    return $this->collection;
+    return $this->query->getCollection();
   }
 
   /**
@@ -137,17 +99,63 @@ abstract class SearchHandler
    */
   public function getTotalHitCount()
   {
+    if ( $this->totalHitCount === null ) {
+      throw new UnexpectedValueException( 'Total hit count not set' );
+    }
+
     return $this->totalHitCount;
   }
 
   /**
-   * Returns the QueryBuilder for this search
-   * 
-   * @return QueryBuilder
+   * Returns the number of hits to return at a time
+   *
+   * @return integer
    */
-  public function getQueryBuilder()
+  public function getHitsPerPage()
   {
-    return $this->queryBuilder;
+    if ( $this->hitsPerPage === null ) {
+      throw new UnexpectedValueException( 'Hits per page not set' );
+    }
+
+    return $this->hitsPerPage;
+  }
+
+  /**
+   * Returns the index of the first hit to return
+   *
+   * @return integer
+   */
+  public function getStartAt()
+  {
+    if ( $this->startAt === null ) {
+      throw new UnexpectedValueException( 'Start at not set' );
+    }
+
+    return $this->startAt;
+  }
+
+  /**
+   * @param integer $v The number of hits to return at a time
+   */
+  public function setHitsPerPage( $v )
+  {
+    if ( ! is_int( $v ) ) {
+      throw new InvalidArgumentException( 'Argument must be an integer' );
+    }
+
+    $this->hitsPerPage = $v;
+  }
+
+  /**
+   * @param integer $v The index of the first hit to return
+   */
+  public function setStartAt( $v )
+  {
+    if ( ! is_int( $v ) ) {
+      throw new InvalidArgumentException( 'Argument must be an integer' );
+    }
+
+    $this->startAt = $v;
   }
 
   /**
@@ -156,14 +164,14 @@ abstract class SearchHandler
    *
    * @return string
    */
-  protected function getIndexLevel()
+  public function getIndexLevel()
   {
     if ( isset( $this->indexLevel ) ) {
       return $this->indexLevel;
     }
 
-    $params = $this->getParams();
-    $collection = $this->getCollection();
+    $params = $this->query->getParams();
+    $collection = $this->query->getCollection();
 
     if (
       isset($params['l'])
@@ -181,15 +189,14 @@ abstract class SearchHandler
   }
 
   /**
-   * @param array $params An array of the query parameters
    * @param Collection $collection The Collection to search
    */
-  public static function factory( array $params, Collection $collection )
+  public static function factory( Query $query )
   {
-    if ( $collection->getConfig( 'solr_host' ) ) {
-      return new SearchHandler_Solr( $params, $collection );
+    if ( $query->getCollection()->getConfig( 'solr_host' ) ) {
+      return new SearchHandler_Solr( $query );
     }
     
-    return new SearchHandler_Zend( $params, $collection );
+    return new SearchHandler_Zend( $query );
   }
 }

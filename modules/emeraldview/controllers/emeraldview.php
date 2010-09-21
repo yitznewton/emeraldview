@@ -87,34 +87,27 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
+    $per_page = $collection->getConfig( 'search_hits_per_page', 20 );
+
     if ( (int) $this->input->get( 'p' ) ) {
-      $page_number = (int) $this->input->get( 'p' );
+      $start_at = 1 + ((int) $this->input->get( 'p' ) - 1) * $per_page;
     }
     else {
-      $page_number = 1;
+      $start_at = 1;
     }
 
-    $search_handler = SearchHandler::factory(
-      $this->input->get(), $collection
-    );
+    $query = Query::factory( $collection, $this->input->get() )
+      or url::redirect( $collection->getUrl() );
 
-    try {
-      $per_page = $collection->getConfig('search_hits_per_page');
+    $search_handler = SearchHandler::factory( $query );
+    $search_handler->setHitsPerPage( $per_page );
+    $search_handler->setStartAt( $start_at );
 
-      if ( $per_page && is_int( $per_page ) ) {
-        $hits_page = new HitsPage( $search_handler, $page_number, $per_page );
-      }
-      else {
-        $hits_page = new HitsPage( $search_handler, $page_number );
-      }
-    }
-    catch (InvalidArgumentException $e) {
-      // page number requested doesn't fit with number of hits and $per_page
-      url::redirect( $collection->getUrl() );
-    }
+    $hits_page = new HitsPage( $search_handler )
+      or url::redirect( $collection->getUrl() );
 
     $history = $this->session->getSearchHistory( $collection );
-    $this->session->recordSearch( $search_handler );
+    $this->session->recordSearch( $query );
 
     $this->loadView( 'search' );
 

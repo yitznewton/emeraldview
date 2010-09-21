@@ -67,6 +67,9 @@ class NodeTreeFormatter
     $this->context = $context;
   }
 
+  /**
+   * @param boolean $a Whether to load branches using AJAX
+   */
   public function setLoadAjax( $a )
   {
     if ( ! is_bool( $a ) ) {

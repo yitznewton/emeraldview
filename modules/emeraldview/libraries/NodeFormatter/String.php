@@ -82,6 +82,7 @@ class NodeFormatter_String extends NodeFormatter
 
     if (
       $child_count
+      && $this->context instanceof NodePage
       && ( get_class( $this->node ) == get_class( $this->context->getNode() ) )
     ) {
       $text = $this->branchFormat;

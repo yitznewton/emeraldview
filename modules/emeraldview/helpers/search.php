@@ -41,9 +41,9 @@ class search_Core
       'name'  => 'q',
     );
 
-    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Simple ) {
+    if ( $search_handler && $search_handler->getQuery() instanceof Query_Simple ) {
       // this page is the result of a simple search, so fill in the form
-      $params = $search_handler->getParams();
+      $params = $search_handler->getQuery()->getParams();
       $text_attributes['value'] = $params['q'];
     }
 
@@ -81,8 +81,8 @@ class search_Core
     Collection $collection, SearchHandler $search_handler = null
   )
   {
-    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Fielded ) {
-      $params = $search_handler->getParams();
+    if ( $search_handler && $search_handler->getQuery() instanceof Query_Fielded ) {
+      $params = $search_handler->getQuery()->getParams();
       $index_default = isset( $params['i'] ) ? $params['i'] : null;
       $level_default = isset( $params['l'] ) ? $params['l'] : null;
       $text_default  = isset( $params['q'] ) ? $params['q'] : null;
@@ -149,8 +149,8 @@ class search_Core
     Collection $collection, SearchHandler $search_handler = null
   )
   {
-    if ( $search_handler && $search_handler->getQueryBuilder() instanceof QueryBuilder_Boolean ) {
-      $params = $search_handler->getParams();
+    if ( $search_handler && $search_handler->getQuery() instanceof Query_Boolean ) {
+      $params = $search_handler->getQuery()->getParams();
     }
     else {
       $params = null;
@@ -245,6 +245,12 @@ class search_Core
     return myhtml::element( 'form', $form_contents, $form_attributes );
   }
 
+  /**
+   * Returns an HTML <<ul>> element with links for changing between the
+   * types of search form
+   *
+   * @return string
+   */
   public static function chooser()
   {
     $simple  = L10n::_('Simple');
@@ -314,13 +320,13 @@ EOF;
       $args = array(
         $hits_page->firstHit, $hits_page->lastHit,
         $search_handler->getTotalHitCount(),
-        $search_handler->getQueryBuilder()->getDisplayQuery(),
+        $search_handler->getQuery()->getDisplayQuery(),
       );
     }
     else {
       $format = 'No results were found for your search '
                 . '<strong>%s</strong>.';
-      $args = array( $search_handler->getQueryBuilder()->getDisplayQuery() );
+      $args = array( $search_handler->getQuery()->getDisplayQuery() );
     }
     
     return L10n::vsprintf( $format, $args );
@@ -423,9 +429,9 @@ EOF;
     $search_history = array_reverse( $search_history );
 
     foreach ( $search_history as $params ) {
-      $query_builder = QueryBuilder::factory( $params, $collection );
+      $query = Query::factory( $collection, $params );
       $url = $collection->getUrl() . '/search?' . http_build_query( $params );
-      $display_query = $query_builder->getDisplayQuery();
+      $display_query = $query->getDisplayQuery();
 
       $link = myhtml::element( 'a', $display_query, array( 'href' => $url ) );
       $items .= myhtml::element( 'li', $link );

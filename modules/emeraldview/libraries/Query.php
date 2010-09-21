@@ -16,14 +16,13 @@
  * @package libraries
  */
 /**
- * QueryBuilder creates Zend_Search_Lucene objects for search, based on the
- * Collection and query parameters
+ * Query parses the query parameters in the context of a given collection
  *
  * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-abstract class QueryBuilder
+abstract class Query
 {
   /**
    * The Collection being searched
@@ -44,19 +43,54 @@ abstract class QueryBuilder
    */
   protected $rawTerms;
   
-  protected function __construct( array $params, Collection $collection )
+  /**
+   * @param Collection $collection The Collection to search
+   * @param array $params The search parameters
+   */
+  protected function __construct( Collection $collection, array $params )
   {
-    $this->params     = $params;
     $this->collection = $collection;
+    $this->params     = $params;
   }
 
   /**
-   * Returns one string representing all terms in the query; for display and
+   * Returns one string representing all terms in the query; for 
    * for use by SearchHandler
    *
    * @return string
    */
   abstract public function getQuerystring();
+
+  /**
+   * Returns one string representing all terms in the query; for display
+   *
+   * @return string
+   * @todo make sure client code is using this new method for human-readable output
+   */
+  public function getDisplayQuery()
+  {
+    return $this->getQuerystring();
+  }
+
+  /**
+   * Returns the Collection of this Query
+   *
+   * @return Collection
+   */
+  public function getCollection()
+  {
+    return $this->collection;
+  }
+
+  /**
+   * Returns the params of this Query
+   *
+   * @return array
+   */
+  public function getParams()
+  {
+    return $this->params;
+  }
 
   /**
    * Returns an array of the search term string fragments for highlighting,
@@ -97,22 +131,38 @@ abstract class QueryBuilder
   }
 
   /**
-   * @param array $params The query parameters to build the query around
-   * @param Collection $collection The Collection to search
-   * @return QueryBuilder
+   * @return array
    */
-  public static function factory( array $params, Collection $collection )
+  public function getValidParams()
+  {
+    return $this->validParams;
+  }
+
+  /**
+   * @param array $params
+   */
+  public function setValidParams( array $params )
+  {
+    $this->validParams = $params;
+  }
+
+  /**
+   * @param Collection $collection The Collection to search
+   * @param array $params The query parameters to build the query around
+   * @return Query
+   */
+  public static function factory( Collection $collection, array $params )
   {
     $indexes = array_keys( $collection->getIndexes() );
 
     if ( array_key_exists( 'i', $params ) && in_array( $params['i'], $indexes ) ) {
-      return new QueryBuilder_Fielded( $params, $collection );
+      return new Query_Fielded( $collection, $params );
     }
     elseif (array_key_exists( 'q1', $params )) {
-      return new QueryBuilder_Boolean( $params, $collection );
+      return new Query_Boolean( $collection, $params );
     }
     elseif (array_key_exists( 'q', $params )) {
-      return new QueryBuilder_Simple( $params, $collection );
+      return new Query_Simple( $collection, $params );
     }
     else {
       return false;

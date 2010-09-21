@@ -16,37 +16,21 @@
  * @package libraries
  */
 /**
- * QueryBuilder_Boolean creates Zend_Search_Lucene objects for search, based on
- * the Collection and boolean query parameters
+ * Query_Boolean parses the query parameters for boolean searches in the
+ * context of a given collection
  *
  * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class QueryBuilder_Boolean extends QueryBuilder
+class Query_Boolean extends Query
 {
   protected $querystring;
 
   /**
-   * @return Zend_Search_Lucene_Search_Query
-   */
-  public function getQuery()
-  {
-    if ($this->query) {
-      return $this->query;
-    }
-
-    $querystring = $this->getDisplayQuery();
-
-    $query = Zend_Search_Lucene_Search_QueryParser::parse( $querystring );
-
-    return $this->query = $query;
-  }
-
-  /**
    * @return string
    */
-  public function getDisplayQuery()
+  public function getQuerystring()
   {
     if ( $this->querystring ) {
       return $this->querystring;

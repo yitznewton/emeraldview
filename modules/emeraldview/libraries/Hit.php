@@ -75,7 +75,7 @@ abstract class Hit
   public function build()
   {
     $collection = $this->searchHandler->getCollection();
-    $this->terms = $this->searchHandler->getQueryBuilder()->getRawTerms();
+    $this->terms = $this->searchHandler->getQuery()->getRawTerms();
     $term_string = implode( '&search[]=', $this->terms );
 
     $node = Node_Document::factory( $collection, $this->docOID );

@@ -1,13 +1,13 @@
 <?php
 if ( isset( $search_handler ) ) {
-  switch ( get_class( $search_handler->getQueryBuilder() ) ) {
-    case 'QueryBuilder_Simple':
+  switch ( get_class( $search_handler->getQuery() ) ) {
+    case 'Query_Simple':
       $form_id = 'search-form-simple';
       break;
-    case 'QueryBuilder_Fielded':
+    case 'Query_Fielded':
       $form_id = 'search-form-fielded';
       break;
-    case 'QueryBuilder_Boolean':
+    case 'Query_Boolean':
       $form_id = 'search-form-boolean';
       break;
     default:
@@ -35,7 +35,7 @@ else {
     <a href="<?php echo $collection->getUrl() ?>"><?php echo $collection_display_name ?></a> &gt;
   </li>
   <li>
-    Search results for <strong><?php echo $search_handler->getQueryBuilder()->getDisplayQuery() ?></strong>
+    Search results for <strong><?php echo $search_handler->getQuery()->getDisplayQuery() ?></strong>
   </li>
 </ul>
 

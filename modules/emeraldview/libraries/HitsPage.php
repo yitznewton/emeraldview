@@ -77,44 +77,30 @@ class HitsPage
 
   /**
    * @param SearchHandler $search_handler
-   * @param integer $page_number
-   * @param integer $per_page 
    */
-  public function __construct( SearchHandler $search_handler, $page_number = 1, $per_page = 20 )
+  public function __construct( SearchHandler $search_handler )
   {
     $this->searchHandler = $search_handler;
 
-    if ( ! is_int( $page_number ) ) {
-      throw new InvalidArgumentException( 'Second argument must be an integer' );
-    }
-
-    if ( ! is_int( $per_page ) ) {
-      throw new InvalidArgumentException( 'Third argument must be an integer' );
-    }
-    
     // calculate page breakdown
 
-    $this->perPage  = $per_page;
-    $this->firstHit = ( $page_number-1 ) * $per_page + 1;
+    $this->perPage  = $search_handler->getHitsPerPage();
+    $this->firstHit = $search_handler->getStartAt();
 
-    $this->hits = $search_handler->execute( $this->perPage, $this->firstHit );
+    $this->hits = $search_handler->execute();
 
     $total_hit_count = $search_handler->getTotalHitCount();
 
-    if ( $total_hit_count === 0 ) {
+    if ( $total_hit_count === 0 || $this->firstHit > $total_hit_count ) {
       $this->totalPages = 0;
+      $this->pageNumber = 1;
       $this->hits = array();
       $this->links = false;
     }
     else {
-      $this->totalPages = ceil( $total_hit_count / $per_page );
+      $this->totalPages = ceil( $total_hit_count / $this->perPage );
 
-      if ( $this->totalPages >= $page_number ) {
-        $this->pageNumber = $page_number;
-      }
-      else {
-        throw new InvalidArgumentException( 'Page number exceeds total pages' );
-      }
+      $this->pageNumber = floor( ($this->firstHit / $this->perPage) ) + 1;
 
       if ( $this->firstHit + $this->perPage <= $total_hit_count ) {
         $this->lastHit = $this->firstHit + $this->perPage - 1;
@@ -143,7 +129,7 @@ class HitsPage
 
     $links = new HitsPageLinks();
 
-    $params = $this->searchHandler->getParams();
+    $params = $this->searchHandler->getQuery()->getParams();
 
     // first, the first-previous-next-last links...
 

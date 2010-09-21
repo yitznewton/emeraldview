@@ -16,26 +16,17 @@
  * @package libraries
  */
 /**
- * Hit for Solr instances
+ * Query_Simple parses the query parameters for simple searches in the
+ * context of a given collection
  *
  * @package libraries
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class Hit_Solr extends Hit
+class Query_Simple extends Query
 {
-  /**
-   * @param SearchHandler $search_handler
-   * @param SimpleXMLElement $solr_hit The hit as returned from Solr
-   */
-  public function __construct(
-    SearchHandler $search_handler,
-    SimpleXMLElement $solr_hit
-  ) {
-    $this->searchHandler = $search_handler;
-
-    $attributes   = $solr_hit->attributes();
-    $this->docOID  = (string) $attributes['docOID'];
-    $this->snippet = trim( (string) $solr_hit );
+  public function getQuerystring()
+  {
+    return $this->params['q'];
   }
 }

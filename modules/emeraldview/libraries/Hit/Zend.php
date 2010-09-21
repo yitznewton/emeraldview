@@ -59,7 +59,7 @@ class Hit_Zend extends Hit
 
     $lucene_document = $this->luceneHit->getDocument();
 
-    $text = $this->searchHandler->getRawText( $this->docOID );
+    $text = $this->getRawText();
 
     if ( $text ) {
       $this->snippet = $this->snippetize( $text );
@@ -74,6 +74,35 @@ class Hit_Zend extends Hit
     else {
       $this->snippet = null;
     }
+  }
+
+  /**
+   * Returns raw text for this Hit's Node
+   *
+   * @return string
+   */
+  protected function getRawText()
+  {
+    $level_prefix = substr( $this->searchHandler->getIndexLevel(), 0, 1 );
+
+    $raw_text_dir = $this->searchHandler->getCollection()
+                    ->getGreenstoneDirectory()
+                    . "/index/raw-text/$level_prefix" . 'idx';
+
+    if ( ! is_dir( $raw_text_dir ) ) {
+      return false;
+    }
+
+    $filename = $raw_text_dir . '/' . $this->docOID . '.txt';
+
+    if ( ! file_exists( $filename ) ) {
+      return false;
+    }
+
+    $text = file_get_contents( $filename );
+    $text = trim( $text );
+
+    return $text;
   }
 
   /**
@@ -97,7 +126,7 @@ class Hit_Zend extends Hit
     // find the first instance of any one of the terms
 
     $text = preg_replace('/\s{2,}/', ' ', $text);
-    $terms = $this->searchHandler->getQueryBuilder()->getRawTerms();
+    $terms = $this->searchHandler->getQuery()->getRawTerms();
     array_walk( $terms, 'preg_quote' );
 
     $term_pattern  = implode( '|', $terms );

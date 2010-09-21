@@ -24,24 +24,9 @@
  */
 class SearchHandler_Solr extends SearchHandler
 {
-  /**
-   * @param array $params An array of the query parameters
-   * @param Collection $collection The Collection to search
-   */
-  public function __construct( array $params, Collection $collection )
+  public function execute()
   {
-    $this->params = $this->filterParams( $params );
-    $this->collection = $collection;
-    $this->queryBuilder = QueryBuilder::factory( $params, $collection );
-
-    if ( ! $this->queryBuilder ) {
-      throw new InvalidArgumentException( 'Could not create QueryBuilder' );
-    }
-  }
-
-  public function execute( $per_page, $start_at = 1 )
-  {
-    $querystring = $this->queryBuilder->getDisplayQuery();
+    $querystring = $this->query->getQuerystring();
 
     $solr_params = array(
       'q'       => $querystring,
@@ -50,16 +35,19 @@ class SearchHandler_Solr extends SearchHandler
       'qf'      => 'text EX^2.5',
       'wt'      => 'xslt',
       'tr'      => 'emeraldview.xsl',
-      'start'   => $start_at-1,
-      'rows'    => $per_page,
-      'defType' => 'dismax',
+      'start'   => $this->startAt-1,
+      'rows'    => $this->hitsPerPage,
     );
 
-    $host = $this->getCollection()->getConfig( 'solr_host' );
+    if ( $this->query instanceof Query_Simple ) {
+      $solr_params['defType'] = 'dismax';
+    }
+
+    $host = $this->query->getCollection()->getConfig( 'solr_host' );
 
     if ( ! $host ) {
       $msg = 'No Solr host specified in config for collection '
-             . $this->getCollection()->getGreenstoneName();
+             . $this->query->getCollection()->getGreenstoneName();
 
       throw new Exception( $msg );
     }
@@ -67,7 +55,11 @@ class SearchHandler_Solr extends SearchHandler
     $query_url = 'http://' . $host . '/select/?'
                  . http_build_query( $solr_params );
     
-    $xml = @file_get_contents( $query_url );
+    $ctx = stream_context_create( array( 'http' => array(
+      'timeout' => 10,
+    )));
+    
+    $xml = @file_get_contents( $query_url, 0, $ctx );
 
     if ( ! $xml ) {
       throw new Exception( 'Unexpected or no response from Solr' );
@@ -85,21 +77,6 @@ class SearchHandler_Solr extends SearchHandler
     }
 
     return $hits;
-  }
-
-  public function getTotalHitCount()
-  {
-    return $this->totalHitCount;
-  }
-
-  /**
-   * Returns an array of the query parameters
-   *
-   * @return array
-   */
-  public function getParams()
-  {
-    return $this->params;
   }
 
   /**
