@@ -164,7 +164,21 @@ class HitsPage
 
     // now, the individual page links...
 
-    for ( $i = 1; $i < $this->pageNumber; $i++ )
+    if ( $this->pageNumber > 10 ) {
+      $start_with = $this->pageNumber - 9;
+    }
+    else {
+      $start_with = 1;
+    }
+
+    if ( $this->pageNumber + 9 < $this->totalPages ) {
+      $end_with = $this->pageNumber + 9;
+    }
+    else {
+      $end_with = $this->totalPages;
+    }
+
+    for ( $i = $start_with; $i < $this->pageNumber; $i++ )
     {
       // add pages before this one
       $params['p'] = $i;
@@ -175,7 +189,7 @@ class HitsPage
     $links->pages[ $this->pageNumber ] = null;
 
     // add pages after this one
-    for ( $i = $this->pageNumber + 1; $i < $this->totalPages + 1; $i++ )
+    for ( $i = $this->pageNumber + 1; $i < $end_with + 1; $i++ )
     {
       $params['p'] = $i;
       $links->pages[ $i ] = $this->searchHandler->getCollection()->getUrl()

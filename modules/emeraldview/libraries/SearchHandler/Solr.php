@@ -40,7 +40,7 @@ class SearchHandler_Solr extends SearchHandler
     );
 
     if ( $this->query instanceof Query_Simple ) {
-      $solr_params['defType'] = 'dismax';
+      //$solr_params['defType'] = 'dismax';  // breaks apostrophes in Hebrew
     }
 
     $host = $this->query->getCollection()->getConfig( 'solr_host' );
