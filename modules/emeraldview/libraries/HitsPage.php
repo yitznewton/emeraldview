@@ -110,7 +110,16 @@ class HitsPage
       }
 
       foreach ( $this->hits as $hit ) {
-        $hit->build();
+        try {
+          $hit->build();
+        }
+        catch ( UnexpectedValueException $e ) {
+          // unable to retrieve Node for this result; log error
+          $msg = 'Unable to retrieve Node for docOID ' . $hit->docOID . ' in '
+                 . 'query [' . $search_handler->getQuery()->getQuerystring()
+                 . '] for collection ' . $search_handler->getCollection()->getName();
+          Kohana::log( 'error', $msg );
+        }
       }
 
       $this->buildLinks();

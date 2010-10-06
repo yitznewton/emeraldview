@@ -29,7 +29,6 @@ class SearchHandler_Solr extends SearchHandler
     $querystring = $this->query->getQuerystring();
 
     $solr_params = array(
-      'q'       => $querystring,
       'hl'      => 'on',
       'hl.fl'   => '*',
       'qf'      => 'text EX^2.5',
@@ -37,6 +36,7 @@ class SearchHandler_Solr extends SearchHandler
       'tr'      => 'emeraldview.xsl',
       'start'   => $this->startAt-1,
       'rows'    => $this->hitsPerPage,
+      'q'       => $querystring,
     );
 
     if ( $this->query instanceof Query_Simple ) {
@@ -54,6 +54,8 @@ class SearchHandler_Solr extends SearchHandler
 
     $query_url = 'http://' . $host . '/select/?'
                  . http_build_query( $solr_params );
+
+    $query_url = substr( $query_url, 0, 2048 );
     
     $ctx = stream_context_create( array( 'http' => array(
       'timeout' => 10,

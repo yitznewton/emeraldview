@@ -325,7 +325,7 @@ EOF;
     }
     else {
       $format = 'No results were found for your search '
-                . '<strong>%s</strong>.';
+                . '<strong>%s</strong>';
       $args = array( $search_handler->getQuery()->getDisplayQuery() );
     }
     

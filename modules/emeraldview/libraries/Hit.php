@@ -79,6 +79,12 @@ abstract class Hit
     $term_string = implode( '&search[]=', $this->terms );
 
     $node = Node_Document::factory( $collection, $this->docOID );
+
+    if ( ! $node ) {
+      $msg = 'No node found with specified docOID';
+      throw new UnexpectedValueException( $msg );
+    }
+
     $formatter = NodeFormatter::factory( $node, $this->searchHandler );
     $this->title = $formatter->format();
 
