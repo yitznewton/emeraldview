@@ -62,6 +62,8 @@ else {
     <?php echo search::result_summary( $hits_page, $search_handler ) ?>
   </div>
 
+  <?php echo search::pager( $hits_page, $collection ) ?>
+  
   <?php if ($hits_page->hits): ?>
   <ol id="search-hits" start="<?php echo $hits_page->firstHit ?>">
     <?php foreach ($hits_page->hits as $hit): ?>
@@ -76,6 +78,7 @@ else {
   </ol>
 
   <?php echo search::pager( $hits_page, $collection ) ?>
+
   <?php endif; ?>
 </div>
 
