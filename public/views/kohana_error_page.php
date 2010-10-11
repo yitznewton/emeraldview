@@ -11,9 +11,6 @@
 <link rel="stylesheet" type="text/css"
 href="<?php echo url::base() ?>views/default/css/reset.css">
 
-<link rel="stylesheet" type="text/css" media="screen"
-href="<?php echo url::base() ?>libraries/treeview/jquery.treeview.css">
-
 <link rel="stylesheet" type="text/css"
 href="<?php echo url::base() ?>views/default/css/style.css">
 
@@ -22,9 +19,6 @@ href="<?php echo url::base() ?>views/default/css/style-print.css">
 
 <script type="text/javascript"
 src="<?php echo url::base() ?>libraries/jquery.js"></script>
-
-<script type="text/javascript"
-src="<?php echo url::base() ?>libraries/treeview/jquery.treeview.js"></script>
 
 <script type="text/javascript"
 src="<?php echo url::base() ?>views/default/js/default.js"></script>
@@ -46,20 +40,28 @@ src="<?php echo url::base() ?>views/default/js/default.js"></script>
 </div>
 
   <div id="main-content">
-    <h1>Server error</h1>
+    <?php if ( IN_PRODUCTION ): ?>
+      <h1>Error</h1>
+      
+      <p>
+        We're sorry, our system encountered an error. Please try again later.
+      </p>
+    <?php else: ?>
+      <h1>Server error</h1>
 
-    <div id="framework_error" style="width:42em;margin:20px auto;">
-    <h3><?php echo html::specialchars($error) ?></h3>
-    <p><?php echo html::specialchars($description) ?></p>
-    <?php if ( ! empty($line) AND ! empty($file)): ?>
-    <p><?php echo Kohana::lang('core.error_file_line', $file, $line) ?></p>
-    <?php endif ?>
-    <p><code class="block"><?php echo $message ?></code></p>
-    <?php if ( ! empty($trace)): ?>
-    <h3><?php echo Kohana::lang('core.stack_trace') ?></h3>
-    <?php echo $trace ?>
-    <?php endif ?>
-    </div>
+      <div id="framework_error" style="width:42em;margin:20px auto;">
+      <h3><?php echo html::specialchars($error) ?></h3>
+      <p><?php echo html::specialchars($description) ?></p>
+      <?php if ( ! empty($line) AND ! empty($file)): ?>
+      <p><?php echo Kohana::lang('core.error_file_line', $file, $line) ?></p>
+      <?php endif ?>
+      <p><code class="block"><?php echo $message ?></code></p>
+      <?php if ( ! empty($trace)): ?>
+      <h3><?php echo Kohana::lang('core.stack_trace') ?></h3>
+      <?php echo $trace ?>
+      <?php endif ?>
+      </div>
+    <?php endif; ?>
   </div>
 
 <div id="footer">
