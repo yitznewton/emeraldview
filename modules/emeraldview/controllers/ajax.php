@@ -61,14 +61,14 @@ class Ajax_Controller extends Emeraldview_Template_Controller
     $collection = $this->loadCollection( $collection_name );
 
     if ( ! $collection ) {
-      // FIXME: 404 header (#19)
+      header('HTTP/1.1 404 Not Found');
       exit;
     }
 
     $node = Node_Classifier::factory( $collection, $node_id );
 
     if ( ! $node ) {
-      // FIXME: 404 header (#19)
+      header('HTTP/1.1 404 Not Found');
       exit;
     }
 
