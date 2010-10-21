@@ -1,11 +1,8 @@
 package solrbuilder;
 
-# Use same basic XML structure setup by mgppbuilder/mgppbuildproc
-
 use lucenebuilder;
 use strict; 
 no strict 'refs';
-
 
 sub BEGIN {
     @solrbuilder::ISA = ('lucenebuilder');

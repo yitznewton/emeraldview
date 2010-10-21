@@ -26,14 +26,20 @@ if ( $argc != 3 ) {
 $index_level = $argv[2];
 
 $build_dir   = $argv[1];
-$output_file = $build_dir . '/solr-' . $index_level . '.xml';
-$output_fh   = @fopen( $output_file, 'wb' );
 
-if ( ! $output_fh ) {
-  throw new Exception( 'Could not open output for appending' );
+$data_file   = $build_dir . '/solr-' . $index_level . '.xml';
+$schema_file = $build_dir . '/solr-' . $index_level . '-schema.xml';
+
+$data_fh   = @fopen( $data_file, 'wb' );
+
+if ( ! $data_fh ) {
+  echo 'Could not open output for writing data' . chr(10);
+  exit(1);
 }
 
-fwrite( $output_fh, '<add>' . chr(10) );
+$collection_fields = array();
+
+fwrite( $data_fh, '<add>' . chr(10) );
 
 $xml_in_blob = '';
 
@@ -41,7 +47,7 @@ while ( $line = fgets( STDIN ) ) {
   if ( substr( $line, 0, 4 ) == '<Doc' ) {
     if ( $xml_in_blob ) {
       // already accumulated one
-      process_xml_doc( $xml_in_blob, $output_fh, $index_level );
+      process_xml_doc( $xml_in_blob, $data_fh, $index_level );
     }
     
     $xml_in_blob = '<?xml version="1.0" encoding="UTF-8"?>' . chr(10);
@@ -50,10 +56,21 @@ while ( $line = fgets( STDIN ) ) {
   $xml_in_blob .= $line;
 }
 
-process_xml_doc( $xml_in_blob, $output_fh, $index_level );  // the last document
+process_xml_doc( $xml_in_blob, $data_fh, $index_level );  // the last document
 
-fwrite( $output_fh, '</add>' . chr(10) );
+fwrite( $data_fh, '</add>' . chr(10) );
+fclose( $data_fh );
 
+$schema_fh = @fopen( $schema_file, 'wb' );
+
+if ( ! $schema_fh ) {
+  echo 'Could not open output for writing schema' . chr(10);
+  exit(1);
+}
+
+fwrite( $schema_fh, get_schema_xml( $collection_fields ) );
+
+fclose( $schema_fh );
 
 function process_xml_doc( $blob, $fh, $index_level )
 {
@@ -89,6 +106,8 @@ function process_xml_doc( $blob, $fh, $index_level )
     $fields = extract_section_fields( $section );
     
     foreach ( $fields as $field ) {
+      record_collection_field( $field[0] );
+
       $field_xml = '<field name="' . $field[0] . '">'
                    . $field[1] . '</field>' . chr(10);
       
@@ -116,4 +135,58 @@ function extract_section_fields( DOMNode $dom_node )
   }
   
   return $fields;
+}
+
+function record_collection_field( $field )
+{
+  global $collection_fields;
+
+  if ( ! is_string( $field ) ) {
+    echo 'Argument must be a string' . chr(10);
+    exit(1);
+  }
+
+  if ( ! in_array( $field, $collection_fields ) ) {
+    $collection_fields[] = $field;
+  }
+}
+
+function get_schema_xml( array $collection_fields )
+{
+  $xml = '';
+
+  $xml .= '<fields>' . chr(10);
+
+  $xml .= '<field name="docOID" type="string" indexed="true" stored="true" '
+       .  'required="true" />' . chr(10);
+  
+  $xml .= '<field name="timestamp" type="date" indexed="true" stored="true" '
+       .  'default="NOW" multiValued="false"/>' . chr(10);
+
+  $xml .= '<dynamicField name="*"  type="textgen"  multiValued="true" '
+       .  'indexed="true"  stored="true"/>' . chr(10);
+
+  foreach ( $collection_fields as $field ) {
+    if ( $field == 'docOID' ) continue;
+    
+    $xml .= '<field name="' . $field . '" type="textgen" indexed="true" '
+         .  'stored="true" multiValued="true" />' . chr(10);
+  }
+
+  $xml .= '</fields>' . chr(10);
+
+  foreach ( $collection_fields as $field ) {
+    if ( $field == 'docOID' || $field == 'TX' ) continue;
+
+    $xml .= '<copyField source="' . $field . '" dest="TX" />' . chr(10);
+  }
+
+  $xml .= <<<EOF
+<defaultSearchField>TX</defaultSearchField>
+<solrQueryParser defaultOperator="AND"/>
+<uniqueKey>docOID</uniqueKey>
+
+EOF;
+
+  return $xml;
 }

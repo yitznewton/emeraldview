@@ -1,11 +1,8 @@
 package emeraldviewbuilder;
 
-# Use same basic XML structure setup by mgppbuilder/mgppbuildproc
-
 use lucenebuilder;
 use strict; 
 no strict 'refs';
-
 
 sub BEGIN {
     @emeraldviewbuilder::ISA = ('lucenebuilder');
