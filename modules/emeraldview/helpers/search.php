@@ -348,27 +348,11 @@ EOF;
 
     $pages = '';
     
-//    if ($hits_page->links->first) {
-//      $pages .= myhtml::element(
-//        'li', html::anchor( $hits_page->links->first, '<<' )
-//      );
-//    }
-//    else {
-//      $pages .= myhtml::element(
-//        'li', '<<'
-//      );
-//    }
-    
     if ($hits_page->links->previous) {
       $pages .= myhtml::element(
         'li', html::anchor( $hits_page->links->previous, '<' )
       );
     }
-//    else {
-//      $pages .= myhtml::element(
-//        'li', '<'
-//      );
-//    }
 
     foreach ( $hits_page->links->pages as $page_number => $page_link ) {
       if ( $page_link ) {
@@ -389,22 +373,6 @@ EOF;
         'li', html::anchor( $hits_page->links->next, '>' )
       );
     }
-//    else {
-//      $pages .= myhtml::element(
-//        'li', '>'
-//      );
-//    }
-    
-//    if ($hits_page->links->last) {
-//      $pages .= myhtml::element(
-//        'li', html::anchor( $hits_page->links->last, '>>' )
-//      );
-//    }
-//    else {
-//      $pages .= myhtml::element(
-//        'li', '>>'
-//      );
-//    }
     
     if ($pages) {
       return myhtml::element(

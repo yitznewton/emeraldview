@@ -56,9 +56,17 @@ class SearchHandler_Solr extends SearchHandler
                  . http_build_query( $solr_params );
 
     $query_url = substr( $query_url, 0, 2048 );
+
+    $last_quote_pos = strrpos( $query_url, '+OR+%22' );
+
+    if ( $last_quote_pos !== false && substr( $query_url, -3 ) != '%22' ) {
+      // truncated in the middle of a quoted portion
+      // FIXME: this hack doesn't always seem to work
+      $query_url = substr( $query_url, 0, -3 ) . '%22';
+    }
     
     $ctx = stream_context_create( array( 'http' => array(
-      'timeout' => 10,
+      'timeout' => 6,
     )));
     
     $xml = @file_get_contents( $query_url, 0, $ctx );

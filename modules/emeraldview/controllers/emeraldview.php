@@ -1,5 +1,28 @@
 <?php
-
+/**
+ * EmeraldView
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://yitznewton.org/emeraldview/index.php?title=License
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to yitznewton@hotmail.com so we can send you a copy immediately.
+ *
+ * @version 0.2.0-b4
+ * @package controllers
+ */
+/**
+ * BuildCfg_G2 is a reader interface for Greenstone's build configuration
+ * file(s) as implemented in Greenstone2 as build.cfg
+ *
+ * @package controllers
+ * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
+ * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
+ */
 class Emeraldview_Controller extends Emeraldview_Template_Controller
 {
 	public function index()

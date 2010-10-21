@@ -28,7 +28,7 @@ $index_level = $argv[2];
 $build_dir   = $argv[1];
 
 $data_file   = $build_dir . '/solr-' . $index_level . '.xml';
-$schema_file = $build_dir . '/solr-' . $index_level . '-schema.xml';
+$schema_file = $build_dir . '/solr-' . $index_level . '-schema.xml.txt';
 
 $data_fh   = @fopen( $data_file, 'wb' );
 

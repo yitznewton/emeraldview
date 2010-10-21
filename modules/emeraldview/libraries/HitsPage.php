@@ -128,6 +128,7 @@ class HitsPage
 
   /**
    * Builds the HitsPageLinks URLs corresponding to various pages of hits
+   * 
    * @todo refactor this into HitsPageLinks
    */
   protected function buildLinks()
