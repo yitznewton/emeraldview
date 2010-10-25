@@ -28,17 +28,10 @@ class SearchHandler_Solr extends SearchHandler
   {
     $host = $this->query->getCollection()->getConfig( 'solr_host' );
     $path = $this->query->getCollection()->getConfig( 'solr_path', '/solr' );
-    $port = $this->query->getCollection()->getConfig( 'solr_port' );
+    $port = $this->query->getCollection()->getConfig( 'solr_port', 8983 );
 
     if ( ! $host ) {
       $msg = 'No Solr host specified in config for collection '
-             . $this->query->getCollection()->getGreenstoneName();
-
-      throw new Exception( $msg );
-    }
-
-    if ( ! $port ) {
-      $msg = 'No Solr port specified in config for collection '
              . $this->query->getCollection()->getGreenstoneName();
 
       throw new Exception( $msg );
