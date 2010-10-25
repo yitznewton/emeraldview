@@ -26,6 +26,24 @@ class SearchHandler_Solr extends SearchHandler
 {
   public function execute()
   {
+    $host = $this->query->getCollection()->getConfig( 'solr_host' );
+    $path = $this->query->getCollection()->getConfig( 'solr_path', '/solr' );
+    $port = $this->query->getCollection()->getConfig( 'solr_port' );
+
+    if ( ! $host ) {
+      $msg = 'No Solr host specified in config for collection '
+             . $this->query->getCollection()->getGreenstoneName();
+
+      throw new Exception( $msg );
+    }
+
+    if ( ! $port ) {
+      $msg = 'No Solr port specified in config for collection '
+             . $this->query->getCollection()->getGreenstoneName();
+
+      throw new Exception( $msg );
+    }
+
     $querystring = $this->query->getQuerystring();
 
     $solr_params = array(
@@ -39,54 +57,15 @@ class SearchHandler_Solr extends SearchHandler
       'q'       => $querystring,
     );
 
-    if ( $this->query instanceof Query_Simple ) {
-      //$solr_params['defType'] = 'dismax';  // breaks apostrophes in Hebrew
-    }
+    $path .= '/select';
 
-    $host = $this->query->getCollection()->getConfig( 'solr_host' );
+    $xml = $this->post( $host, $path, $port, http_build_query( $solr_params ) );
 
-    if ( ! $host ) {
-      $msg = 'No Solr host specified in config for collection '
-             . $this->query->getCollection()->getGreenstoneName();
-
-      throw new Exception( $msg );
-    }
-
-    $query_url = 'http://' . $host . '/select/?'
-                 . http_build_query( $solr_params );
-
-    $query_url = substr( $query_url, 0, 2048 );
-
-    $last_quote_pos = strrpos( $query_url, '+OR+%22' );
-
-    if ( $last_quote_pos !== false && substr( $query_url, -3 ) != '%22' ) {
-      // truncated in the middle of a quoted portion
-      // FIXME: this hack doesn't always seem to work
-      $query_url = substr( $query_url, 0, -3 ) . '%22';
-    }
-    
-    $ctx = stream_context_create( array( 'http' => array(
-      'timeout' => 6,
-    )));
-    
-    $xml = @file_get_contents( $query_url, 0, $ctx );
-
-    if ( ! $xml ) {
+    if ( ! $xml || substr( $xml, 0, 5 ) !== '<?xml' ) {
       throw new Exception( 'Unexpected or no response from Solr' );
     }
     
-    $data = new SimpleXMLElement( $xml );
-    
-    $attributes          = $data->attributes();
-    $this->totalHitCount = (int) $attributes['numFound'];
-
-    $hits = array();
-
-    foreach ( $data->children() as $child ) {
-      $hits[] = new Hit_Solr( $this, $child );
-    }
-
-    return $hits;
+    return $this->parseHits( $xml );
   }
 
   /**
@@ -109,5 +88,47 @@ class SearchHandler_Solr extends SearchHandler
     }
 
     return $params;
+  }
+
+  protected function parseHits( $xml )
+  {
+    $data = new SimpleXMLElement( $xml );
+
+    $attributes          = $data->attributes();
+    $this->totalHitCount = (int) $attributes['numFound'];
+
+    $hits = array();
+
+    foreach ( $data->children() as $child ) {
+      $hits[] = new Hit_Solr( $this, $child );
+    }
+
+    return $hits;
+  }
+
+  /**
+   *
+   * @param string $host The host on which Solr is running
+   * @param string $path The path to Solr
+   * @param int $port The port Solr is listening on
+   * @param array|string $data The query data
+   * @return string
+   */
+  protected function post( $host, $path, $port, $data )
+  {
+    $curl = curl_init();
+
+    curl_setopt( $curl, CURLOPT_TIMEOUT, 5 );
+    curl_setopt( $curl, CURLOPT_PORT, $port );
+    curl_setopt( $curl, CURLOPT_URL, 'http://' . $host . $path );
+    curl_setopt( $curl, CURLOPT_POST, true );
+    curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+
+    $response = curl_exec( $curl );
+
+    curl_close( $curl );
+
+    return $response;
   }
 }
