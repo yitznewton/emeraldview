@@ -44,7 +44,8 @@ class search_Core
     if ( $search_handler && $search_handler->getQuery() instanceof Query_Simple ) {
       // this page is the result of a simple search, so fill in the form
       $params = $search_handler->getQuery()->getParams();
-      $text_attributes['value'] = $params['q'];
+      $value  = htmlentities( $params['q'], ENT_COMPAT, 'UTF-8' );
+      $text_attributes['value'] = $value;
     }
 
     $text_element = myhtml::element('input', null, $text_attributes);
@@ -103,7 +104,7 @@ class search_Core
     $text_attr = array(
       'type' => 'text',
       'name' => 'q',
-      'value' => $text_default,
+      'value' => htmlentities( $text_default, ENT_COMPAT, 'UTF-8' ),
     );
             
     $text_input = myhtml::element( 'input', null, $text_attr );
@@ -182,7 +183,7 @@ class search_Core
       $attrs = array( 'type' => 'text', 'name' => "q$i" );
 
       if ( isset( $params["q$i"] ) ) {
-        $attrs['value'] = $params["q$i"];
+        $attrs['value'] = htmlentities( $params["q$i"], ENT_COMPAT, 'UTF-8' );
       }
 
       $varname = "text$i";
