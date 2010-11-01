@@ -152,4 +152,13 @@ $(document).ready( function() {
   }
 
   $('h2.browse-section').hide();
+
+  $('#pager-form').submit( function() {
+    if ( typeof doc_url !== undefined || doc_url ) {
+      new_url = doc_url + '/' + $(this).children('input:text').get(0).value;
+      window.location = new_url;
+      
+      return false;
+    }
+  });
 });

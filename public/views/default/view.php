@@ -55,6 +55,10 @@
 
 <form id="pager-form" method="get" action="<?php echo $root_page->getUrl() ?>">
 
+<script type="text/javascript">
+  doc_url = '<?php echo $root_page->getUrl() ?>';
+</script>
+
 <?php if ($paged_urls['previous']): ?>
   <span class="prev-button">
     <a href="<?php echo $paged_urls['previous'] ?>">
