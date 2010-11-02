@@ -42,13 +42,18 @@ class SearchHandler_Solr extends SearchHandler
     $solr_params = array(
       'hl'      => 'on',
       'hl.fl'   => '*',
-      'qf'      => 'text EX^2.5',
       'wt'      => 'xslt',
       'tr'      => 'emeraldview.xsl',
       'start'   => $this->startAt-1,
       'rows'    => $this->hitsPerPage,
       'q'       => $querystring,
     );
+
+    $qt = $this->query->getCollection()->getConfig( 'solr_simple_qt' );
+
+    if ( $this->query instanceof Query_Simple && $qt ) {
+      $solr_params['qt'] = $qt;
+    }
 
     $path .= '/select';
 
