@@ -28,7 +28,8 @@ class SearchHandler_Solr extends SearchHandler
   {
     $host = $this->query->getCollection()->getConfig( 'solr_host' );
     $port = $this->query->getCollection()->getConfig( 'solr_port', 8983 );
-    $path = $this->query->getCollection()->getConfig( 'solr_path', '/solr' );
+    $path = $this->query->getCollection()->getConfig( 'solr_path', '/solr' )
+            . '/select';
 
     if ( ! $host ) {
       $msg = 'No Solr host specified in config for collection '
@@ -37,25 +38,7 @@ class SearchHandler_Solr extends SearchHandler
       throw new Exception( $msg );
     }
 
-    $querystring = $this->query->getQuerystring();
-
-    $solr_params = array(
-      'hl'      => 'on',
-      'hl.fl'   => '*',
-      'wt'      => 'xslt',
-      'tr'      => 'emeraldview.xsl',
-      'start'   => $this->startAt-1,
-      'rows'    => $this->hitsPerPage,
-      'q'       => $querystring,
-    );
-
-    $qt = $this->query->getCollection()->getConfig( 'solr_simple_qt' );
-
-    if ( $this->query instanceof Query_Simple && $qt ) {
-      $solr_params['qt'] = $qt;
-    }
-
-    $path .= '/select';
+    $solr_params = $this->getSolrParams();
 
     $xml = $this->post( $host, $path, $port, http_build_query( $solr_params ) );
 
@@ -67,27 +50,37 @@ class SearchHandler_Solr extends SearchHandler
   }
 
   /**
-   * Returns an array of query parameters with irrelevant ones filtered out -
-   * prepares them for search history processing
+   * Returns params for the Solr request
    *
-   * @param array $params An array of raw parameters
    * @return array
    */
-  protected function filterParams( array $params )
+  protected function getSolrParams()
   {
-    $valid_params = array(
-      'l', 'i', 'i1', 'i2', 'i3', 'q', 'q1', 'q2', 'q3', 'b1', 'b2', 'b3',
+    $params = array(
+      'hl'      => 'on',
+      'hl.fl'   => '*',
+      'wt'      => 'xslt',
+      'tr'      => 'emeraldview.xsl',
+      'start'   => $this->startAt-1,
+      'rows'    => $this->hitsPerPage,
+      'q'       => $this->query->getQuerystring(),
     );
 
-    foreach( $params as $key => $value ) {
-      if ( ! in_array( $key, $valid_params ) ) {
-        unset( $params[ $key ] );
-      }
+    $qt = $this->query->getCollection()->getConfig( 'solr_simple_qt' );
+
+    if ( $this->query instanceof Query_Simple && $qt ) {
+      $params['qt'] = $qt;
     }
 
     return $params;
   }
 
+  /**
+   * Returns an array of Hits based on XML returned by Solr
+   *
+   * @param string $xml
+   * @return array Hit_Solr[]
+   */
   protected function parseHits( $xml )
   {
     $data = new SimpleXMLElement( $xml );
