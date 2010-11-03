@@ -57,8 +57,7 @@ abstract class SearchHandler
   protected $startAt = 1;
 
   /**
-   * @param array $params An array of the query parameters
-   * @param Collection $collection The Collection to search
+   * @param Query $query The Query to perform
    */
   protected function __construct( Query $query )
   {
