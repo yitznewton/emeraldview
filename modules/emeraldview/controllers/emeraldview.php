@@ -25,7 +25,7 @@
  */
 class Emeraldview_Controller extends Emeraldview_Template_Controller
 {
-	public function index()
+  public function index()
   {
     $this->loadView( 'index' );
     

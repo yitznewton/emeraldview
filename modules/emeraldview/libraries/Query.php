@@ -155,13 +155,22 @@ abstract class Query
   {
     $indexes = array_keys( $collection->getIndexes() );
 
-    if ( array_key_exists( 'i', $params ) && in_array( $params['i'], $indexes ) ) {
+    if (
+      array_key_exists( 'i', $params )
+      && in_array( $params['i'], $indexes )
+      && array_key_exists( 'q', $params )
+      && $params['q']
+    ) {
       return new Query_Fielded( $collection, $params );
     }
-    elseif (array_key_exists( 'q1', $params )) {
+    elseif ( array_key_exists( 'q1', $params ) && $params['q1'] ) {
       return new Query_Boolean( $collection, $params );
     }
-    elseif (array_key_exists( 'q', $params )) {
+    elseif (
+      array_key_exists( 'q', $params )
+      && $params['q']
+      && ! array_key_exists( 'i', $params )
+    ) {
       return new Query_Simple( $collection, $params );
     }
     else {
