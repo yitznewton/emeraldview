@@ -399,6 +399,11 @@ EOF;
 
     foreach ( $search_history as $params ) {
       $query = Query::factory( $collection, $params );
+
+      if ( ! $query ) {
+        continue;
+      }
+
       $url = $collection->getUrl() . '/search?' . http_build_query( $params );
       $display_query = $query->getDisplayQuery();
 

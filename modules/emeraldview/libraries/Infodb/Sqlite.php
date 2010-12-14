@@ -210,19 +210,22 @@ class Infodb_Sqlite extends Infodb
    */
   public function getCousinIdByTitle( Node_Document $node, $title )
   {
-    if (!$title) {
-      return false;
+    if ( ! $title ) {
+      $msg = 'Second argument must not be false';
+      throw new InvalidArgumentException( $msg );
     }
 
     $params = array(
       strlen( $node->getRootId() ),
       $node->getRootId(),
-      "%<Title>$title%",
+      "%<Title>$title\n%",
+      "%<Title>$title",
     );
 
     $query  = 'SELECT key, value FROM data '
-              . "WHERE SUBSTR(key, 1, ?)=? "
-              . "AND value LIKE ?";
+              . 'WHERE SUBSTR(key, 1, ?)=? '
+              . 'AND (value LIKE ?'
+              . 'OR value LIKE ?)';
 
     $stmt = $this->pdo->prepare( $query );
     $stmt->execute( $params );
