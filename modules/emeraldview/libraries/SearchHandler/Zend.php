@@ -40,9 +40,8 @@ class SearchHandler_Zend extends SearchHandler
 
     $collection = $query->getCollection();
 
-    $level_prefix = substr( $this->getIndexLevel(), 0, 1 );
     $index_dir = $collection->getGreenstoneDirectory()
-               . "/index/$level_prefix" . 'idx';
+               . '/index/sidx';
 
     if ( ! is_dir( $index_dir ) || ! is_readable( $index_dir ) ) {
       throw new Exception("Could not read index directory $index_dir");

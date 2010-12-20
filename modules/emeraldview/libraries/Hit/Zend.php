@@ -83,11 +83,9 @@ class Hit_Zend extends Hit
    */
   protected function getRawText()
   {
-    $level_prefix = substr( $this->searchHandler->getIndexLevel(), 0, 1 );
-
     $raw_text_dir = $this->searchHandler->getCollection()
                     ->getGreenstoneDirectory()
-                    . "/index/raw-text/$level_prefix" . 'idx';
+                    . '/index/raw-text/sidx';
 
     if ( ! is_dir( $raw_text_dir ) ) {
       return false;

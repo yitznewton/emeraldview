@@ -169,7 +169,7 @@ class CollectCfg_G2 extends CollectCfg
   {
     return $this->defaultLevel;
   }
-  
+
   /**
    * @return string
    */

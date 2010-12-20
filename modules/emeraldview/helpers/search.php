@@ -85,21 +85,17 @@ class search_Core
     if ( $search_handler && $search_handler->getQuery() instanceof Query_Fielded ) {
       $params = $search_handler->getQuery()->getParams();
       $index_default = isset( $params['i'] ) ? $params['i'] : null;
-      $level_default = isset( $params['l'] ) ? $params['l'] : null;
       $text_default  = isset( $params['q'] ) ? $params['q'] : null;
     }
     else {
       $params = null;
       $index_default = null;
-      $level_default = null;
       $text_default = null;
     }
 
     $index_select = myhtml::select_element(
       $collection->getIndexes(), array('name' => 'i'), $index_default
     );
-
-    $level_select = search::level_select( $collection, $params );
 
     $text_attr = array(
       'type' => 'text',
@@ -116,14 +112,8 @@ class search_Core
 
     $submit_input = myhtml::element( 'input', null, $submit_attr );
 
-    if ($level_select) {
-      $format = 'Search %1$s at the %2$s level for %3$s';
-      $args = array( $index_select, $level_select, $text_input );
-    }
-    else {
-      $format = 'Search %1$s for %2$s';
-      $args = array( $index_select, $text_input );
-    }
+    $format = 'Search %1$s for %2$s';
+    $args = array( $index_select, $text_input );
 
     $form_contents = L10n::vsprintf( $format, $args, true ). $submit_input;
 
@@ -216,14 +206,7 @@ class search_Core
     $submit = myhtml::element( 'input', null, $submit_attributes );
     $reset  = myhtml::element( 'input', null, $reset_attributes );
 
-    $level_select = search::level_select( $collection, $params );
-
-    if ( $level_select ) {
-      $first_line = L10n::vsprintf( 'Search at the %s level for', array( $level_select ) );
-    }
-    else {
-      $first_line = L10n::_('Search for');
-    }
+    $first_line = L10n::_('Search for');
 
     $form_contents = '';
     $form_contents .= "<div>$first_line:</div>\n";
@@ -273,36 +256,6 @@ class search_Core
 EOF;
 
     return $html;
-  }
-
-  /**
-   * Returns an HTML <select> element corresponding to the available index
-   * levels for the specified Collection
-   *
-   * @param Collection $collection
-   * @param array $params The query params submitted by the user
-   * @return string
-   */
-  public static function level_select( Collection $collection, array $params = null )
-  {
-    if ( count( $collection->getIndexLevels() ) == 1 ) {
-      return false;
-    }
-
-    if ( isset( $params['l'] ) && in_array( $params['l'], $collection->getIndexLevels() )) {
-      $level_default = $params['l'];
-    }
-    else {
-      $level_default = $collection->getDefaultIndexLevel();
-    }
-
-    $level_options = array();
-
-    foreach ( $collection->getIndexLevels() as $level ) {
-      $level_options[ $level ] = L10n::_( $level );
-    }
-
-    return myhtml::select_element( $level_options, array('name' => 'l'), $level_default );
   }
 
   /**

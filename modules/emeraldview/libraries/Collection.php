@@ -102,6 +102,12 @@ class Collection
     $this->collectCfg = CollectCfg::factory( $this );
     $this->infodb     = Infodb::factory( $this );
     $this->buildCfg   = BuildCfg::factory( $this );
+
+    if ( ! in_array( 'section', $this->getIndexLevels() ) ) {
+      $msg = 'Only section-level indexes supported';
+      throw new UnexpectedValueException( $msg );
+    }
+
     $this->slugLookup = new SlugLookup( $this );
 
     $this->slugLookup->initialize();
@@ -203,16 +209,6 @@ class Collection
     return $this->getCollectCfg()->getLevels();
   }
 
-  /**
-   * Returns a string indicating the default index level
-   *
-   * @return string
-   */
-  public function getDefaultIndexLevel()
-  {
-    return $this->getCollectCfg()->getDefaultLevel();
-  }
-  
   /**
    * Returns the display name of the Collection in a given language
    * 
