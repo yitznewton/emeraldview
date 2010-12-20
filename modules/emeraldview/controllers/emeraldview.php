@@ -169,8 +169,12 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
     }
 
     if ( $root_node->isPaged() ) {
-      if ( isset( $args[2] ) ) {
+      if ( isset( $args[2] ) && (int) $args[2] ) {
         $subnode_title = (int) $args[2];
+      }
+      elseif ( isset( $args[2] ) ) {
+        // integer cast failed
+        $subnode_id = 1;
       }
       elseif ( $this->input->get('page') ) {
         $subnode_title = (int) $this->input->get('page');
