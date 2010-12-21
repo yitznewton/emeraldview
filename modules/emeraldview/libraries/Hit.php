@@ -95,6 +95,9 @@ abstract class Hit
     }
 
     $url = NodePage_DocumentSection::factory( $node )->getUrl() . '?search[]=' . $term_string;
+
+    $url = substr( $url, 0, 3500 );
+
     $search = array( '[a]', '[/a]' );
     $replace = array( '<a href="' . $url . '">', '</a>' );
     $this->link = str_replace( $search, $replace, $this->title );
