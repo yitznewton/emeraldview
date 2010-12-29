@@ -76,13 +76,39 @@ abstract class CollectCfg
    */
   public static function factory( Collection $collection )
   {
-    $dir = $collection->getGreenstoneDirectory() . '/etc';
-    
-    if (is_readable( $dir . '/collect.cfg' )) {
-      return new CollectCfg_G2( $collection );
+    $use_cache = false;
+
+    try {
+      if (
+        $collection->getConfig( 'cache_internals' )
+        && $cache = Cache::instance()
+      ) {
+        $use_cache = true;
+        $cache_address = $collection->getName() . '_' . 'collectcfg';
+      }
     }
-    
-    throw new Exception( 'Unsupported CollectCfg for collection '
-                         . $collection->getGreenstoneName() );
+    catch ( Kohana_Exception $e ) {
+      // problem instantiating Cache; log and ignore
+      Kohana::log( 'error', $e->getMessage() );
+    }
+
+    if ( $use_cache && $collect_cfg = $cache->get( $cache_address ) ) {
+      return $collect_cfg;
+    }
+
+    $dir = $collection->getGreenstoneDirectory() . '/etc';
+
+    if ( ! is_readable( $dir . '/collect.cfg' ) ) {
+      throw new Exception( 'No supported CollectCfg for collection '
+                           . $collection->getGreenstoneName() );
+    }
+
+    $collect_cfg = new CollectCfg_G2( $collection );
+
+    if ( $use_cache ) {
+      $cache->set( $cache_address, $collect_cfg );
+    }
+
+    return $collect_cfg;
   }
 }
