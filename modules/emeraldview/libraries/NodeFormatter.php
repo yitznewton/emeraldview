@@ -81,7 +81,7 @@ class NodeFormatter
 
   /**
    * @param Node $node
-   * @param mixed $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @param NodeFormatterContext $context An object representing the situation where the string is needed; used for determining which format specification to use
    * @return NodeFormatter
    */
   public static function factory( Node $node, $context )

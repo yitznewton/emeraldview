@@ -41,7 +41,7 @@ class NodeFormatter_String extends NodeFormatter
   /**
    *
    * @param Node $node
-   * @param NodePage|SearchHandler An object representing the situation where the string is needed
+   * @param NodeFormatterContext An object representing the situation where the string is needed
    * @param array|string $format_config 
    */
   public function __construct( Node $node, $context, $format_config )
@@ -314,7 +314,7 @@ class NodeFormatter_String extends NodeFormatter
 
   /**
    * @param Node $node
-   * @param NodePage|SearchHandler $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @param NodeFormatterContext $context An object representing the situation where the string is needed; used for determining which format specification to use
    * @return void
    */
   public static function factory( Node $node, $context )

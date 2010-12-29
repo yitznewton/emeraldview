@@ -35,7 +35,7 @@ class NodeTreeFormatter
    * An object representing the situation where the string is needed; used
    * for determining which format specification to use
    *
-   * @var NodePage|SearchHandler
+   * @var NodeFormatterContext
    */
   protected $context;
   /**
@@ -59,7 +59,7 @@ class NodeTreeFormatter
 
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
-   * @param NodePage|SearchHandler $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @param NodeFormatterContext $context An object representing the situation where the string is needed; used for determining which format specification to use
    */
   public function __construct( Node $node, $context )
   {
@@ -88,6 +88,35 @@ class NodeTreeFormatter
   {
     if ( ! $this->rootNode->getChildCount() ) {
       return false;
+    }
+
+    // classifier caching
+
+    try {
+      if (
+        $this->context instanceof NodePage_Classifier
+        && $this->context->getConfig('cache')
+        && $cache = Cache::instance()
+      ) {
+        $cache_address = $this->rootNode->getCollection()->getName() . '_'
+                         . $this->rootNode->getId();
+
+        $node_output = $cache->get( $cache_address );
+
+        if ( $node_output ) {
+          return $node_output;
+        }
+        else {
+          $node_output = $this->renderNode( $this->rootNode );
+          $cache->set( $cache_address, $node_output );
+
+          return $node_output;
+        }
+      }
+    }
+    catch ( Kohana_Exception $e ) {
+      // problem instantiating Cache; log and ignore
+      Kohana::log( 'error', $e->getMessage() );
     }
 
     return $this->renderNode( $this->rootNode );

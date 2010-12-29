@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-abstract class NodePage
+abstract class NodePage implements NodeFormatterContext
 {
   /**
    * The Node being wrapped
