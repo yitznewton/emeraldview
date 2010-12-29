@@ -132,7 +132,7 @@ class Router extends Router_Core
 			// Add another slash
 			$controller_path .= '/';
 		}
-
+    
 		if ($method_segment !== NULL AND isset(Router::$rsegments[$method_segment]))
 		{
 			// Set method
@@ -161,17 +161,17 @@ class Router extends Router_Core
         // Search within controllers only
         $dir .= 'controllers/';
 
-        if (is_dir($dir.'collection') OR is_file($dir.'collection'.EXT))
+        if (is_dir($dir.'emeraldview') OR is_file($dir.'emeraldview'.EXT))
         {
           // The controller must be a file that exists with the search path
-          if ($c = str_replace('\\', '/', realpath($dir.'collection'.EXT))
+          if ($c = str_replace('\\', '/', realpath($dir.'emeraldview'.EXT))
               AND is_file($c) AND strpos($c, $dir) === 0) {
             break;
           }
         }
       }
 
-      Router::$controller      = 'collection';
+      Router::$controller      = 'emeraldview';
       Router::$controller_path = $c;
       Router::$method          = 'show404';
 		}
