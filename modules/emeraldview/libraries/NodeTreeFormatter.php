@@ -183,7 +183,7 @@ class NodeTreeFormatter
 
       $dashed_id = str_replace( '.', '-', $child->getId() );
 
-      if ( $this->loadAjax ) {
+      if ( $this->isUsingAjax ) {
         $url = url::base() . 'ajax/' . $node->getCollection()->getName()
                . '/browse/' . $child->getId();
         
