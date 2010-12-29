@@ -69,24 +69,21 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
 
     $this->loadView( 'browse' );
 
-    $root_node = $classifier->getNode();
-    
+    $root_node           = $classifier->getNode();
     $node_tree_formatter = $classifier->getNodeTreeFormatter();
-    $is_ajax = $classifier->getConfig( 'load_ajax' );
+    $tree                = $node_tree_formatter->render();
 
-    if ( $is_ajax ) {
-      $node_tree_formatter->setLoadAjax( true );
-    }
-
-    $tree = $node_tree_formatter->render();
-
-    if ( $node_tree_formatter->isUsingTabs() || $is_ajax ) {
+    if ( $node_tree_formatter->isUsingTabs()
+         || $node_tree_formatter->isUsingAjax()
+         || $node_tree_formatter->isUsingCache() ) {
       $this->template->addCss( 'libraries/tabs/jquery-ui-1.7.2.css' );
       $this->template->addJs(  'libraries/tabs/jquery-ui-1.7.2.js'  );
       $this->template->addJs(  'libraries/tabs/jquery.cookie.js'  );
     }
 
-    if ( $node_tree_formatter->isUsingTree() || $is_ajax ) {
+    if ( $node_tree_formatter->isUsingTree()
+         || $node_tree_formatter->isUsingAjax()
+         || $node_tree_formatter->isUsingCache() ) {
       $this->template->addCss( 'libraries/treeview/jquery.treeview.css' );
       $this->template->addJs(  'libraries/treeview/jquery.treeview.js'  );
     }

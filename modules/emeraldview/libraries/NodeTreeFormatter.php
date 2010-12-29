@@ -39,13 +39,13 @@ class NodeTreeFormatter
    */
   protected $context;
   /**
-   * Whether the current page uses a tree; for loading Javascript
+   * Whether the current page uses a tree; for loading JS/CSS
    *
    * @var boolean
    */
   protected $isUsingTree = false;
   /**
-   * Whether the current page uses tabs; for loading Javascript
+   * Whether the current page uses tabs; for loading JS/CSS
    *
    * @var boolean
    */
@@ -55,7 +55,13 @@ class NodeTreeFormatter
    *
    * @var boolean
    */
-  protected $loadAjax = false;
+  protected $isUsingAjax = false;
+  /**
+   * Whether the current page uses caching; for loading JS/CSS
+   *
+   * @var boolean
+   */
+  protected $isUsingCache = false;
 
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
@@ -65,18 +71,27 @@ class NodeTreeFormatter
   {
     $this->rootNode = $node;
     $this->context = $context;
-  }
 
-  /**
-   * @param boolean $a Whether to load branches using AJAX
-   */
-  public function setLoadAjax( $a )
-  {
-    if ( ! is_bool( $a ) ) {
-      throw new InvalidArgumentException( 'Argument must be a boolean' );
+    if (
+      $this->context instanceof NodePage_Classifier
+      && $this->context->getConfig( 'load_ajax' )
+    ) {
+      $this->isUsingAjax = true;
     }
 
-    $this->loadAjax = ( $a );
+    try {
+      if (
+        $this->context instanceof NodePage_Classifier
+        && $this->context->getConfig('cache')
+        && Cache::instance()
+      ) {
+        $this->isUsingCache = true;
+      }
+    }
+    catch ( Kohana_Exception $e ) {
+      // problem instantiating Cache; log and ignore
+      Kohana::log( 'error', $e->getMessage() );
+    }
   }
 
   /**
@@ -90,33 +105,23 @@ class NodeTreeFormatter
       return false;
     }
 
-    // classifier caching
+    if ( $this->isUsingCache ) {
+      $cache = Cache::instance();
 
-    try {
-      if (
-        $this->context instanceof NodePage_Classifier
-        && $this->context->getConfig('cache')
-        && $cache = Cache::instance()
-      ) {
-        $cache_address = $this->rootNode->getCollection()->getName() . '_'
-                         . $this->rootNode->getId();
+      $cache_address = $this->rootNode->getCollection()->getName() . '_'
+                       . $this->rootNode->getId();
 
-        $node_output = $cache->get( $cache_address );
+      $node_output = $cache->get( $cache_address );
 
-        if ( $node_output ) {
-          return $node_output;
-        }
-        else {
-          $node_output = $this->renderNode( $this->rootNode );
-          $cache->set( $cache_address, $node_output );
-
-          return $node_output;
-        }
+      if ( $node_output ) {
+        return $node_output;
       }
-    }
-    catch ( Kohana_Exception $e ) {
-      // problem instantiating Cache; log and ignore
-      Kohana::log( 'error', $e->getMessage() );
+      else {
+        $node_output = $this->renderNode( $this->rootNode );
+        $cache->set( $cache_address, $node_output );
+
+        return $node_output;
+      }
     }
 
     return $this->renderNode( $this->rootNode );
@@ -317,7 +322,7 @@ class NodeTreeFormatter
   }
 
   /**
-   * Returns whether the current page uses a tree; for loading Javascript
+   * Returns whether the current page uses a tree; for loading JS/CSS
    *
    * @return boolean
    */
@@ -327,12 +332,32 @@ class NodeTreeFormatter
   }
 
   /**
-   * Returns whether the current page uses tabs; for loading Javascript
+   * Returns whether the current page uses tabs; for loading JS/CSS
    *
    * @return boolean
    */
   public function isUsingTabs()
   {
     return $this->isUsingTabs;
+  }
+
+  /**
+   * Returns whether the current page loads via AJAX; for loading JS/CSS
+   *
+   * @return boolean
+   */
+  public function isUsingAjax()
+  {
+    return $this->isUsingAjax;
+  }
+
+  /**
+   * Returns whether the current page uses caching; for loading JS/CSS
+   *
+   * @return boolean
+   */
+  public function isUsingCache()
+  {
+    return $this->isUsingCache;
   }
 }
