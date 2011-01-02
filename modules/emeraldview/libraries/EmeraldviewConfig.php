@@ -18,7 +18,7 @@
 /**
  * load sfYaml library
  */
-require_once( Kohana::find_file('vendors', 'sfYaml/sfYaml') );
+require_once MODPATH.'emeraldview/vendors/sfYaml/sfYaml.php';
 /**
  * EmeraldviewConfig is a static wrapper class for sfYaml
  *

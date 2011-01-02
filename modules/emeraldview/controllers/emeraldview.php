@@ -142,9 +142,6 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
   
   public function view( $collection_name, $slug )
   {
-    $subnode_id = '';
-    $args = func_get_args();
-
     $collection = $this->loadCollection( $collection_name );
 
     if ( ! $collection ) {
@@ -158,45 +155,22 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
     }
 
     $root_node = Node_Document::factory( $collection, $document_id );
-    $subnode_id = null;
-    $subnode_title = null;
 
     if ( ! $root_node ) {
       return $this->show404();
     }
 
-    if ( $root_node->isPaged() ) {
-      if ( isset( $args[2] ) && (int) $args[2] ) {
-        $subnode_title = (int) $args[2];
-      }
-      elseif ( isset( $args[2] ) ) {
-        // integer cast failed
-        $subnode_id = 1;
-      }
-      elseif ( $this->input->get('page') ) {
-        $subnode_title = (int) $this->input->get('page');
-      }
-      else {
-        // page not indicated; default to first page
-        $subnode_id = '1';
-      }
-    }
-    elseif (count( $args ) > 2) {
-      // not paged, and subnode is indicated
-      $subnodes = array_slice( $args, 2 );
-      $subnode_id = implode( '.', $subnodes );
-    } // ... otherwise no subnode specified; will default to root Node
-
-    if ( $subnode_id ) {
-      $node = $root_node->getCousin( $subnode_id );
-    }
-    elseif ( $subnode_title ) {
-      $node = $root_node->getCousinByTitle( $subnode_title );
+    if ( $root_node->isPaged() && $this->input->get('page') ) {
+      $subnode_args = array( $this->input->get('page') );
     }
     else {
-      $node = $root_node;
+      $args         = func_get_args();
+      $subnode_args = array_slice( $args, 2 );
     }
 
+    $node = RouteNodeTranslator::factory( $root_node )
+            ->getNode( $subnode_args );
+  
     if ( ! $node ) {
       // whatever subnode was requested could not be found
       return $this->show404();
