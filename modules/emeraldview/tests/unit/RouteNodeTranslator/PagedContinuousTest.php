@@ -1,19 +1,20 @@
 <?php
-class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
+class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
 {
   protected $collection;
   protected $root_node;
 
   protected function setUp()
   {
-    $this->collection = Collection::factory( 'demo' );
+    $this->collection = Collection::factory( 'tidhar' );
 
     if ( ! $this->collection instanceof Collection ) {
       throw new Exception( 'Could not load Collection' );
     }
-
-    $this->root_node = Node_Document::factory( $this->collection, 'D1' );
-
+    
+    $this->root_node = Node_Document::factory( $this->collection,
+      'HASH358e1a2398f3113dd6f9f0' );
+    
     if ( ! $this->root_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );
     }
@@ -21,33 +22,36 @@ class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
 
   public function testFactory()
   {
-    $this->assertInstanceOf( 'RouteNodeTranslator',
+    $this->assertInstanceOf( 'RouteNodeTranslator_PagedContinuous',
       RouteNodeTranslator::factory( $this->root_node ) );
   }
 
+  /**
+   * @expectedException UnexpectedValueException
+   */
   public function testGetNode()
   {
+    $this->assertTrue( $this->collection->getConfig( 'paged_continuous' ) );
+
     $rnt = RouteNodeTranslator::factory( $this->root_node );
 
     $existing_subnode_args = array(
       array(),
-      array( '4' ),
-      array( 4 ),
-      array( '4', '1' ),
-      array( '4', 1 ),
+      array( '50' ),
+      array( 50 ),
+      array( '4000' ),
+      array( 4000 ),
     );
 
     $nonexisting_subnode_args = array(
       array( false ),
       array( null ),
-      array( '999' ),
-      array( 999 ),
+      array( '9999' ),
+      array( 9999 ),
     );
 
     foreach ( $existing_subnode_args as $args ) {
       $this->assertInstanceOf( 'Node_Document', $rnt->getNode( $args ) );
-      $this->assertEquals( $this->root_node->getId(),
-        $rnt->getNode( $args )->getRootId() );
     }
 
     foreach ( $nonexisting_subnode_args as $args ) {

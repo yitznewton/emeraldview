@@ -64,10 +64,17 @@ class RouteNodeTranslator
    */
   public static function factory( Node_Document $root_node )
   {
-    if ( $root_node->isPaged() ) {
+    if (
+      $root_node->isPaged()
+      && $root_node->getCollection()->getConfig('paged_continuous')
+    ) {
+      return new RouteNodeTranslator_PagedContinuous( $root_node );
+    }
+    elseif ( $root_node->isPaged() ) {
       return new RouteNodeTranslator_Paged( $root_node );
     }
-    
-    return new RouteNodeTranslator( $root_node );
+    else {
+      return new RouteNodeTranslator( $root_node );
+    }
   }
 }

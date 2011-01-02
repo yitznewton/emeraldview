@@ -78,6 +78,14 @@ abstract class Infodb
    */
   abstract public function getCousinIdByDocnum( Node_Document $node, $docnum );
   /**
+   * Returns id of node given the title field of the desired node; for use
+   * with continuous paged Collections
+   *
+   * @param string $title
+   * @return string
+   */
+  abstract public function getNodeIdByTitle( $title );
+  /**
    * Returns id of related node given the title field of the desired node
    *
    * @param Node_Document $node

@@ -313,6 +313,20 @@ class Collection
   }
 
   /**
+   * Returns a Node_Document based on a given title; for use with continuous
+   * paged Collections
+   *
+   * @param string $title The Node's title
+   * @return Node_Document
+   */
+  public function getNodeByTitle( $title )
+  {
+    $id = $this->getInfodb()->getNodeIdByTitle( $title );
+
+    return Node_Document::factory( $this, $id );
+  }
+
+  /**
    * Returns an array of randomly-selected nodes which have at least one
    * instance of the specified metadata element
    *

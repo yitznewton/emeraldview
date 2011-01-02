@@ -170,10 +170,15 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
 
     $node = RouteNodeTranslator::factory( $root_node )
             ->getNode( $subnode_args );
-  
+
     if ( ! $node ) {
       // whatever subnode was requested could not be found
       return $this->show404();
+    }
+
+    if ( $node->getRootId() != $root_node->getId() ) {
+      // crossing into another document via RouteNodeTranslator_PagedContinuous
+      url::redirect( $node->getNodePage()->getUrl() );
     }
 
     $this->loadView( 'view' );

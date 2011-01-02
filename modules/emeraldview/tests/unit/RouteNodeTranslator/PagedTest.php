@@ -1,18 +1,19 @@
 <?php
-class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
+class RouteNodeTranslator_PagedTest extends PHPUnit_Framework_TestCase
 {
   protected $collection;
   protected $root_node;
 
   protected function setUp()
   {
-    $this->collection = Collection::factory( 'demo' );
+    $this->collection = Collection::factory( 'paged' );
 
     if ( ! $this->collection instanceof Collection ) {
       throw new Exception( 'Could not load Collection' );
     }
 
-    $this->root_node = Node_Document::factory( $this->collection, 'D1' );
+    $this->root_node = Node_Document::factory( $this->collection,
+      'HASH010d952d4f6624863c78611d' );
 
     if ( ! $this->root_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );
@@ -21,20 +22,21 @@ class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
 
   public function testFactory()
   {
-    $this->assertInstanceOf( 'RouteNodeTranslator',
+    $this->assertInstanceOf( 'RouteNodeTranslator_Paged',
       RouteNodeTranslator::factory( $this->root_node ) );
   }
 
+  /**
+   * @expectedException UnexpectedValueException
+   */
   public function testGetNode()
   {
     $rnt = RouteNodeTranslator::factory( $this->root_node );
 
     $existing_subnode_args = array(
       array(),
-      array( '4' ),
-      array( 4 ),
-      array( '4', '1' ),
-      array( '4', 1 ),
+      array( '9' ),
+      array( 9 ),
     );
 
     $nonexisting_subnode_args = array(

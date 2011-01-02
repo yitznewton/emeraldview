@@ -204,6 +204,33 @@ class Infodb_Sqlite extends Infodb
 
   /**
    *
+   * @param string $title
+   * @return string
+   */
+  public function getNodeIdByTitle( $title )
+  {
+    if ( ! $title ) {
+      $msg = 'Argument must not be false';
+      throw new InvalidArgumentException( $msg );
+    }
+
+    $params = array(
+      "%<Title>$title\n%",
+      "%<Title>$title",
+    );
+
+    $query  = 'SELECT key, value FROM data '
+              . 'WHERE (value LIKE ?'
+              . 'OR value LIKE ?)';
+
+    $stmt = $this->pdo->prepare( $query );
+    $stmt->execute( $params );
+
+    return $stmt->fetchColumn();
+  }
+
+  /**
+   *
    * @param Node_Document $node
    * @param string $title
    * @return string
