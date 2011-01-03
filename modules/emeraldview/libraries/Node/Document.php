@@ -136,30 +136,4 @@ class Node_Document extends Node
 
     return $nodes;
   }
-
-  /**
-   * @param Collection $collection
-   * @param string $node_id
-   * @return Node_Document
-   */
-  public static function factory( Collection $collection, $node_id )
-  {
-    try {
-      return new Node_Document( $collection, $node_id );
-    }
-    catch (InvalidArgumentException $e) {
-      return false;
-    }
-  }
-
-  /**
-   *
-   * @param Collection $collection
-   * @param string $node_id
-   * @return Node_Document
-   */
-  protected function staticFactory( Collection $collection, $node_id )
-  {
-    return Node_Document::factory( $collection, $node_id );
-  }
 }

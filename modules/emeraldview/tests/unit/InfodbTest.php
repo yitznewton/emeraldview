@@ -14,6 +14,8 @@ class InfodbTest extends PHPUnit_Framework_TestCase
 
   public function testGetNodeIdByTitle()
   {
-    $this->assertType( 'string', $this->continuous_paged_collection->getInfodb()->getNodeIdByTitle('100'));
+    $this->assertInternalType( 'string',
+      $this->continuous_paged_collection->getInfodb()
+      ->getNodeIdByTitle('100'));
   }
 }

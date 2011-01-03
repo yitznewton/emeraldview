@@ -92,29 +92,4 @@ class Node_Classifier extends Node
       return Node_Document::factory( $this->collection, $node_id );
     }
   }
-
-  /**
-   * @param Collection $collection
-   * @param string $node_id
-   * @return Node_Classifier
-   */
-  public static function factory( Collection $collection, $node_id )
-  {
-    try {
-      return new Node_Classifier( $collection, $node_id );
-    }
-    catch (InvalidArgumentException $e) {
-      return false;
-    }
-  }
-
-  /**
-   * @param Collection $collection
-   * @param string $node_id
-   * @return Node_Classifier
-   */
-  protected function staticFactory( Collection $collection, $node_id )
-  {
-    return Node_Classifier::factory( $collection, $node_id );
-  }
 }

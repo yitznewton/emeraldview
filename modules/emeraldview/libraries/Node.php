@@ -178,7 +178,7 @@ abstract class Node
     $class = get_class( $this );
 
     // ugly workaround for lack of LSB in < 5.3
-    $this->rootNode = $this->staticFactory(
+    $this->rootNode = Node::factory(
       $this->collection, $this->getRootId()
     );
 
@@ -226,7 +226,7 @@ abstract class Node
       $id = $this->getRootId() . '.' . $id;
     }
 
-    return $this->staticFactory( $this->collection, $id );
+    return Node::factory( $this->collection, $id );
   }
 
   /**
@@ -341,15 +341,18 @@ abstract class Node
    * @param string $node_id
    * @return Node
    */
-  abstract public static function factory( Collection $collection, $node_id );
-
-  /**
-   * This is a pseudo-static proxy function that allows code in this abstract
-   * class to call a static function defined in the instance's subclass;
-   * i.e. a substitute for proper late static binding
-   *
-   * @param Collection $collection
-   * @param string $node_id
-   */
-  abstract protected function staticFactory( Collection $collection, $node_id );
+  public static function factory( Collection $collection, $node_id )
+  {
+    try {
+      if ( substr( $node_id, 0, 2 ) == 'CL' ) {
+        return new Node_Classifier( $collection, $node_id );
+      }
+      else {
+        return new Node_Document( $collection, $node_id );
+      }
+    }
+    catch (InvalidArgumentException $e) {
+      return false;
+    }
+  }
 }
