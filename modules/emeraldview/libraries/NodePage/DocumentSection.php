@@ -120,7 +120,6 @@ class NodePage_DocumentSection extends NodePage
       }
       else {
         $subnode_id = $this->getNode()->getField( 'Title' );
-        //$subnode_id = 'jim';
       }
     }
     else {
