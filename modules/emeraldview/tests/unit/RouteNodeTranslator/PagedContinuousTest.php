@@ -13,7 +13,7 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
     }
     
     $this->root_node = Node_Document::factory( $this->collection,
-      'HASH358e1a2398f3113dd6f9f0' );
+      'HASH01fb5e6d0499d20a049915b2' );
     
     if ( ! $this->root_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );
@@ -37,10 +37,10 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
 
     $existing_subnode_args = array(
       array(),
-      array( '50' ),
-      array( 50 ),
-      array( '4000' ),
-      array( 4000 ),
+      array( '4873' ),
+      array( 4873 ),
+      array( '5081' ),
+      array( 5081 ),
     );
 
     $nonexisting_subnode_args = array(

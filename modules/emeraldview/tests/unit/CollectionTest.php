@@ -29,7 +29,7 @@ class CollectionTest extends PHPUnit_Framework_TestCase
     $this->paged_node = Node_Document::factory( $this->paged_collection,
       'HASH010d952d4f6624863c78611d' );
     $this->continuous_paged_node = Node_Document::factory(
-      $this->continuous_paged_collection, 'HASH358e1a2398f3113dd6f9f0' );
+      $this->continuous_paged_collection, 'HASH01fb5e6d0499d20a049915b2' );
     $this->nonpaged_node = Node_Document::factory(
       $this->nonpaged_collection, 'D1' );
 
@@ -49,6 +49,6 @@ class CollectionTest extends PHPUnit_Framework_TestCase
   public function testGetNodeByTitle()
   {
     $this->assertInstanceOf( 'Node_Document',
-      $this->continuous_paged_collection->getNodeByTitle( '100' ) );
+      $this->continuous_paged_collection->getNodeByTitle( '4875' ) );
   }
 }
