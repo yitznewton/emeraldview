@@ -18,8 +18,8 @@
 /**
  * load PHP-gettext reader library
  */
-require( Kohana::find_file('vendors', 'php-gettext/Gettext') );
-require( Kohana::find_file('vendors', 'php-gettext/Streams') );
+require MODPATH.'emeraldview/vendors/php-gettext/Gettext.php';
+require MODPATH.'emeraldview/vendors/php-gettext/Streams.php';
 /**
  * L10n is a static container class for a single main Gettext instance and
  * optional child Gettext instances for alternate gettext domains
