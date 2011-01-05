@@ -18,5 +18,11 @@ class NodePage_ClassifierTest extends PHPUnit_Framework_TestCase
 
     $this->assertFalse(
       NodePage_Classifier::retrieveBySlug( $this->collection, 'foo-bar' ) );
+
+    try {
+      NodePage_Classifier::retrieveBySlug( $this->collection, array() );
+      $this->fail();
+    }
+    catch ( InvalidArgumentException $e ) {}
   }
 }
