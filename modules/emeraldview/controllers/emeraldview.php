@@ -181,7 +181,19 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       url::redirect( $node->getNodePage()->getUrl() );
     }
 
-    $this->loadView( 'view' );
+    try {
+      // templates split as of 0.2.1
+      if ( $node->isPaged() ) {
+        $this->loadView( 'viewPaged' );
+      }
+      else {
+        $this->loadView( 'viewNonpaged' );
+      }
+    }
+    catch ( Kohana_Exception $e ) {
+      // try with single template from 0.2.0
+      $this->loadView( 'view' );
+    }
 
     $page = $node->getNodePage();
     $search_terms = $this->input->get('search');
