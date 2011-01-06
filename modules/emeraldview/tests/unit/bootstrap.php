@@ -1,10 +1,10 @@
 <?php
-define('MODPATH', '/www/websites/emeraldview/modules/');
+define('MODPATH', dirname(__FILE__).'/../../../');
 define('APPPATH', dirname(__FILE__).'/../application/');
 define('SYSPATH', '');
 
 set_include_path( get_include_path().PATH_SEPARATOR
-                  .'/www/websites/emeraldview/modules/emeraldview/libraries'
+                  .MODPATH.'emeraldview/libraries'
                   );
 
 require_once MODPATH.'emeraldview/core/Kohana.php';

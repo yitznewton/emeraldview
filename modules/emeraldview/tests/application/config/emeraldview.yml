@@ -1,0 +1,38 @@
+emeraldview_name:          Encyclopedia of the Founders and Builders of Israel
+institution_url:           http://www.tourolib.org/
+institution_name:          Touro College Libraries
+
+greenstone_collection_dir: <?php echo MODPATH.'emeraldview/tests/collect' ?>
+
+collections:
+  demo:
+    active: true
+    search_results_format: "[Title]"
+    classifiers:
+      CL4:
+        slug: how-to
+  paged:
+    active: true
+  tidhar:
+    active: true
+    theme: tidhar
+    paged_continuous: true
+    send_email_to: "michoel.ronn@touro.edu"
+    solr_host: localhost
+    solr_simple_qt: dismaxev
+    slug_metadata_elements:
+      - Volume
+    search_results_format_function: |
+      return L10n::vsprintf( 'Page %s', array( $node->getField( 'Title' ) ) );
+    classifiers:
+      CL1:
+        cache: true
+        format_function: |
+          return '[a]' . L10n::vsprintf( 'Volume %s', array( $node->getField( 'Volume' ) ) ) . '[/a]';
+      CL2:
+        load_ajax: true
+        cache: true
+        dir: rtl
+        format:
+          leaf: "[Subject]"
+
