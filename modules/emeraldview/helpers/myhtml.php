@@ -189,6 +189,10 @@ class myhtml {
     $attributes  = array_merge( $default_attributes, $attributes );
     $pdf_options = array_merge( $default_pdf_options, $pdf_options );
 
+    if ( isset( $pdf_options['search'] ) && ! $pdf_options['search'] ) {
+      unset( $pdf_options['search'] );
+    }
+
     // we can't use http_build_query() because we need to preserve spaces
     // in #search, and not replace them with '+'
     $pdf_options_string = '';
