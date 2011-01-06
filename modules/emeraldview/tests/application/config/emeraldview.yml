@@ -35,4 +35,7 @@ collections:
         dir: rtl
         format:
           leaf: "[Subject]"
+  memory:
+    active: true
+
 

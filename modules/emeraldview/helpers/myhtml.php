@@ -22,7 +22,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class myhtml_Core {
+class myhtml {
   /**
    * Returns specified HTML enclosed by HTML tags as specified by $tag, with
    * specified aattributes
@@ -170,5 +170,44 @@ class myhtml_Core {
     );
 
     return $div_element;
+  }
+
+  public static function iframe_pdf(
+    $url, $attributes = array(), $pdf_options = array()
+  ) {
+    $default_attributes = array(
+      'height' => '800',
+      'width'  => '100%',
+    );
+
+    $default_pdf_options = array(
+      'view'      => 'Fit',
+      'scrollbar' => '0',
+      'navpanes'  => '0',
+    );
+
+    $attributes  = array_merge( $default_attributes, $attributes );
+    $pdf_options = array_merge( $default_pdf_options, $pdf_options );
+
+    // we can't use http_build_query() because we need to preserve spaces
+    // in #search, and not replace them with '+'
+    $pdf_options_string = '';
+
+    foreach ( $pdf_options as $key => $value ) {
+      $pdf_options_string .= "&$key=$value";
+    }
+
+    if ( $pdf_options_string ) {
+      // trim extra '&'
+      $pdf_options_string = '#' . substr( $pdf_options_string, 1 );
+    }
+
+    $attributes['src'] = $url . $pdf_options_string;
+
+    $iframe_element = myhtml::element(
+      'iframe', '', $attributes
+    );
+
+    return $iframe_element;
   }
 }

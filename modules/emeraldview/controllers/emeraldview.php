@@ -196,7 +196,12 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
     }
 
     $page = $node->getNodePage();
+    
     $search_terms = $this->input->get('search');
+
+    if ( ! $search_terms ) {
+      $search_terms = array();
+    }
 
     if ( $search_terms ) {
       $highlighter = new Highlighter_Text();
@@ -233,7 +238,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
     $this->passDown( 'tree_pager',      NodeTreePager::html( $node ) );
     $this->passDown( 'paged_urls',      $paged_urls );
     $this->passDown( 'tree',            $tree );
-    $this->passDown( 'search_terms',    $this->input->get('search') );
+    $this->passDown( 'search_terms',    $search_terms );
     $this->passDown( 'text',            $text );
   }
 

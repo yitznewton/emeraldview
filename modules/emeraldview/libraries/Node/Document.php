@@ -103,6 +103,17 @@ class Node_Document extends Node
   }
 
   /**
+   * Returns whether the current Node is a PDF section Node of a paged
+   * document
+   *
+   * @return boolean
+   */
+  public function isPagedPDF()
+  {
+    return ( $this->getField('FileFormat') == 'PagedPDF' );
+  }
+
+  /**
    * @param string $node_id
    * @return Node_Document
    */

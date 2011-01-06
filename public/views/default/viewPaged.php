@@ -57,6 +57,12 @@
   </a>
 </div>
 
+<?php elseif ( $page->getNode()->isPagedPDF() ): ?>
+<?php echo myhtml::iframe_pdf(
+  $source_url,
+  array( 'class' => 'paged-pdf' ),
+  array( 'search' => implode(' ', $search_terms)) ) ?>
+
 <?php elseif ($source_url): ?>
 <div id="source-link">
   <a href="<?php echo $source_url ?>">
@@ -65,8 +71,10 @@
 </div>
 <?php endif; ?>
 
+<?php if ( ! $page->getNode()->isPagedPDF() ): ?>
 <div id="body-text">
   <?php echo $text ?>
 </div>
+<?php endif; ?>
 
 <?php include 'viewFoot.php' ?>

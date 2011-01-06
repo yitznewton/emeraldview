@@ -336,6 +336,11 @@ ul.hits-pager li{
 	padding: 0 0 1em;
 }
 
+iframe.paged-pdf{
+  margin-top: 1em;
+  border: 0;
+}
+
 .top-link{
   padding: 1.5em 0 1em;
   font-size: 0.8em;

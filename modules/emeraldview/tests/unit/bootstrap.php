@@ -3,8 +3,9 @@ define('MODPATH', dirname(__FILE__).'/../../../');
 define('APPPATH', dirname(__FILE__).'/../application/');
 define('SYSPATH', '');
 
-set_include_path( get_include_path().PATH_SEPARATOR
-                  .MODPATH.'emeraldview/libraries'
+set_include_path( get_include_path()
+                  .PATH_SEPARATOR.MODPATH.'emeraldview/libraries'
+                  .PATH_SEPARATOR.MODPATH.'emeraldview/helpers'
                   );
 
 require_once MODPATH.'emeraldview/core/Kohana.php';
