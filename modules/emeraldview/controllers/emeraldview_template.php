@@ -99,12 +99,12 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
    */
   protected function passDown( $name, $value )
   {
+    $this->$name = $value;
     $this->globals[ $name ] = $value;
   }
 
   protected function setTheme( $name )
   {
-    $this->theme = $name;
     $this->passDown( 'theme', $name );
   }
 
@@ -209,8 +209,7 @@ abstract class Emeraldview_Template_Controller extends Template_Controller
 
   protected function setLanguage( $language )
   {
-    $this->language = $language;
-    $this->passDown( 'language', $this->language );
+    $this->passDown( 'language', $language );
     
     $this->loadGettextDomain( $language );
   }
