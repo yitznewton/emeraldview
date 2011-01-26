@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class NodePage_Classifier extends NodePage
+class NodePage_Classifier extends NodePage implements NodeTreeContext
 {
   /**
    * An array of slugs for all classifiers in the collection
@@ -37,8 +37,8 @@ class NodePage_Classifier extends NodePage
    * specified in config/emeraldview.yml
    *
    * @param string $subnode
-   * @param mixed $default
-   * @return mixed
+   * @param string|array $default
+   * @return string|array
    */
   public function getConfig( $subnode = null, $default = null )
   {
@@ -95,7 +95,7 @@ class NodePage_Classifier extends NodePage
     $pages = array();
     
     foreach ( $nodes as $node ) {
-      $pages[] = $node->getNodePage();
+      $pages[] = NodePage::factory( $this->collection, $node );
     }
 
     return $pages;
@@ -154,8 +154,10 @@ class NodePage_Classifier extends NodePage
 
     foreach ( NodePage_Classifier::$slugs as $id => $test_slug ) {
       if ( $slug == $test_slug ) {
-        $node = Node::factory( $collection, $id );
-        return $node->getNodePage();
+        // TODO: use Node::factory() instead?
+        $node = $collection->getNode( $id );
+        
+        return NodePage::factory( $collection, $node );
       }
     }
 

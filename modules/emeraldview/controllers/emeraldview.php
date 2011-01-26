@@ -154,7 +154,8 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    $root_node = Node::factory( $collection, $document_id );
+    $root_node = $collection->getNode( $document_id );
+    $root_page = NodePage::factory( $collection, $root_node );
 
     if ( ! $root_node ) {
       return $this->show404();
@@ -168,7 +169,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       $subnode_args = array_slice( $args, 2 );
     }
 
-    $node = RouteNodeTranslator::factory( $root_node )
+    $node = RouteNodeTranslator::factory( $collection, $root_node )
             ->getNode( $subnode_args );
 
     if ( ! $node ) {
@@ -178,7 +179,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
 
     if ( $node->getRootId() != $root_node->getId() ) {
       // crossing into another document via RouteNodeTranslator_PagedContinuous
-      url::redirect( $node->getNodePage()->getUrl() );
+      url::redirect( $root_page->getUrl() );
     }
 
     try {
@@ -195,7 +196,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       $this->loadView( 'view' );
     }
 
-    $page = $node->getNodePage();
+    $page = NodePage::factory( $collection, $node );
     
     $search_terms = $this->input->get('search');
 
@@ -233,9 +234,9 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
     $this->passDown( 'node',            $node );
     $this->passDown( 'page',            $page );
     $this->passDown( 'root_node',       $root_node );
-    $this->passDown( 'root_page',       $root_node->getNodePage() );
+    $this->passDown( 'root_page',       $root_page );
     $this->passDown( 'language_select', myhtml::language_select( $this->availableLanguages, $this->language ) );
-    $this->passDown( 'tree_pager',      NodeTreePager::html( $node ) );
+    $this->passDown( 'tree_pager',      NodeTreePager::html( $collection, $node ) );
     $this->passDown( 'paged_urls',      $paged_urls );
     $this->passDown( 'tree',            $tree );
     $this->passDown( 'search_terms',    $search_terms );

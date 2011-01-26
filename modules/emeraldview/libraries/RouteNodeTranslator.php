@@ -59,14 +59,15 @@ class RouteNodeTranslator
   }
 
   /**
+   * @param Collection $collection
    * @param Node_Document $root_node
    * @return RouteNodeTranslator_Paged
    */
-  public static function factory( Node_Document $root_node )
+  public static function factory(
+    Collection $collection, Node_Document $root_node )
   {
     if (
-      $root_node->isPaged()
-      && $root_node->getCollection()->getConfig('paged_continuous')
+      $root_node->isPaged() && $collection->getConfig('paged_continuous')
     ) {
       return new RouteNodeTranslator_PagedContinuous( $root_node );
     }

@@ -62,8 +62,7 @@ class Node_Document extends Node
     $new_docnum = $starting_docnum + $interval;
 
     // use ad hoc function rather than write a whole ORM mapping
-    $new_id = $this->collection->getInfodb()
-              ->getCousinIdByDocnum( $this, $new_docnum );
+    $new_id = $this->infodb->getCousinIdByDocnum( $this, $new_docnum );
 
     return $this->getCousin( $new_id );
   }
@@ -77,8 +76,7 @@ class Node_Document extends Node
    */
   public function getCousinByTitle( $title )
   {
-    $id = $this->getCollection()->getInfodb()
-          ->getCousinIdByTitle( $this, $title );
+    $id = $this->infodb->getCousinIdByTitle( $this, $title );
 
     return $this->getCousin( $id );
   }
@@ -117,6 +115,7 @@ class Node_Document extends Node
    * Returns an array of all root Node_Document instances for the given
    * Collection
    *
+   * @todo refactor this into SlugLookup
    * @param Collection $collection
    * @return array
    */
@@ -133,7 +132,7 @@ class Node_Document extends Node
         continue;
       }
 
-      $nodes[] = Node::factory( $collection, $id );
+      $nodes[] = $this->getCousin( $id );
     }
 
     return $nodes;

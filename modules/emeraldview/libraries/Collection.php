@@ -305,8 +305,8 @@ class Collection
         continue;
       }
       
-      $node = Node::factory( $this, $id );
-      $classifiers[] = NodePage_Classifier::factory( $node );
+      $node = $this->getNode( $id );
+      $classifiers[] = NodePage_Classifier::factory( $this, $node );
     }
     
     return $this->classifiers = $classifiers;
@@ -323,7 +323,18 @@ class Collection
   {
     $id = $this->getInfodb()->getNodeIdByTitle( $title );
 
-    return Node::factory( $this, $id );
+    return $this->getNode( $id );
+  }
+
+  /**
+   * Returns a Node from the Collection bearing the specified ID
+   *
+   * @param string $id The Node's ID
+   * @return Node
+   */
+  public function getNode( $id )
+  {
+    return Node::factory( $this->infodb, $id );
   }
 
   /**
@@ -340,7 +351,7 @@ class Collection
     $nodes    = array();
 
     foreach ( $node_ids as $id ) {
-      $nodes[] = Node::factory( $this, $id );
+      $nodes[] = $this->getNode( $id );
     }
 
     return $nodes;

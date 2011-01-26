@@ -44,7 +44,8 @@ class NodeFormatter_String extends NodeFormatter
    * @param NodeFormatterContext An object representing the situation where the string is needed
    * @param array|string $format_config 
    */
-  public function __construct( Node $node, $context, $format_config )
+  public function __construct( Node $node, NodeFormatterContext $context,
+    $format_config )
   {
     parent::__construct( $node, $context );
     

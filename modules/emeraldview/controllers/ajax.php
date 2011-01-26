@@ -88,14 +88,14 @@ class Ajax_Controller extends Emeraldview_Template_Controller
       exit;
     }
 
-    $node = Node::factory( $collection, $node_id );
+    $node = $collection->getNode( $node_id );
 
     if ( ! $node ) {
       header('HTTP/1.1 404 Not Found');
       exit;
     }
 
-    $page = $node->getRootNode()->getNodePage();
+    $page = NodePage::factory( $collection, $node->getRootNode() );
 
     $node_tree_formatter = new NodeTreeFormatter( $node, $page );
 

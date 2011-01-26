@@ -46,12 +46,12 @@ class NodeFormatter
 
   /**
    * @param Node $node
-   * @param NodePage|SearchHandler An object representing the situation where the string is needed
+   * @param NodeFormatterContext An object representing the situation where the string is needed
    */
   protected function __construct( Node $node, $context )
   {
     $this->node     = $node;
-    $this->nodePage = $node->getNodePage();
+    $this->nodePage = NodePage::factory( $context->getCollection(), $node );
     $this->context  = $context;
   }
 
@@ -84,7 +84,7 @@ class NodeFormatter
    * @param NodeFormatterContext $context An object representing the situation where the string is needed; used for determining which format specification to use
    * @return NodeFormatter
    */
-  public static function factory( Node $node, $context )
+  public static function factory( Node $node, NodeFormatterContext $context )
   {
     // changed from switch ( get_class() ) to accomodate custom
     // application-level subclasses of SearchHandler

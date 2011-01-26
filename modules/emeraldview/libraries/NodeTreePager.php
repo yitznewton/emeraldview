@@ -29,10 +29,11 @@ class NodeTreePager
    * Returns links or link placeholders corresponding to the previous and next
    * Nodes in a hierarchical document
    *
+   * @param Collection $collection
    * @param Node_Document $node
    * @return string
    */
-  public static function html( Node_Document $node )
+  public static function html( Collection $collection, Node_Document $node )
   {
     $output = '';
     
@@ -40,7 +41,7 @@ class NodeTreePager
     $next_node = $node->getNextNode();
 
     if ($prev_node) {
-      $prev_url = NodePage::factory( $prev_node )->getUrl();
+      $prev_url = NodePage::factory( $collection, $prev_node )->getUrl();
       $output .= myhtml::element(
         'a', L10n::_('Previous page'), array('href' => $prev_url)
       );
@@ -52,7 +53,7 @@ class NodeTreePager
     }
 
     if ($next_node) {
-      $next_url = NodePage::factory( $next_node )->getUrl();
+      $next_url = NodePage::factory( $collection, $next_node )->getUrl();
       $output .= myhtml::element(
         'a', L10n::_('Next page'), array('href' => $next_url)
       );

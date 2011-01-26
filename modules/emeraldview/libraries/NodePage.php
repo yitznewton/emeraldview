@@ -26,6 +26,12 @@
 abstract class NodePage implements NodeFormatterContext
 {
   /**
+   * The Collection containing the Node
+   *
+   * @var Collection
+   */
+  protected $collection;
+  /**
    * The Node being wrapped
    *
    * @var Node
@@ -33,11 +39,13 @@ abstract class NodePage implements NodeFormatterContext
   protected $node;
 
   /**
+   * @param Collection, $collection
    * @param Node $node 
    */
-  protected function __construct( Node $node )
+  protected function __construct( Collection $collection, Node $node )
   {
-    $this->node = $node;
+    $this->collection = $collection;
+    $this->node       = $node;
   }
 
   /**
@@ -84,20 +92,21 @@ abstract class NodePage implements NodeFormatterContext
    */
   public function getCollection()
   {
-    return $this->getNode()->getCollection();
+    return $this->collection;
   }
 
   /**
+   * @param Collection $collection
    * @param Node $node
    * @return NodePage
    */
-  public static function factory( Node $node )
+  public static function factory( Collection $collection, Node $node )
   {
     switch ( get_class( $node ) ) {
       case 'Node_Classifier':
-        return new NodePage_Classifier( $node );
+        return new NodePage_Classifier( $collection, $node );
       case 'Node_Document':
-        return new NodePage_DocumentSection( $node );
+        return new NodePage_DocumentSection( $collection, $node );
       default:
         throw new Exception( 'Unrecognized subclass of Node' );
     }

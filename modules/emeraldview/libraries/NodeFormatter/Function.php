@@ -37,7 +37,8 @@ class NodeFormatter_Function extends NodeFormatter
    * @param NodeFormatterContext An object representing the situation where the string is needed
    * @param string $function_definition 
    */
-  public function __construct( Node $node, $context, $function_definition )
+  public function __construct( Node $node, NodeFormatterContext $context,
+    $function_definition )
   {
     parent::__construct( $node, $context );
 

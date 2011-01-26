@@ -23,7 +23,7 @@
  * @copyright  Copyright (c) 2010 Benjamin Schaffer (http://yitznewton.org/)
  * @license    http://yitznewton.org/emeraldview/index.php?title=License     New BSD License
  */
-class NodePage_DocumentSection extends NodePage
+class NodePage_DocumentSection extends NodePage implements NodeTreeContext
 {
   /**
    * The NodePage as rendered in HTML
@@ -45,7 +45,7 @@ class NodePage_DocumentSection extends NodePage
       return false;
     }
 
-    return $this->getNode()->getCollection()->getGreenstoneUrl() . '/archives/'
+    return $this->collection->getGreenstoneUrl() . '/archives/'
            . $root_node->getField('assocfilepath') . '/cover.jpg';
   }
 
@@ -60,7 +60,7 @@ class NodePage_DocumentSection extends NodePage
       return $this->html;
     }
 
-    $xml_file = $this->getCollection()->getGreenstoneDirectory()
+    $xml_file = $this->collection->getGreenstoneDirectory()
                 . '/index/text/' . $this->getNode()->getRootNode()->getField( 'archivedir' )
                 . '/doc.xml';
 
@@ -77,7 +77,7 @@ class NodePage_DocumentSection extends NodePage
     $html = trim( $dom_nodes->item(0)->nodeValue );
 
     // fix Greenstone macro'ed internal URLs
-    $path = url::base() . 'files/' . $this->getCollection()->getGreenstoneName() . '/index/assoc/'
+    $path = url::base() . 'files/' . $this->collection->getGreenstoneName() . '/index/assoc/'
             . $this->getNode()->getRootNode()->getField( 'archivedir' );
     $html = str_replace( '_httpdocimg_', $path, $html );
 
@@ -133,14 +133,14 @@ class NodePage_DocumentSection extends NodePage
       $section_url = '';
     }
 
-    $slug = $this->getCollection()->getSlugLookup()
+    $slug = $this->collection->getSlugLookup()
             ->retrieveSlug( $root_id );
 
     if ( ! $slug ) {
       throw new Exception( 'Slug lookup failed' );
     }
 
-    return $this->getCollection()->getUrl() . "/view/$slug$section_url";
+    return $this->collection->getUrl() . "/view/$slug$section_url";
   }
 
   /**
@@ -200,7 +200,7 @@ class NodePage_DocumentSection extends NodePage
     if ( preg_last_error() ) {
       // probably tried to get a metadata element that was not set
       $msg = 'regex error in NodePage_DocumentSection::getMetadataUrl() '
-             . 'in collection ' . $this->getNode()->getCollection() . ' '
+             . 'in collection ' . $this->collection . ' '
              . 'for node ' . $this->getNode()->getId() . 'trying to retrieve '
              . 'element ' . $element_name;
 
@@ -209,7 +209,7 @@ class NodePage_DocumentSection extends NodePage
       return false;
     }
 
-    $url  = $this->getCollection()->getGreenstoneUrl()
+    $url  = $this->collection->getGreenstoneUrl()
             . '/index/assoc/' . $element;
 
     return $url;
@@ -223,7 +223,7 @@ class NodePage_DocumentSection extends NodePage
    */
   public function getDisplayMetadata()
   {
-    $fields_to_display = $this->getCollection()->getConfig( 'display_metadata' );
+    $fields_to_display = $this->collection->getConfig( 'display_metadata' );
 
     if ( ! $fields_to_display ) {
       return array();
@@ -279,8 +279,7 @@ class NodePage_DocumentSection extends NodePage
     $metadata = $this->getNode()->getAllFields();
     $url = preg_replace('/ \[ (\w+) \] /ex', '$metadata["\\1"]', $url);
 
-    $url  = $this->getCollection()->getGreenstoneUrl()
-            . '/index/assoc/' . $url;
+    $url  = $this->collection->getGreenstoneUrl() . '/index/assoc/' . $url;
 
     return $url;
   }
@@ -309,11 +308,13 @@ class NodePage_DocumentSection extends NodePage
     else {
       // previous node exists and is not the root, but rather another child
       // Node
-      $prev_url = NodePage::factory( $prev_node )->getUrl();
+      $prev_url = NodePage::factory( $this->collection, $prev_node )
+                  ->getUrl();
     }
 
     if ( $next_node ) {
-      $next_url = NodePage::factory( $next_node )->getUrl();
+      $next_url = NodePage::factory( $this->collection, $next_node )
+                  ->getUrl();
     }
     else {
       $next_url = '';

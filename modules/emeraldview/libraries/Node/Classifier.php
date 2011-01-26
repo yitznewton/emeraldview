@@ -34,13 +34,9 @@ class Node_Classifier extends Node
    */
   protected $mdoffsets;
 
-  /**
-   * @param Collection $collection
-   * @param string $node_id
-   */
-  protected function __construct( Collection $collection, $node_id = null )
+  protected function __construct( Infodb $infodb, $node_id = null )
   {
-    parent::__construct( $collection, $node_id );
+    parent::__construct( $infodb, $node_id );
     
     if ( isset( $this->data['mdoffset'] ) && $this->data['mdoffset'] !== '') {
       $this->mdoffsets = explode( ';', $this->data['mdoffset'] );
@@ -69,11 +65,11 @@ class Node_Classifier extends Node
    */
   public function getRandomLeafNodes( $count = 1 )
   {
-    $node_ids = $this->collection->getInfodb()->getRandomLeafNodeIds( $this, $count );
+    $node_ids = $this->infodb->getRandomLeafNodeIds( $this, $count );
     $nodes    = array();
 
     foreach ( $node_ids as $id ) {
-      $nodes[] = Node::factory( $this->collection, $id );
+      $nodes[] = $this->getCousin( $id );
     }
 
     return $nodes;

@@ -37,7 +37,8 @@ class RouteNodeTranslator_PagedContinuous extends RouteNodeTranslator
     }
 
     if ( is_string( $subnode_args[0] ) || is_int( $subnode_args[0] ) ) {
-      return $this->root_node->getCollection()->getNodeByTitle( $subnode_args[0] );
+      // FIXME: not yet implemented
+      return $this->root_node->getCousinByTitle( $subnode_args[0] );
     }
     else {
       $msg = 'Unexpected subnode value';

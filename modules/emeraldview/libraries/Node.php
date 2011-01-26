@@ -26,12 +26,6 @@
 abstract class Node
 {
   /**
-   * The parent Collection
-   *
-   * @var Collection
-   */
-  protected $collection;
-  /**
    * @var string
    */
   protected $id;
@@ -55,51 +49,18 @@ abstract class Node
   protected $rootNode;
   
   /**
-   * Returns the current Node's child of specified id.
-   *
-   * @todo This is vestigial from the old Node factory; eliminate it
-   * @param string $node_id
-   * @return Node
-   */
-  protected function getChild( $node_id )
-  {
-    return Node::factory( $this->collection, $node_id );
-  }
-  
-  /**
-   * @param Collection $collection
+   * @param Infodb $infodb
    * @param string $node_id
    */
-  protected function __construct(
-    Collection $collection, $node_id = null
-  )
+  protected function __construct( Infodb $infodb, $node_id )
   {
-    $this->id = $node_id;
-    $this->data = $collection->getInfodb()->getNode( $this->id );
+    $this->id     = $node_id;
+    $this->infodb = $infodb;
+    $this->data   = $this->infodb->getNode( $this->id );
 
     if ( ! $this->data ) {
       throw new InvalidArgumentException('No such node');
     }
-
-    $this->collection = $collection;
-  }
-  
-  /**
-   * Returns a string representing the Node in a greater context (e.g. classifier
-   * tree or search results list)
-   *
-   * @return string
-   */
-  public function format()
-  {
-    $node_formatter = NodeFormatter::factory( $this );
-    $text = $node_formatter->format();
-
-    if ( strpos( $text, '<a' ) === false ) {
-      $text = html::anchor( $this->getNodePage()->getUrl(), $text );
-    }
-
-    return $text;
   }
 
   /**
@@ -176,9 +137,7 @@ abstract class Node
       return $this->rootNode;
     }
 
-    $this->rootNode = Node::factory(
-      $this->collection, $this->getRootId()
-    );
+    $this->rootNode = $this->getCousin( $this->getRootId() );
 
     return $this->rootNode;
   }
@@ -199,16 +158,6 @@ abstract class Node
   }
 
   /**
-   * Returns a NodePage built around the Node
-   *
-   * @return NodePage
-   */
-  public function getNodePage()
-  {
-    return NodePage::factory( $this );
-  }
-
-  /**
    * Returns a descendent of the root Node which has the supplied node id
    * or subnode id
    *
@@ -217,24 +166,16 @@ abstract class Node
    */
   public function getCousin( $id )
   {
-    if ( strpos( $id, $this->getRootId() ) === false ) {
+    //if ( strpos( $id, $this->getRootId() ) === false ) {
+    if ( strpos( $id, $this->getRootId() ) === false && $this instanceof Node_Document ) {
       // client did not specify the root ID (really this is the more sensible
       // way to call, but we are accomodating certain methods that favor
       // the full subnode id)
+      // TODO: change this
       $id = $this->getRootId() . '.' . $id;
     }
-
-    return Node::factory( $this->collection, $id );
-  }
-
-  /**
-   * Returns the parent Collection
-   *
-   * @return Collection
-   */
-  public function getCollection()
-  {
-    return $this->collection;
+    
+    return Node::factory( $this->infodb, $id );
   }
 
   /**
@@ -258,7 +199,7 @@ abstract class Node
       $children = array();
       foreach ($children_names as $child) {
         $child_id = str_replace('"', $this->id, $child);
-        $this->children[] = $this->getChild( $child_id );
+        $this->children[] = $this->getCousin( $child_id );
       }
     }
 
@@ -335,18 +276,30 @@ abstract class Node
   }
 
   /**
-   * @param Collection $collection
+   * Returns the current Node's child of specified id.
+   *
+   * @deprecated
    * @param string $node_id
    * @return Node
    */
-  public static function factory( Collection $collection, $node_id )
+  protected function getChild( $node_id )
+  {
+    return $this->getCousin( $node_id );
+  }
+
+  /**
+   * @param Infodb $infodb
+   * @param string $node_id
+   * @return Node
+   */
+  public static function factory( Infodb $infodb, $node_id )
   {
     try {
       if ( substr( $node_id, 0, 2 ) == 'CL' ) {
-        return new Node_Classifier( $collection, $node_id );
+        return new Node_Classifier( $infodb, $node_id );
       }
       else {
-        return new Node_Document( $collection, $node_id );
+        return new Node_Document( $infodb, $node_id );
       }
     }
     catch (InvalidArgumentException $e) {

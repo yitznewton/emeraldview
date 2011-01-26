@@ -65,9 +65,9 @@ class NodeTreeFormatter
 
   /**
    * @param Node $node The root Node of the classifier/document that we're building a tree for
-   * @param NodeFormatterContext $context An object representing the situation where the string is needed; used for determining which format specification to use
+   * @param NodeTreeContext $context An object representing the situation where the string is needed; used for determining which format specification to use
    */
-  public function __construct( Node $node, $context )
+  public function __construct( Node $node, NodeTreeContext $context )
   {
     $this->rootNode = $node;
     $this->context = $context;
@@ -108,7 +108,7 @@ class NodeTreeFormatter
     if ( $this->isUsingCache ) {
       $cache = Cache::instance();
 
-      $cache_address = $this->rootNode->getCollection()->getName() . '_'
+      $cache_address = $this->context->getCollection->getName() . '_'
                        . $this->rootNode->getId();
 
       $node_output = $cache->get( $cache_address );
@@ -184,7 +184,7 @@ class NodeTreeFormatter
       $dashed_id = str_replace( '.', '-', $child->getId() );
 
       if ( $this->isUsingAjax ) {
-        $url = url::base() . 'ajax/' . $node->getCollection()->getName()
+        $url = url::base() . 'ajax/' . $this->context->getCollection()->getName()
                . '/browse/' . $child->getId();
         
         $top_html .= "<li><a href=\"$url\"><span class=\"spinner\"></span>"
@@ -200,7 +200,8 @@ class NodeTreeFormatter
       }
     }
 
-    $dir = strtolower( $node->getNodePage()->getConfig('dir') );
+    $node_page = NodePage::factory( $this->context->collection, $node );
+    $dir = strtolower( $node_page->getConfig('dir') );
 
     $attr = array( 'class' => 'browse-tabs ' . $dir );
 
@@ -227,7 +228,8 @@ class NodeTreeFormatter
     $inner_html = '';
 
     if ( $this->rootNode instanceof Node_Document ) {
-      $node_page = $this->rootNode->getNodePage();
+      $node_page = NodePage::factory( $this->context->getCollection(),
+                   $this->rootNode );
 
       if ( $node_page->getHTML() ) {
         $url = $node_page->getUrl();
@@ -244,7 +246,8 @@ class NodeTreeFormatter
     }
 
     if ( $node instanceof Node_Classifier ) {
-      $dir = strtolower( $node->getNodePage()->getConfig('dir') );
+      $node_page = NodePage::factory( $this->context->getCollection(), $node );
+      $dir = strtolower( $node_page->getConfig('dir') );
     }
     else {
       $dir = null;
@@ -302,7 +305,7 @@ class NodeTreeFormatter
       ( $this->rootNode instanceof Node_Classifier && $node instanceof Node_Document )
       || ( $this->rootNode instanceof Node_Document )
     ) {
-      $url = NodePage::factory( $node )->getUrl();
+      $url = NodePage::factory( $this->context->getCollection(), $node )->getUrl();
       $replace = array( '<a href="' . $url . '">', '</a>' );
     }
     else {
