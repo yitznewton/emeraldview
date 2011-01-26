@@ -78,7 +78,7 @@ abstract class Hit
     $this->terms = $this->searchHandler->getQuery()->getRawTerms();
     $term_string = implode( '&search[]=', $this->terms );
 
-    $node = Node_Document::factory( $collection, $this->docOID );
+    $node = Node::factory( $collection, $this->docOID );
 
     if ( ! $node ) {
       $msg = 'No node found with specified docOID';

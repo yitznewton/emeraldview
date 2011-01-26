@@ -55,15 +55,16 @@ abstract class Node
   protected $rootNode;
   
   /**
-   * Returns the current Node's child of specified id.  This is abstract
-   * because, for example, Node_Classifier::getChild() may return a
-   * Node_Classifier or a Node_Document depending on the context
+   * Returns the current Node's child of specified id.
    *
-   * @todo just incorporate subclass detection based on id into Node::factory (#20)
+   * @todo This is vestigial from the old Node factory; eliminate it
    * @param string $node_id
    * @return Node
    */
-  abstract protected function getChild( $node_id );
+  protected function getChild( $node_id )
+  {
+    return Node::factory( $this->collection, $node_id );
+  }
   
   /**
    * @param Collection $collection
@@ -175,9 +176,6 @@ abstract class Node
       return $this->rootNode;
     }
 
-    $class = get_class( $this );
-
-    // ugly workaround for lack of LSB in < 5.3
     $this->rootNode = Node::factory(
       $this->collection, $this->getRootId()
     );

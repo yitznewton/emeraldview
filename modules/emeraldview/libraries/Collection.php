@@ -305,7 +305,7 @@ class Collection
         continue;
       }
       
-      $node = Node_Classifier::factory( $this, $id );
+      $node = Node::factory( $this, $id );
       $classifiers[] = NodePage_Classifier::factory( $node );
     }
     
@@ -323,7 +323,7 @@ class Collection
   {
     $id = $this->getInfodb()->getNodeIdByTitle( $title );
 
-    return Node_Document::factory( $this, $id );
+    return Node::factory( $this, $id );
   }
 
   /**
@@ -340,7 +340,7 @@ class Collection
     $nodes    = array();
 
     foreach ( $node_ids as $id ) {
-      $nodes[] = Node_Document::factory( $this, $id );
+      $nodes[] = Node::factory( $this, $id );
     }
 
     return $nodes;

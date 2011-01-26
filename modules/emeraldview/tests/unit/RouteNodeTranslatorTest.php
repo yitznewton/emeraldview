@@ -12,7 +12,7 @@ class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
       throw new Exception( 'Could not load Collection' );
     }
 
-    $this->root_node = Node_Document::factory( $this->collection, 'D1' );
+    $this->root_node = Node::factory( $this->collection, 'D1' );
 
     if ( ! $this->root_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );

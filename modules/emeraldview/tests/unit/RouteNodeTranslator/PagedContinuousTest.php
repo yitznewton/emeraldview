@@ -12,7 +12,7 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
       throw new Exception( 'Could not load Collection' );
     }
     
-    $this->root_node = Node_Document::factory( $this->collection,
+    $this->root_node = Node::factory( $this->collection,
       'HASH01fb5e6d0499d20a049915b2' );
     
     if ( ! $this->root_node instanceof Node_Document ) {

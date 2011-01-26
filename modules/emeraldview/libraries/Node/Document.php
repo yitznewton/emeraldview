@@ -114,15 +114,6 @@ class Node_Document extends Node
   }
 
   /**
-   * @param string $node_id
-   * @return Node_Document
-   */
-  protected function getChild( $node_id )
-  {
-    return Node_Document::factory( $this->collection, $node_id );
-  }
-
-  /**
    * Returns an array of all root Node_Document instances for the given
    * Collection
    *
@@ -142,7 +133,7 @@ class Node_Document extends Node
         continue;
       }
 
-      $nodes[] = Node_Document::factory( $collection, $id );
+      $nodes[] = Node::factory( $collection, $id );
     }
 
     return $nodes;

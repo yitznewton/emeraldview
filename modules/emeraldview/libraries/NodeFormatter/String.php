@@ -319,7 +319,7 @@ class NodeFormatter_String extends NodeFormatter
    */
   public static function factory( Node $node, $context )
   {
-    $msg = 'Can only call Node::factory() from abstract parent class';
+    $msg = 'Can only call NodeFormatter::factory() from abstract parent class';
     throw new Exception( $msg );
   }
 }

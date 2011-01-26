@@ -73,23 +73,9 @@ class Node_Classifier extends Node
     $nodes    = array();
 
     foreach ( $node_ids as $id ) {
-      $nodes[] = Node_Document::factory( $this->collection, $id );
+      $nodes[] = Node::factory( $this->collection, $id );
     }
 
     return $nodes;
-  }
-
-  /**
-   * @param string $node_id
-   * @return Node
-   */
-  protected function getChild( $node_id )
-  {
-    if (substr( $node_id, 0, 2 ) == 'CL') {
-      return new Node_Classifier( $this->collection, $node_id );
-    }
-    else {
-      return Node_Document::factory( $this->collection, $node_id );
-    }
   }
 }

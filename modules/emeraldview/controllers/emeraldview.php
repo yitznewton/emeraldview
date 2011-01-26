@@ -154,7 +154,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
       return $this->show404();
     }
 
-    $root_node = Node_Document::factory( $collection, $document_id );
+    $root_node = Node::factory( $collection, $document_id );
 
     if ( ! $root_node ) {
       return $this->show404();
