@@ -298,8 +298,14 @@ abstract class Node
       if ( substr( $node_id, 0, 2 ) == 'CL' ) {
         return new Node_Classifier( $infodb, $node_id );
       }
-      else {
+      elseif ( substr( $node_id, 0, 4 ) == 'HASH' ) {
         return new Node_Document( $infodb, $node_id );
+      }
+      elseif ( substr( $node_id, 0, 1 ) == 'D' ) {
+        return new Node_Document( $infodb, $node_id );
+      }
+      else {
+        return false;
       }
     }
     catch (InvalidArgumentException $e) {

@@ -36,7 +36,13 @@ class NodeTest extends PHPUnit_Framework_TestCase
   {
     $this->assertInstanceOf( 'Node_Classifier',
       Node::factory( $this->infodb, 'CL1' ) );
+
     $this->assertInstanceOf( 'Node_Document',
       Node::factory( $this->infodb, 'D0' ) );
+
+    $this->assertInstanceOf( 'Node_Document',
+      Node::factory( $this->infodb, 'HASHASDFHKJ' ) );
+
+    $this->assertFalse( Node::factory( $this->infodb, 'somejunk' ) );
   }
 }
