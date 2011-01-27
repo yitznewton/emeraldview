@@ -1,26 +1,4 @@
 <?php
-class MockCollection extends Collection
-{
-  public function __construct() {}
-}
-
-class MockInfodb extends Infodb
-{
-  public function __construct() {}
-  public function getDocumentMetadata( $id ) {}
-  public function getClassifierIds() {}
-  public function getAllNodes() {}
-  public function getCousinIdByDocnum( Node_Document $node, $docnum ) {}
-  public function getNodeIdByTitle( $title ) {}
-  public function getCousinIdByTitle( Node_Document $node, $title ) {}
-  public function getRandomLeafNodeIdsHavingMetadata( $element, $count = 1 ) {}
-  public function getRandomLeafNodeIds( Node_Classifier $node, $count = 1 ) {}
-
-  public function getNode( $id ) {
-    return array( 'id' => $id );
-  }
-}
-
 class NodeTest extends PHPUnit_Framework_TestCase
 {
   protected $collection;
@@ -28,8 +6,25 @@ class NodeTest extends PHPUnit_Framework_TestCase
 
   public function setUp()
   {
-    $this->collection = new MockCollection();
-    $this->infodb     = new MockInfoDb();
+    $this->collection = $this->getMockBuilder('Collection')
+                        ->disableOriginalConstructor()
+                        ->getMock();
+
+    $this->infodb = $this->getMockBuilder('Infodb')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+
+    $this->infodb->expects( $this->any() )
+                 ->method('getNode')
+                 ->will( $this->returnCallback(
+                   array( $this, 'mockGetNode' ) )
+                 );
+  }
+
+  public function mockGetNode()
+  {
+    $args = func_get_args();
+    return array( 'id' => $args[0] );
   }
 
   public function testFactory()
