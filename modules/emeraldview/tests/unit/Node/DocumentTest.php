@@ -103,43 +103,43 @@ class Node_DocumentTest extends PHPUnit_Framework_TestCase
 
   public function testIsPaged()
   {
-    $this->assertFalse( Node::factory( $this->infodb_unpaged,
-      'D0' )->isPaged() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_unpaged, 'D0' )->isPaged() );
     
-    $this->assertFalse( Node::factory( $this->infodb_unpaged,
-      'D0.1' )->isPaged() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_unpaged, 'D0.1' )->isPaged() );
 
-    $this->assertTrue( Node::factory( $this->infodb_paged,
-      'D0' )->isPaged() );
+    $this->assertTrue(
+      Node::factory( $this->infodb_paged, 'D0' )->isPaged() );
     
-    $this->assertTrue( Node::factory( $this->infodb_paged,
-      'D0.1' )->isPaged() );
+    $this->assertTrue(
+      Node::factory( $this->infodb_paged, 'D0.1' )->isPaged() );
 
-    $this->assertTrue( Node::factory( $this->infodb_paged_pdf,
-      'D0' )->isPaged() );
+    $this->assertTrue(
+      Node::factory( $this->infodb_paged_pdf, 'D0' )->isPaged() );
 
-    $this->assertTrue( Node::factory( $this->infodb_paged_pdf,
-      'D0.1' )->isPaged() );
+    $this->assertTrue(
+      Node::factory( $this->infodb_paged_pdf, 'D0.1' )->isPaged() );
   }
 
   public function testIsPagedPDF()
   {
-    $this->assertFalse( Node::factory( $this->infodb_unpaged,
-      'D0' )->isPagedPDF() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_unpaged, 'D0' )->isPagedPDF() );
 
-    $this->assertFalse( Node::factory( $this->infodb_unpaged,
-      'D0.1' )->isPagedPDF() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_unpaged, 'D0.1' )->isPagedPDF() );
 
-    $this->assertFalse( Node::factory( $this->infodb_paged,
-      'D0' )->isPagedPDF() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_paged, 'D0' )->isPagedPDF() );
 
-    $this->assertFalse( Node::factory( $this->infodb_paged,
-      'D0.1' )->isPagedPDF() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_paged, 'D0.1' )->isPagedPDF() );
 
-    $this->assertFalse( Node::factory( $this->infodb_paged_pdf,
-      'D0' )->isPagedPDF() );
+    $this->assertFalse(
+      Node::factory( $this->infodb_paged_pdf, 'D0' )->isPagedPDF() );
 
-    $this->assertTrue( Node::factory( $this->infodb_paged_pdf,
-      'D0.1' )->isPagedPDF() );
+    $this->assertTrue(
+      Node::factory( $this->infodb_paged_pdf, 'D0.1' )->isPagedPDF() );
   }
 }

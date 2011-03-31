@@ -146,7 +146,7 @@ class Node_Document extends Node
         continue;
       }
 
-      $nodes[] = $this->getCousin( $id );
+      $nodes[] = Node::factory( $collection->getInfodb(), $id );
     }
 
     return $nodes;

@@ -209,7 +209,7 @@ class NodeTreeFormatter
       $attr[ 'dir' ] = $dir;
     }
 
-    $inner_html = "<ul>\n$top_html\n</ul>\n$bottom_html\n</div>\n";
+    $inner_html = "<ul>\n$top_html\n</ul>\n$bottom_html\n";
 
     return myhtml::element( 'div', $inner_html, $attr );
   }
