@@ -82,6 +82,20 @@ class Node_Document extends Node
   }
 
   /**
+   * Returns a Node in the document which has the specified Title.  Used in
+   * collections built with Greenstone's PagedImagePlugin and paged_continuous
+   *
+   * @param string $title
+   * @return Node_Document
+   */
+  public function getContinuousCousinByTitle( $title )
+  {
+    $id = $this->infodb->getNodeIdByTitle( $title );
+
+    return Node::factory( $this->infodb, $id );
+  }
+
+  /**
    * Returns whether the document was built with the PagedImagePlugin or
    * another paged plugin
    *

@@ -179,7 +179,7 @@ class Emeraldview_Controller extends Emeraldview_Template_Controller
 
     if ( $node->getRootId() != $root_node->getId() ) {
       // crossing into another document via RouteNodeTranslator_PagedContinuous
-      url::redirect( $root_page->getUrl() );
+      url::redirect( NodePage::factory( $collection, $node )->getUrl() );
     }
 
     try {
