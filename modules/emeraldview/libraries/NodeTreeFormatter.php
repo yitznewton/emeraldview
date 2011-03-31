@@ -108,7 +108,7 @@ class NodeTreeFormatter
     if ( $this->isUsingCache ) {
       $cache = Cache::instance();
 
-      $cache_address = $this->context->getCollection->getName() . '_'
+      $cache_address = $this->context->getCollection()->getName() . '_'
                        . $this->rootNode->getId();
 
       $node_output = $cache->get( $cache_address );
@@ -200,7 +200,7 @@ class NodeTreeFormatter
       }
     }
 
-    $node_page = NodePage::factory( $this->context->collection, $node );
+    $node_page = NodePage::factory( $this->context->getCollection(), $node );
     $dir = strtolower( $node_page->getConfig('dir') );
 
     $attr = array( 'class' => 'browse-tabs ' . $dir );
