@@ -14,6 +14,14 @@ languages:
   fr: French
 
 collections:
+  memory:
+    active: true
+    theme: memory
+    classifiers:
+      CL1:
+        format: "[TitleRoman]"
+      CL2:
+        format: "[TitleHebrew]"
   demo:
     active: true
     slug_max_length: 30

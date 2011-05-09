@@ -292,11 +292,16 @@ abstract class Node
    * values) corresponding to the specified metadata field for the current Node
    *
    * @param string $field_name
+   * @param integer $index The index of the value to return, in case desired field is an array
    * @return mixed
    */
-  public function getField( $field_name )
+  public function getField( $field_name, $index = null )
   {
     if (array_key_exists( $field_name, $this->data )) {
+      if ( is_array( $this->data[ $field_name ] ) && is_int( $index ) ) {
+        return $this->data[ $field_name ][ $index ];
+      }
+
       return $this->data[ $field_name ];
     }
     else {
