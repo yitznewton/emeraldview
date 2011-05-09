@@ -21,10 +21,16 @@ class NodeTest extends PHPUnit_Framework_TestCase
                  );
   }
 
-  public function mockGetNode()
+  public function mockGetNode( $id )
   {
-    $args = func_get_args();
-    return array( 'id' => $args[0] );
+    if ( $id == 'D0' ) {
+      $children = '".1';
+    }
+    else {
+      $children = false;
+    }
+
+    return array( 'id' => $id, 'contains' => $children );
   }
 
   public function testFactory()
@@ -37,7 +43,14 @@ class NodeTest extends PHPUnit_Framework_TestCase
 
     $this->assertInstanceOf( 'Node_Document',
       Node::factory( $this->infodb, 'HASHASDFHKJ' ) );
+  }
 
-    $this->assertFalse( Node::factory( $this->infodb, 'somejunk' ) );
+  public function testGetChildren()
+  {
+    $node_with_children = Node::factory( $this->infodb, 'D0' );
+    $node_without_children = Node::factory( $this->infodb, 'D1' );
+
+    $this->assertInternalType( 'array', $node_with_children->getChildren() );
+    $this->assertInternalType( 'array', $node_without_children->getChildren() );
   }
 }
