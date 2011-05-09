@@ -12,7 +12,7 @@ class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
       throw new Exception( 'Could not load Collection' );
     }
 
-    $this->root_node = Node::factory( $this->collection, 'D1' );
+    $this->root_node = Node::factory( $this->collection->getInfodb(), 'D1' );
 
     if ( ! $this->root_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );
@@ -22,12 +22,12 @@ class RouteNodeTranslatorTest extends PHPUnit_Framework_TestCase
   public function testFactory()
   {
     $this->assertInstanceOf( 'RouteNodeTranslator',
-      RouteNodeTranslator::factory( $this->root_node ) );
+      RouteNodeTranslator::factory( $this->collection, $this->root_node ) );
   }
 
   public function testGetNode()
   {
-    $rnt = RouteNodeTranslator::factory( $this->root_node );
+    $rnt = RouteNodeTranslator::factory( $this->collection, $this->root_node );
 
     $existing_subnode_args = array(
       array(),

@@ -26,12 +26,12 @@ class CollectionTest extends PHPUnit_Framework_TestCase
       throw new Exception( 'Could not load Collection' );
     }
 
-    $this->paged_node = Node::factory( $this->paged_collection,
+    $this->paged_node = Node::factory( $this->paged_collection->getInfodb(),
       'HASH010d952d4f6624863c78611d' );
     $this->continuous_paged_node = Node::factory(
-      $this->continuous_paged_collection, 'HASH01fb5e6d0499d20a049915b2' );
+      $this->continuous_paged_collection->getInfodb(), 'HASH01fb5e6d0499d20a049915b2' );
     $this->nonpaged_node = Node::factory(
-      $this->nonpaged_collection, 'D1' );
+      $this->nonpaged_collection->getInfodb(), 'D1' );
 
     if ( ! $this->paged_node instanceof Node_Document ) {
       throw new Exception( 'Error loading Node' );

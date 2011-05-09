@@ -12,7 +12,7 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
       throw new Exception( 'Could not load Collection' );
     }
     
-    $this->root_node = Node::factory( $this->collection,
+    $this->root_node = Node::factory( $this->collection->getInfodb(),
       'HASH01fb5e6d0499d20a049915b2' );
     
     if ( ! $this->root_node instanceof Node_Document ) {
@@ -23,7 +23,7 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
   public function testFactory()
   {
     $this->assertInstanceOf( 'RouteNodeTranslator_PagedContinuous',
-      RouteNodeTranslator::factory( $this->root_node ) );
+      RouteNodeTranslator::factory( $this->collection, $this->root_node ) );
   }
 
   /**
@@ -33,7 +33,7 @@ class RouteNodeTranslator_PagedContinuousTest extends PHPUnit_Framework_TestCase
   {
     $this->assertTrue( $this->collection->getConfig( 'paged_continuous' ) );
 
-    $rnt = RouteNodeTranslator::factory( $this->root_node );
+    $rnt = RouteNodeTranslator::factory( $this->collection, $this->root_node );
 
     $existing_subnode_args = array(
       array(),
