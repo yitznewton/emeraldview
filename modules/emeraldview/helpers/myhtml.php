@@ -172,21 +172,23 @@ class myhtml {
     return $div_element;
   }
 
+  /**
+   * Returns an HTML <iframe> element requesting a PDF with given options
+   *
+   * @param string $url The URL of the PDF
+   * @param array string[] $attributes HTML attributes for the iframe
+   * @param array string[] $pdf_options Parameters to pass to the PDF reader
+   * @return string
+   */
   public static function iframe_pdf(
     $url, $attributes = array(), $pdf_options = array()
   ) {
-    $default_attributes = array(
-      'height' => '800',
-      'width'  => '100%',
-    );
-
     $default_pdf_options = array(
       'view'      => 'Fit',
       'scrollbar' => '0',
       'navpanes'  => '0',
     );
 
-    $attributes  = array_merge( $default_attributes, $attributes );
     $pdf_options = array_merge( $default_pdf_options, $pdf_options );
 
     if ( isset( $pdf_options['search'] ) && ! $pdf_options['search'] ) {

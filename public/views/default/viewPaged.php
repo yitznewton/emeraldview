@@ -58,10 +58,19 @@
 </div>
 
 <?php elseif ( $page->getNode()->isPagedPDF() ): ?>
+
 <?php echo myhtml::iframe_pdf(
   $source_url,
   array( 'class' => 'paged-pdf' ),
   array( 'search' => implode(' ', $search_terms)) ) ?>
+
+<?php if ( $page->getImageUrl() ): ?>
+<div>
+  <a href="<?php echo $page->getImageUrl() ?>">
+    <?php echo L10n::_('Click here to view unprocessed page image') ?>
+  </a>
+</div>
+<?php endif; ?>
 
 <?php elseif ($source_url): ?>
 <div id="source-link">

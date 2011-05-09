@@ -154,6 +154,17 @@ class NodePage_DocumentSection extends NodePage implements NodeTreeContext
   }
 
   /**
+   * Returns the URL for the originating image; for use with PagedImagePlugin
+   * customized for PDF support
+   *
+   * @return string
+   */
+  public function getImageUrl()
+  {
+    return $this->getMetadataUrl( 'imglink' );
+  }
+
+  /**
    * Returns the URL for an icon representaton of the source document;
    * e.g. smaller version of the source image
    *
