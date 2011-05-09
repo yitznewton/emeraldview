@@ -38,9 +38,9 @@ abstract class Node
   /**
    * The Node's child Nodes
    *
-   * @var array
+   * @var array Node[]
    */
-  protected $children = array();
+  protected $children;
   /**
    * The root Node of this classifier or document
    *
@@ -184,9 +184,11 @@ abstract class Node
    */
   public function getChildren()
   {
-    if ( $this->children ) {
+    if ( isset( $this->children )) {
       return $this->children;
     }
+
+    $this->children = array();
 
     if (
       isset($this->data['contains'])
