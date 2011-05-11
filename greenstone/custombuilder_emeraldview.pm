@@ -1,11 +1,11 @@
-package solrbuilder;
+package custombuilder;
 
 use lucenebuilder;
 use strict; 
 no strict 'refs';
 
 sub BEGIN {
-    @solrbuilder::ISA = ('lucenebuilder');
+    @custombuilder::ISA = ('lucenebuilder');
 }
 
 sub build_index {
@@ -84,6 +84,17 @@ sub build_index {
     print STDERR "<Phase name='CreatingIndexDic'/>\n" if $self->{'gli'};
     my ($handle);
 
+    if ($self->{'debug'}) {
+	$handle = *STDOUT;
+    } else {
+	print STDERR "Cmd: $full_lucene_passes_exe $opt_create_index index $lucene_passes_sections \"$build_dir\" \"$indexdir\"   $osextra\n";
+	if (!-e "$full_lucene_passes" ||
+	    !open($handle, "| $full_lucene_passes_exe $opt_create_index index $lucene_passes_sections \"$build_dir\" \"$indexdir\"   $osextra")) {
+	    print STDERR "<FatalError name='NoRunLucenePasses'/>\n</Stage>\n" if $self->{'gli'};
+	    die "lucenebuilder::build_index - couldn't run $full_lucene_passes_exe\n";
+	}
+    }
+
     my $store_levels = $self->{'levels'};
     my $db_level = "section"; #always
     my $dom_level = "";
@@ -109,12 +120,17 @@ sub build_index {
     $self->{'buildproc'}->set_levels ($local_levels);
     $self->{'buildproc'}->set_db_level($db_level);
     $self->{'buildproc'}->reset();
-
-    open( $handle, "| php $ENV{'GSDLHOME'}/perllib/solr_extract.php \"$build_dir\" \"$indexdir\" " );
-    $self->{'buildproc'}->set_output_handle ($handle);
     &plugin::read ($self->{'pluginfo'}, $self->{'source_dir'},
 		   "", {}, {}, $self->{'buildproc'}, $self->{'maxdocs'}, 0, $self->{'gli'});
     close ($handle) unless $self->{'debug'};
+
+    # EmeraldView: store raw text to build search snippets at runtime
+    my $handle2;
+    open( $handle2, "| php $ENV{'GSDLHOME'}/perllib/raw_text_extract.php \"$build_dir\" \"$indexdir\" " );
+    $self->{'buildproc'}->set_output_handle ($handle2);
+    &plugin::read ($self->{'pluginfo'}, $self->{'source_dir'},
+		   "", {}, {}, $self->{'buildproc'}, $self->{'maxdocs'}, 0, $self->{'gli'});
+    close ($handle2) unless $self->{'debug'};
 
     $self->print_stats();
 
